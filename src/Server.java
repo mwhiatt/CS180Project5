@@ -5,7 +5,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-
+/**
+ * Project 5 - Learning Management Quiz Tool - Server
+ * Server class to receive connections from multiple users and store information. 
+ * <p>
+ * 
+ * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
+ * @version 11/15/2021
+ */
 public class Server implements Runnable {
 	Socket socket;
 	public Server(Socket socket) {
