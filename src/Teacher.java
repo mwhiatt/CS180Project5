@@ -318,7 +318,7 @@ public class Teacher {
 		}
 	}
 
-	public static void editQuiz(Scanner input, String quizName, String courseName) {
+	public static void editQuiz(String quizName, String courseName) {
 		// converting file into ArrayList
 		try {
 			BufferedReader bfrForEditing = new BufferedReader(new FileReader(courseName + quizName + ".txt"));

@@ -16,6 +16,9 @@ public class Client implements ActionListener {
     JFrame frame3;
     JFrame frame4;
     JFrame frame5;
+    JFrame frame6;
+    JFrame frame7;
+
     JFrame teacherMainMenu;
     JFrame teacherViewCourseMenu;
 
@@ -351,7 +354,9 @@ public class Client implements ActionListener {
             teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             teacherMainMenu.setSize(500, 500);
             teacherMainMenu.setLocation(430, 100);
+            //general shape of frame created
             JPanel teacherFirstMenu = new JPanel();
+            //same 3 options provided! just coded differently
             createCourse = new JButton("Create Course");
             createCourse.addActionListener(new ActionListener() {
                 @Override
@@ -371,6 +376,7 @@ public class Client implements ActionListener {
                     teacherViewCourse(courseNameRequested);
                 }
             });
+            //general same exit button
             exit = new JButton("Exit");
             exit.addActionListener(this);
             teacherFirstMenu.add(createCourse);
@@ -381,7 +387,7 @@ public class Client implements ActionListener {
         }
     }
 
-    //unfinished
+    // NEED TO FIGURE OUT HOW TO IMPLEMENT SHOWING THE QUIZZES OR SUBMISSIONS DURING QUESTIONS
     public void teacherViewCourse(String courseName) {
         //viewCourseMenuCode
         teacherViewCourseMenu = new JFrame("Please choose an option:");
@@ -389,6 +395,7 @@ public class Client implements ActionListener {
         teacherViewCourseMenu.setSize(500, 500);
         teacherViewCourseMenu.setLocation(430, 100);
         JPanel viewCourseMenu = new JPanel();
+        //same options provided before all on one screen as buttons
         deleteCourse = new JButton("Delete Course");
         deleteCourse.addActionListener(new ActionListener() {
             @Override
@@ -409,18 +416,113 @@ public class Client implements ActionListener {
         createQuiz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String quizNameToCreate = JOptionPane.showInputDialog(null,
-                        "Please enter the course name.");
-                Teacher.createQuiz(courseName, quizNameToCreate);
+                Teacher.createQuiz(courseName);
             }
         });
         editQuiz = new JButton("Edit Quiz");
+        editQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String quizNameToEdit = JOptionPane.showInputDialog(null,
+                        "Please enter the quiz name.");
+                Teacher.editQuiz(courseName, quizNameToEdit);
+            }
+        });
         viewSubmission = new JButton("View Submission");
-        printCourse = new JButton("Print All Courses");
-        printQuizzes = new JButton("Print All Quizzes");
-        printSubmissions = new JButton("Print All Submissions");
+        viewSubmission.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String quizNameToEdit = JOptionPane.showInputDialog(null,
+                        "Please enter the quiz name.");
+                String submissionToView = JOptionPane.showInputDialog(null,
+                        "Please enter name of submission.");
+                Teacher.viewSubmission(courseName, quizNameToEdit, submissionToView);
+            }
+        });
+        //Potential work around to display all courses and quizzes and submissions without it being directly in code.
+//        printCourse = new JButton("Print All Available Courses");
+//        printCourse.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                Teacher.printCourses();
+//            }
+//        });
+        printQuizzes = new JButton("Print All Quiz Names For" + courseName);
+        printQuizzes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Teacher.printQuizzes(courseName);
+            }
+        });
+        printSubmissions = new JButton("Print All Submission Names for Specified Quiz in " + courseName);
+        printSubmissions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String quizNameToView = JOptionPane.showInputDialog(null,
+                        "Please enter the quiz name.");
+                Teacher.printSubmissions(courseName, quizNameToView);
+            }
+        });
+        exit = new JButton("Exit");
+        exit.addActionListener(this);
+        viewCourseMenu.add(deleteCourse);
+        viewCourseMenu.add(deleteQuiz);
+        viewCourseMenu.add(createQuiz);
+        viewCourseMenu.add(editQuiz);
+        viewCourseMenu.add(viewSubmission);
+        viewCourseMenu.add(printQuizzes);
+        viewCourseMenu.add(printSubmissions);
+        viewCourseMenu.add(exit);
+        teacherViewCourseMenu.add(viewCourseMenu, BorderLayout.NORTH);
+        teacherViewCourseMenu.setVisible(true);
 
     }
+
+public void createGUI(){
+
+        //Creates Login File
+        File logins=new File("login.txt");
+        if(!logins.exists()){
+        try{
+        logins.createNewFile();
+        }catch(IOException e){
+        e.printStackTrace();
+        }
+        }
+
+        //Creates coursenames file
+        File courseNames=new File("CourseNames.txt");
+        if(!courseNames.exists()){
+        try{
+        courseNames.createNewFile();
+        }catch(IOException e){
+        e.printStackTrace();
+        }
+        }
+
+
+        frame=new JFrame("Welcome to the Quiz Learning Program");
+
+        Container content=frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        frame.setSize(600,100);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+
+        create=new JButton("Create");
+        create.addActionListener(this);
+        login=new JButton("Login");
+        login.addActionListener(this);
+        exit=new JButton("Exit");
+        exit.addActionListener(this);
+        JPanel panel=new JPanel();
+        panel.add(create);
+        panel.add(login);
+        panel.add(exit);
+        frame.add(panel,BorderLayout.NORTH);
+        }
 }
 
 //        int ongoingChoice;
@@ -482,54 +584,4 @@ public class Client implements ActionListener {
 //                }
 //            }
 //        } while(ongoingChoice == 1 || ongoingChoice == 2);
-    }
-
-public void createGUI(){
-
-        //Creates Login File
-        File logins=new File("login.txt");
-        if(!logins.exists()){
-        try{
-        logins.createNewFile();
-        }catch(IOException e){
-        e.printStackTrace();
-        }
-        }
-
-        //Creates coursenames file
-        File courseNames=new File("CourseNames.txt");
-        if(!courseNames.exists()){
-        try{
-        courseNames.createNewFile();
-        }catch(IOException e){
-        e.printStackTrace();
-        }
-        }
-
-
-        frame=new JFrame("Welcome to the Quiz Learning Program");
-
-        Container content=frame.getContentPane();
-        content.setLayout(new BorderLayout());
-
-        frame.setSize(600,100);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
-
-        create=new JButton("Create");
-        create.addActionListener(this);
-        login=new JButton("Login");
-        login.addActionListener(this);
-        exit=new JButton("Exit");
-        exit.addActionListener(this);
-        JPanel panel=new JPanel();
-        panel.add(create);
-        panel.add(login);
-        panel.add(exit);
-        frame.add(panel,BorderLayout.NORTH);
-
-        }
-
-
-        }
+//    }
