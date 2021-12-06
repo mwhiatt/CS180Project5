@@ -26,26 +26,6 @@ public class Driver {
 		System.out.println("Welcome to the Quiz Learning Program");
 		String user = null;
 		
-		//Creates Login File 
-		File logins = new File("login.txt");
-		if (!logins.exists()) {
-			try {
-				logins.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		//Creates coursenames file
-		File courseNames = new File("CourseNames.txt");
-		if (!courseNames.exists()) {
-			try {
-				courseNames.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
 		//Start Menu
 		int choice;
 		do {
