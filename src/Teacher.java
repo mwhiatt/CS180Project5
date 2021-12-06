@@ -18,19 +18,21 @@ public class Teacher {
 			File newFileQuiz = new File(nameAndQuiz);
 
 			if (newFileQuiz.createNewFile()) {
-				System.out.println("Creating a new file!");
+				JOptionPane.showMessageDialog(null, "New File Created!", "File Status",
+						JOptionPane.INFORMATION_MESSAGE);
 				PrintWriter myWriter = new PrintWriter(new FileOutputStream("CourseNames.txt", true));
 				myWriter.write(courseName + "\n");
 				myWriter.close();
 			} else {
-				System.out.println("The course already exists!");
+				JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error writing to file. Try again.");
+			JOptionPane.showMessageDialog(null, "Error writing to file. Try again.", "File Status",
+					JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Undocumented Error. Try again.");
+			JOptionPane.showMessageDialog(null, "Undocumented Error. Try again.", "File Status",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -54,7 +56,8 @@ public class Teacher {
 			}
 			// Ends method if course doesn't already exist
 			if (!courseExists) {
-				System.out.println("No need to delete, that course doesn't exist.");
+				JOptionPane.showMessageDialog(null, "No need to delete, " +
+								"that course doesn't exist", "File Status", JOptionPane.ERROR_MESSAGE);
 				bfr.close();
 				return;
 			}
@@ -66,11 +69,13 @@ public class Teacher {
 			myWriter.close();
 			// FINISHED REWRITING FILES AFTER DELETING NAME
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("Error writing to file.");
+
+			JOptionPane.showMessageDialog(null, "Error writing to file." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Undocumented Error.");
+
+			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 		}
 		// SEARCHING FOR ALL QUIZZES INSIDE courseName + Quizzes, then calling
 		// deleteQuiz
@@ -91,23 +96,28 @@ public class Teacher {
 			}
 			bfrQuizzes.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("File Not Found.");
+
+			JOptionPane.showMessageDialog(null, "File Not Found." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error reading or writing to file.");
+
+			JOptionPane.showMessageDialog(null, "Error reading/writing to file." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Undocumented Error.");
+
+			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 
 		}
 		// Deleting entire file with all Quiz names. Finished using the file to find all
 		// quizzes, so can delete now.
 		File deletedFile = new File(courseName + "Quizzes.txt");
 		if (deletedFile.delete()) {
-			System.out.println("Successfully deleted the file " + courseName + "Quizzes.txt");
+			JOptionPane.showMessageDialog(null, "Successfully deleted the file " + courseName + "Quizzes.txt" ,
+					"File Status", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			System.out.println("Failed to delete file.");
+			JOptionPane.showMessageDialog(null, "Error deleting file." ,
+					"File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -129,9 +139,11 @@ public class Teacher {
 			for (int a = 0; a < allSubmissions.size(); a++) {
 				deletedSubmissions = new File(allSubmissions.get(a));
 				if (deletedSubmissions.delete()) {
-					System.out.println("Successfully deleted the file " + allSubmissions.get(a));
+					JOptionPane.showMessageDialog(null, "Successfully deleted the file " + allSubmissions.get(a) ,
+							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					System.out.println("Failed to delete file.");
+					JOptionPane.showMessageDialog(null, "Failed to delete file.",
+							"File Status", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			bfrSubmissions.close();
@@ -163,112 +175,114 @@ public class Teacher {
 			// delete quiz now that it is no longer needed for the submissions
 			deletedQuiz = new File(courseName + quizName + ".txt");
 			if (deletedQuiz.delete()) {
-				System.out.println("Successfully deleted the file " + courseName + quizName + ".txt");
+				JOptionPane.showMessageDialog(null,
+						"Successfully deleted the file " + courseName + quizName + ".txt",
+						"File Status", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				System.out.println("Failed to delete file." + courseName + quizName + ".txt");
+				JOptionPane.showMessageDialog(null,
+						"Failed to delete file." + courseName + quizName + ".txt",
+						"File Status", JOptionPane.ERROR_MESSAGE);
 			}
 			File deletedSubmissionFile = new File(courseName + quizName + "Submissions.txt");
 			if (deletedSubmissionFile.delete()) {
-				System.out.println("Successfully deleted the file " + courseName + quizName + "Submissions.txt");
+				JOptionPane.showMessageDialog(null,
+						"Successfully deleted the file " + courseName + quizName + "Submissions.txt",
+						"File Status", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				System.out.println("Failed to delete file.");
+				JOptionPane.showMessageDialog(null,
+						"Failed to delete file.", "File Status", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("File not found.");
+			JOptionPane.showMessageDialog(null,
+					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error Writing/Reading to file.");
+			JOptionPane.showMessageDialog(null,
+					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 
-	public static void createQuiz(Scanner input, String courseName) {
+	public static void createQuiz(String courseName) {
 		try {
 			boolean contWriting = false; // variable for knowing if they want to keep writing quizzes (do while loop)
 			String fileName = "";
 			PrintWriter myWriter;
-			System.out.println("Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
-					+ "file inside terminal immediately)"); // Check if importing or creating
-			String importOrCreate = input.nextLine();
+			String importOrCreate = JOptionPane.showInputDialog(null,
+							"Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
+									+ "file inside terminal immediately)");
+			// ^^checks if importing or creating
 			// checks for valid input
 			if (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
 				while (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
-					System.out.println("Please input a valid answer, Yes or No.");
-					System.out.println("Would you like to import a quiz? Yes or No (If no, you will be directed to "
-							+ "create a file inside terminal immediately");
-					importOrCreate = input.nextLine();
+					importOrCreate = JOptionPane.showInputDialog(null,
+							"Please input a valid answer, Yes or No.\n" + "Would you like to import a quiz? " +
+									"Yes or No (If no, you will be directed to "
+									+ "create a file inside terminal immediately");
 				}
 			}
 			if (importOrCreate.equalsIgnoreCase("yes")) { // if importing, do this
-				System.out.println(
-						"\nRemember File must be in the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
-								+ "Choice C\\nChoice D\nCorrect Choice\nPoints");
-				System.out.println("What is the name of the file?");
-				String premadeFile = input.nextLine();
+				String premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
+						"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+						+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 				boolean check = false;
 				do {
 					try {
 						quizImport(premadeFile, courseName);
 					} catch (FileNotFoundException e) {
 						check = true;
-						System.out.println("File not found! Please try again");
-						System.out.println("\nRemeber File must be in the format:"
-								+ "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
-						System.out.println("What is the name of the file?");
-						premadeFile = input.nextLine();
+						JOptionPane.showMessageDialog(null, "File not found! Please try again",
+								"File Status", JOptionPane.ERROR_MESSAGE);
+						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
+								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 					} catch (IOException e) {
 						check = true;
-						System.out.println("Error! Please try again");
-						System.out.println("\nRemeber File must be in the format:"
-								+ "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
-						System.out.println("What is the name of the file?");
-						premadeFile = input.nextLine();
+						JOptionPane.showMessageDialog(null, "Error, please try again.",
+								"File Status", JOptionPane.ERROR_MESSAGE);
+						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
+								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 					}
 				} while (check);
 			} else { // if creating, do this
 				do {
-					System.out.println("What would you like to name the quiz?");
-					fileName = input.nextLine();
+					fileName = JOptionPane.showInputDialog(null, "What would you like to name the quiz?");
 					if (fileName.isBlank()) {
-						System.out.println("Quiz title cannot be blank!");
+						JOptionPane.showMessageDialog(null, "Quiz title cannot be blank.",
+								"File Status", JOptionPane.ERROR_MESSAGE);
 					}
 				} while (fileName.isBlank());
 				File newQuiz = new File(courseName + fileName + ".txt");
 
 				if (newQuiz.createNewFile()) {
-					System.out.println("Creating a new file!");
+					JOptionPane.showMessageDialog(null, "Creating a new file!",
+							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					System.out.println("Overwriting the file, it already exists!");
+					JOptionPane.showMessageDialog(null, "Overwriting the file, it already exists!",
+							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				}
 				File newQuizSubmissions = new File(courseName + fileName + "Submissions.txt");
 				myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt", true));
 				do { // looping for each question
-					System.out.println("Please write the question");
-					myWriter.write(input.nextLine() + "\n");
-					System.out.println("Please write answer A):");
-					myWriter.write("A." + input.nextLine() + "\n");
-					System.out.println("Please write answer B):");
-					myWriter.write("B. " + input.nextLine() + "\n");
-					System.out.println("Please write answer C):");
-					myWriter.write("C. " + input.nextLine() + "\n");
-					System.out.println("Please write answer D):");
-					myWriter.write("D. " + input.nextLine() + "\n");
-					System.out.println("Please write which letter is the answer:");
-					myWriter.write(input.nextLine() + "\n");
-					System.out.println("What you like to put a point value in? Yes or No");
-					if (input.nextLine().equalsIgnoreCase("yes")) {
-						System.out.println("Please input a value (digit):");
-						myWriter.write(input.nextLine() + "\n");
+					myWriter.write(JOptionPane.showInputDialog(null, "Please write the question") + "\n");
+					myWriter.write("A." + JOptionPane.showInputDialog(null, "Please write answer A):") + "\n");
+					myWriter.write("B." + JOptionPane.showInputDialog(null, "Please write answer B):") + "\n");
+					myWriter.write("C." + JOptionPane.showInputDialog(null, "Please write answer C):") + "\n");
+					myWriter.write("D." + JOptionPane.showInputDialog(null, "Please write answer D):") + "\n");
+					myWriter.write(JOptionPane.showInputDialog(null,
+							"Please write which letter is the answer") + "\n");
+					if (JOptionPane.showInputDialog(null,
+							"What you like to put a point value in? Yes or No").equalsIgnoreCase("yes")) {
+						myWriter.write(JOptionPane.showInputDialog(null,
+								"Please input a value (digit): ") + "\n");
 					} else {
 						myWriter.write("1\n");
 					}
-					System.out.println("Would you like to write another question? Yes or No");
-					String another = input.nextLine();
+					String another = JOptionPane.showInputDialog(null,
+							"Would you like to write another question? Yes or No");
 					while (!(another.equalsIgnoreCase("yes") || another.equalsIgnoreCase("no"))) {
-						System.out.println("Please input a valid answer, Yes or No.");
-						System.out.println("Would you like to write another question? Yes or No");
-						another = input.nextLine();
+						another = JOptionPane.showInputDialog(null, "Please input a valid answer, " +
+								"Yes or No." + "Would you like to write another question? Yes or No");
 					}
 					if (another.equalsIgnoreCase("yes")) {
 						contWriting = true;
@@ -280,22 +294,27 @@ public class Teacher {
 				// Writing to Course Name + Quizzes
 				File allQuizzes = new File(courseName + "Quizzes.txt");
 				if (allQuizzes.exists()) {
-					System.out.println("Creating a new file!");
+					JOptionPane.showMessageDialog(null,
+							"Creating a New File.", "File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					System.out.println("Appending the file, it already exists!");
+					JOptionPane.showMessageDialog(null,
+							"Appending the file, it already exists!", "File Status", JOptionPane.ERROR_MESSAGE);
 				}
 				PrintWriter writeToList = new PrintWriter(new FileOutputStream(allQuizzes, true));
 				writeToList.write(fileName + "\n");
 				writeToList.close();
 			}
-			System.out.println("Done!");
+			JOptionPane.showMessageDialog(null,
+					"DONE!", "File Status", JOptionPane.INFORMATION_MESSAGE);
 
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error writing to file.");
+
+			JOptionPane.showMessageDialog(null,
+					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Undocumented Error.");
+
+			JOptionPane.showMessageDialog(null,
+					"Undocumented Error.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -310,13 +329,12 @@ public class Teacher {
 				quizContents = bfrForEditing.readLine();
 			}
 			bfrForEditing.close();
-			System.out.println("Which question would you like to edit?");
 			// first boolean to make sure valid input, second to make sure the requested
 			// question is an available
 			// question.
 			boolean converted = false;
 			boolean properNumber = false;
-			String editQuestion = input.nextLine();
+			String editQuestion = JOptionPane.showInputDialog(null,"Which question would you like to edit?");
 			int convertNumber = 0;
 			int questionNumber = 0;
 			while (properNumber == false) {
@@ -325,70 +343,77 @@ public class Teacher {
 						convertNumber = Integer.parseInt(editQuestion);
 						converted = true;
 					} catch (NumberFormatException e) {
-						System.out.println("Please input a valid integer.");
-						System.out.println("Which question would you like to edit?");
-						editQuestion = input.nextLine();
+						editQuestion = JOptionPane.showInputDialog(null,"Please input a valid integer." +
+								"Which question would you like to edit?");
 					}
 				}
 				// in case when a new input is needed, needs to convert to integer again.
 				converted = false;
 				if (convertNumber < 1) {
-					System.out.println("Please input a valid question number. Which question would you like to edit?");
-					editQuestion = input.nextLine();
+					editQuestion = JOptionPane.showInputDialog(null,
+							"Please input a valid question number. Which question would you like to edit?");
 				}
 				questionNumber = ((convertNumber - 1) * 7);
 				if (questionNumber > (courseQuizQuestions.size() / 7)) {
-					System.out.println("Please input a valid question number. Which question would you like to edit?");
-					editQuestion = input.nextLine();
+					editQuestion = JOptionPane.showInputDialog(null,
+							"Please input a valid question number. Which question would you like to edit?");
 				} else {
 					properNumber = true;
 				}
 			}
-			System.out.println("Please write the question");
-			courseQuizQuestions.set(questionNumber, input.nextLine());
-			System.out.println("Please write answer A):");
-			courseQuizQuestions.set((questionNumber + 1), "A. " + input.nextLine());
-			System.out.println("Please write answer B):");
-			courseQuizQuestions.set(questionNumber + 2, "B. " + input.nextLine());
-			System.out.println("Please write answer C):");
-			courseQuizQuestions.set(questionNumber + 3, "C. " + input.nextLine());
-			System.out.println("Please write answer D):");
-			courseQuizQuestions.set(questionNumber + 4, "D. " + input.nextLine());
-			System.out.println("Please write which letter is the answer:");
-			courseQuizQuestions.set(questionNumber + 5, input.nextLine());
-			System.out.println("What you like to put a point value in? Yes or No");
-			if (input.nextLine().toLowerCase().equals("yes")) {
-				System.out.println("Please input a value (digit):");
-				courseQuizQuestions.set(questionNumber + 6, input.nextLine());
+			courseQuizQuestions.set(questionNumber, JOptionPane.showInputDialog(null,
+					"Please write the question"));
+			courseQuizQuestions.set((questionNumber + 1), "A. " + JOptionPane.showInputDialog(null,
+					"Please write answer A):"));
+			courseQuizQuestions.set((questionNumber + 2), "B. " + JOptionPane.showInputDialog(null,
+					"Please write answer B):"));
+			courseQuizQuestions.set((questionNumber + 3), "C. " + JOptionPane.showInputDialog(null,
+					"Please write answer C):"));
+			courseQuizQuestions.set((questionNumber + 4), "D. " + JOptionPane.showInputDialog(null,
+					"Please write answer D):"));
+			courseQuizQuestions.set(questionNumber + 5, JOptionPane.showInputDialog(null,
+					"Please write which letter is the answer:"));
+			if (JOptionPane.showInputDialog(null,
+					"What you like to put a point value in? Yes or No").equalsIgnoreCase("yes")) {
+				courseQuizQuestions.set(questionNumber + 6, JOptionPane.showInputDialog(null,
+						"Please input a value (digit): "));
 			} else {
 				courseQuizQuestions.set(questionNumber + 6, "1");
 			}
+
 			PrintWriter myWriterToQuiz = new PrintWriter(new FileOutputStream(courseName + quizName + ".txt"));
 			for (int c = 0; c < courseQuizQuestions.size(); c++) {
 				myWriterToQuiz.write(courseQuizQuestions.get(c) + "\n");
 			}
 			myWriterToQuiz.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 
 	public static void viewSubmission(String courseName, String quizName, String submissionName) {
+		String fullSubmission = "";
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + submissionName + ".txt"));
 			String details = bfr.readLine();
 			while (details != null) {
-				System.out.println(details);
+				fullSubmission += details + "\n";
 				details = bfr.readLine();
 			}
+			JOptionPane.showMessageDialog(null,
+					fullSubmission, submissionName, JOptionPane.INFORMATION_MESSAGE);
 			bfr.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -442,6 +467,7 @@ public class Teacher {
 	}
 
 	public static void printSubmissions(String courseName, String quizName) {
+		String allSubmissions = "";
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + "Submissions.txt"));
 			while (true) {
@@ -452,11 +478,14 @@ public class Teacher {
 				line = line.replace(courseName, "");
 				line = line.replace(quizName, "");
 				line = line.replace(".txt", "");
-				System.out.println(line);
+				allSubmissions += line + "\n";
 			}
+			JOptionPane.showMessageDialog(null,
+					allSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
 			bfr.close();
 		} catch (IOException e) {
-			System.out.println("Error Displaying Submissions.");
+			JOptionPane.showMessageDialog(null,
+					"Error Displaying Submission.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -474,10 +503,12 @@ public class Teacher {
 				}
 			}
 			bfr.close();
-			System.out.println("Submission Not Found");
+			JOptionPane.showMessageDialog(null,
+					"Submission Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
-			System.out.println("Error Validating Submission.");
+			JOptionPane.showMessageDialog(null,
+					"Error Validating Submission.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -496,10 +527,12 @@ public class Teacher {
 				}
 			}
 			bfr.close();
-			System.out.println("Quiz Not Found");
+			JOptionPane.showMessageDialog(null,
+					"Quiz Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
-			System.out.println("Error Validating Quiz.");
+			JOptionPane.showMessageDialog(null,
+					"Error Validating Quiz.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -518,10 +551,12 @@ public class Teacher {
 				}
 			}
 			bfr.close();
-			System.out.println("Course Not Found\n");
+			JOptionPane.showMessageDialog(null,
+					"Course Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
-			System.out.println("Error Validating Course.");
+			JOptionPane.showMessageDialog(null,
+					"Error Validating Course.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
