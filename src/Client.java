@@ -65,39 +65,71 @@ public class Client implements ActionListener {
 
     }
 
-    public void answerQuiz() {
-        frame6 = new JFrame("Quiz Answer");
-        frame6.setVisible(true);
-        frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame6.setSize(500, 140);
-        frame6.setLocation(430, 100);
-        JPanel panel = new JPanel();
-        JLabel lbl = new JLabel("Select an option click OK");
-        panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
+    public void answerQuiz(ArrayList<String> quizAndAnswers) {
+        for (int c = 0; c < quizAndAnswers.size(); c+=3) {
+            frame6 = new JFrame("Quiz Answer");
+            frame6.setVisible(true);
+            frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame6.setSize(500, 250);
+            frame6.setLocation(430, 100);
+            JPanel panel = new JPanel();
+            JPanel panelForQuestion = new JPanel();
+            JTextArea question = new JTextArea(quizAndAnswers.get(c));
+            panelForQuestion.add(question, BorderLayout.AFTER_LINE_ENDS);
+            JLabel lbl = new JLabel("Select an option click OK");
+            panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
 
-        String[] choices = {"Answer through GUI", "Answer through file imports"};
+            String[] choices = {"Answer through GUI", "Answer through file imports"};
 
-        final JComboBox<String> cb = new JComboBox<String>(choices);
+            final JComboBox<String> cb = new JComboBox<String>(choices);
 
-        cb.setMaximumSize(cb.getPreferredSize());
-        panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
-        JButton ok3 = new JButton("OK");
-        panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
-        ok3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                {
-                    String answerChoice = (String) cb.getSelectedItem();
-                    if (answerChoice.equals("Answer through GUI")) {
-                       //to-do
-                    } else {
-                        //to-do
+            cb.setMaximumSize(cb.getPreferredSize());
+            panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
+            JButton ok3 = new JButton("OK");
+            panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+            frame6.add(panelForQuestion, BorderLayout.NORTH);
+            frame6.add(panel, BorderLayout.SOUTH);
+            ok3.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    {
+                        frame6.setVisible(false);
+                        String answerChoice = (String) cb.getSelectedItem();
+                        ArrayList<String> answerList = new ArrayList<>();
+                        if (answerChoice.equals("Answer through GUI")) {
+                            frame7 = new JFrame("Answer through GUI");
+                            frame7.setSize(500, 250);
+                            frame7.setLocation(430, 100);
+                            JPanel panelForQuestion = new JPanel();
+//                            JTextArea question = new JTextArea(quizAndAnswers.get(c));
+                            panelForQuestion.add(question, BorderLayout.AFTER_LINE_ENDS);
+                            JLabel answerLabel = new JLabel("Answer:");
+                            JPanel panel3 = new JPanel();
+                            JTextField answer = new JTextField(8);
+                            panel3.add(answerLabel, BorderLayout.WEST);
+                            panel3.add(answer, BorderLayout.AFTER_LINE_ENDS);
+                            JButton ok4 = new JButton("OK");
+                            panel3.add(ok4, BorderLayout.AFTER_LINE_ENDS);
+                            ok4.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    answerList.add(answer.getText());
+                                }
+                            });
+                            frame7.add(panelForQuestion, BorderLayout.NORTH);
+                            frame7.add(panel3, BorderLayout.CENTER);
+                            frame7.setVisible(true);
+
+
+                        } else {
+                            //to-do
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
-        frame6.add(panel, BorderLayout.NORTH);
+
 
 
     }
@@ -139,13 +171,16 @@ public class Client implements ActionListener {
                     ok4.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-//                            if (Teacher.checkQuizExistence(courseName, quiz)) {
-//
+                            if (Teacher.checkQuizExistence(courseName, quiz)) {
+                                frame5.setVisible(false);
+                                ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
+                                answerQuiz(quizAndAnswers);
+
 //                                ArrayList<String> submission = Student.answer(input, course, quiz);
 //                                String total = submission.get(submission.size() - 1);
 //                                submission.remove(submission.size() - 1);
 //                                Student.writeFile(course, quiz, user, submission, total);
-//                            }
+                            }
                         }
                     });
                     panel2.add(ok4, BorderLayout.AFTER_LINE_ENDS);
@@ -159,6 +194,7 @@ public class Client implements ActionListener {
 
 
     }
+
 
 
     public void create() {
