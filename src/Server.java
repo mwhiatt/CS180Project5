@@ -32,6 +32,26 @@ public class Server implements Runnable {
 		}
 	}
 	public static void main(String[] args) throws IOException {
+		//Creates Login File 
+		File logins = new File("login.txt");
+		if (!logins.exists()) {
+			try {
+				logins.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//Creates coursenames file
+		File courseNames = new File("CourseNames.txt");
+		if (!courseNames.exists()) {
+			try {
+				courseNames.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		ServerSocket serverSocket = new ServerSocket(4343);
 		
 		while (true) {
