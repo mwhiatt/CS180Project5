@@ -1,12 +1,12 @@
-
+import javax.swing.*;
 import java.util.*;
 import java.io.*;
 
 /**
- * Project 4 - Learning Management Quiz Tool - Teacher Contains methods for
+ * Project 5 - Learning Management Quiz Tool - Teacher Contains methods for
  * teacher functionality
  * <p>
- * 
+ *
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
  * @version 11/15/2021
  */
@@ -116,7 +116,7 @@ public class Teacher {
 		try {
 			// read file to get name of all submissions
 			BufferedReader bfrSubmissions = new BufferedReader(
-					  new FileReader(courseName + quizName + "Submissions.txt"));
+					new FileReader(courseName + quizName + "Submissions.txt"));
 			ArrayList<String> allSubmissions = new ArrayList<>();
 			String submissionsNames = bfrSubmissions.readLine();
 			while (submissionsNames != null) {
@@ -189,20 +189,20 @@ public class Teacher {
 			String fileName = "";
 			PrintWriter myWriter;
 			System.out.println("Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
-			    	  + "file inside terminal immediately)"); // Check if importing or creating
+					+ "file inside terminal immediately)"); // Check if importing or creating
 			String importOrCreate = input.nextLine();
 			// checks for valid input
 			if (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
 				while (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
 					System.out.println("Please input a valid answer, Yes or No.");
 					System.out.println("Would you like to import a quiz? Yes or No (If no, you will be directed to "
-							  + "create a file inside terminal immediately");
+							+ "create a file inside terminal immediately");
 					importOrCreate = input.nextLine();
 				}
 			}
 			if (importOrCreate.equalsIgnoreCase("yes")) { // if importing, do this
 				System.out.println(
-						  "\nRemember File must be in the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+						"\nRemember File must be in the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints");
 				System.out.println("What is the name of the file?");
 				String premadeFile = input.nextLine();
@@ -214,14 +214,14 @@ public class Teacher {
 						check = true;
 						System.out.println("File not found! Please try again");
 						System.out.println("\nRemeber File must be in the format:"
-								  + "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
+								+ "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
 						System.out.println("What is the name of the file?");
 						premadeFile = input.nextLine();
 					} catch (IOException e) {
 						check = true;
 						System.out.println("Error! Please try again");
 						System.out.println("\nRemeber File must be in the format:"
-								  + "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
+								+ "\nQuestion\nChoice A\nChoice B\nChoice C\n" + "Choice D\nCorrect Choice\nPoints");
 						System.out.println("What is the name of the file?");
 						premadeFile = input.nextLine();
 					}
@@ -392,7 +392,8 @@ public class Teacher {
 		}
 	}
 
-	public static void printCourses() {
+	public static String[] printCourses() {
+		ArrayList<String> choices = new ArrayList<>();
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt"));
 			while (true) {
@@ -400,15 +401,23 @@ public class Teacher {
 				if (line == null) {
 					break;
 				}
-				System.out.println(line);
+				//System.out.println(line);
+				choices.add(line);
 			}
 			bfr.close();
 		} catch (IOException e) {
-			System.out.println("Error Displaying Courses.");
+			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Quizzes",
+					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
 		}
+		String[] choices2 = new String[choices.size()];
+		for (int c = 0; c < choices.size(); c++) {
+			choices2[c] = choices.get(c);
+		}
+		return choices2;
 	}
 
-	public static void printQuizzes(String courseName) {
+	public static String[] printQuizzes(String courseName) {
+		ArrayList<String> choices = new ArrayList<>();
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(courseName + "Quizzes.txt"));
 			while (true) {
@@ -416,12 +425,20 @@ public class Teacher {
 				if (line == null) {
 					break;
 				}
-				System.out.println(line);
+				//System.out.println(line);
+				choices.add(line);
+
 			}
 			bfr.close();
 		} catch (IOException e) {
-			System.out.println("Error Displaying Quizzes.");
+			JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
+					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
 		}
+		String[] choices2 = new String[choices.size()];
+		for (int c = 0; c < choices.size(); c++) {
+			choices2[c] = choices.get(c);
+		}
+		return choices2;
 	}
 
 	public static void printSubmissions(String courseName, String quizName) {

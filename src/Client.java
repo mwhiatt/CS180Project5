@@ -16,43 +16,60 @@ public class Client implements ActionListener {
     JFrame frame3;
     JFrame frame4;
     JFrame frame5;
+    JFrame teacherMainMenu;
+    JFrame teacherViewCourseMenu;
 
     JButton create; // create quiz
     JButton login; // login
     JButton exit;
     JButton takeQuiz;
     JButton viewSubmissions;
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == create) {
-                this.create();
-                frame.setVisible(false);
-            }
-            if (e.getSource() == login) {
-                this.login();
-                frame.setVisible(false);
-            }
-            if (e.getSource() == exit) {
-                this.exit();
-                frame.setVisible(false);
-                frame4.setVisible(false);
-            }
-            if (e.getSource() == takeQuiz) {
-                this.takeQuiz();
-                frame4.setVisible(false);
-            }
+    //all teacher functions below
+    JButton createCourse;
+    JButton viewCourse;
+
+    JButton deleteCourse;
+    JButton deleteQuiz;
+    JButton createQuiz;
+    JButton editQuiz;
+    JButton viewSubmission;
+    JButton printCourse;
+    JButton printQuizzes;
+    JButton printSubmissions;
+    JButton checkSubmissionExistence;
+
+    //all teacher functions/buttons above
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == create) {
+            this.create();
+            frame.setVisible(false);
+        }
+        if (e.getSource() == login) {
+            this.login();
+            frame.setVisible(false);
+        }
+        if (e.getSource() == exit) {
+            this.exit();
+            frame.setVisible(false);
+            frame4.setVisible(false);
+        }
+        if (e.getSource() == takeQuiz) {
+            this.takeQuiz();
+            frame4.setVisible(false);
+        }
 //            if (e.getSource() == answerQuiz) {
 //                this.answerQuiz();
 //
 //            }
 
-        }
+    }
 
     public void answerQuiz() {
     }
 
     public void takeQuiz() {
-        frame5 =  new JFrame("Available Quizzes");
+        frame5 = new JFrame("Available Quizzes");
         frame5.setVisible(true);
         frame5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame5.setSize(500, 140);
@@ -78,7 +95,7 @@ public class Client implements ActionListener {
                     JLabel lbl2 = new JLabel("Select an option click OK");
                     panel2.add(lbl2, BorderLayout.AFTER_LINE_ENDS);
 
-                    String[]choicesQuizzes = Teacher.printQuizzes(courseName);
+                    String[] choicesQuizzes = Teacher.printQuizzes(courseName);
                     final JComboBox<String> cb2 = new JComboBox<String>(choicesQuizzes);
 
                     cb2.setMaximumSize(cb2.getPreferredSize());
@@ -107,7 +124,6 @@ public class Client implements ActionListener {
         frame5.add(panel, BorderLayout.NORTH);
 
 
-
     }
 
 
@@ -125,7 +141,7 @@ public class Client implements ActionListener {
         JLabel lbl = new JLabel("Select an option click OK");
         panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
 
-        String[] choices = { "Teacher", "Student" };
+        String[] choices = {"Teacher", "Student"};
 
         final JComboBox<String> cb = new JComboBox<String>(choices);
 
@@ -152,20 +168,20 @@ public class Client implements ActionListener {
                     boolean prompt = true;
                     String classification = (String) cb.getSelectedItem();
                     if (password.getText().isBlank()) {
-                            JOptionPane.showMessageDialog(null, "Password cannot be blank!", "Password Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            prompt = false;
+                        JOptionPane.showMessageDialog(null, "Password cannot be blank!", "Password Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        prompt = false;
 
-                        }
+                    }
                     if (Login.isDuplicate(username.getText())) {
-                            JOptionPane.showMessageDialog(null, "Sorry that username is taken, please try a new one.", "Username Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            prompt = false;
-                        }
+                        JOptionPane.showMessageDialog(null, "Sorry that username is taken, please try a new one.", "Username Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        prompt = false;
+                    }
                     if (username.getText().isBlank()) {
-                            JOptionPane.showMessageDialog(null, "Username cannot be blank!", "Username Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            prompt = false;
+                        JOptionPane.showMessageDialog(null, "Username cannot be blank!", "Username Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        prompt = false;
                     }
                     if (prompt) {
                         Login.writeNewUser(classification, username.getText(), password.getText());
@@ -179,6 +195,7 @@ public class Client implements ActionListener {
         frame2.add(panel3, BorderLayout.SOUTH);
 //        frame2.setVisible(true);
     }
+
     public void login() {
         frame3 = new JFrame("Login");
         JPanel panel = new JPanel();
@@ -222,6 +239,7 @@ public class Client implements ActionListener {
         frame3.setVisible(true);
 
     }
+
     public void exit() {
         JOptionPane.showMessageDialog(null, "Logged Out\nHave a Good Day", "Welcome",
                 JOptionPane.INFORMATION_MESSAGE);
@@ -257,9 +275,83 @@ public class Client implements ActionListener {
             panel2.add(exit);
             frame4.add(panel2, BorderLayout.NORTH);
             frame4.setVisible(true);
-        } else if (type.equals("Teacher")){
-            //TO-DO
+        } else if (type.equals("Teacher")) {
+            // created december 5
+            teacherMainMenu = new JFrame("Welcome Teacher " + username);
+            teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            teacherMainMenu.setSize(500, 500);
+            teacherMainMenu.setLocation(430, 100);
+            JPanel teacherFirstMenu = new JPanel();
+            createCourse = new JButton("Create Course");
+            createCourse.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String courseNameRequested = JOptionPane.showInputDialog(null,
+                            "Please enter the course name.");
+                    Teacher.createCourse(courseNameRequested);
+                }
+            });
+            viewCourse = new JButton("View Courses");
+            viewCourse.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    teacherMainMenu.setVisible(false);
+                    String courseNameRequested = JOptionPane.showInputDialog(null,
+                            "Please enter the course name.");
+                    teacherViewCourse(courseNameRequested);
+                }
+            });
+            exit = new JButton("Exit");
+            exit.addActionListener(this);
+            teacherFirstMenu.add(createCourse);
+            teacherFirstMenu.add(viewCourse);
+            teacherFirstMenu.add(exit);
+            teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
+            teacherMainMenu.setVisible(true);
         }
+    }
+
+    //unfinished
+    public void teacherViewCourse(String courseName) {
+        //viewCourseMenuCode
+        teacherViewCourseMenu = new JFrame("Please choose an option:");
+        teacherViewCourseMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        teacherViewCourseMenu.setSize(500, 500);
+        teacherViewCourseMenu.setLocation(430, 100);
+        JPanel viewCourseMenu = new JPanel();
+        deleteCourse = new JButton("Delete Course");
+        deleteCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Teacher.deleteCourse(courseName);
+            }
+        });
+        deleteQuiz = new JButton("Delete Quiz");
+        deleteQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String quizNameToDelete = JOptionPane.showInputDialog(null,
+                        "Please enter the quiz name.");
+                Teacher.deleteQuiz(courseName, quizNameToDelete);
+            }
+        });
+        createQuiz = new JButton("Create Quiz");
+        createQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String quizNameToCreate = JOptionPane.showInputDialog(null,
+                        "Please enter the course name.");
+                Teacher.createQuiz(courseName, quizNameToCreate);
+            }
+        });
+        editQuiz = new JButton("Edit Quiz");
+        viewSubmission = new JButton("View Submission");
+        printCourse = new JButton("Print All Courses");
+        printQuizzes = new JButton("Print All Quizzes");
+        printSubmissions = new JButton("Print All Submissions");
+
+    }
+}
 
 //        int ongoingChoice;
 //        do {
@@ -322,52 +414,52 @@ public class Client implements ActionListener {
 //        } while(ongoingChoice == 1 || ongoingChoice == 2);
     }
 
-    public void createGUI() {
+public void createGUI(){
 
         //Creates Login File
-        File logins = new File("login.txt");
-        if (!logins.exists()) {
-            try {
-                logins.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        File logins=new File("login.txt");
+        if(!logins.exists()){
+        try{
+        logins.createNewFile();
+        }catch(IOException e){
+        e.printStackTrace();
+        }
         }
 
         //Creates coursenames file
-        File courseNames = new File("CourseNames.txt");
-        if (!courseNames.exists()) {
-            try {
-                courseNames.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        File courseNames=new File("CourseNames.txt");
+        if(!courseNames.exists()){
+        try{
+        courseNames.createNewFile();
+        }catch(IOException e){
+        e.printStackTrace();
+        }
         }
 
 
-        frame = new JFrame("Welcome to the Quiz Learning Program");
+        frame=new JFrame("Welcome to the Quiz Learning Program");
 
-        Container content = frame.getContentPane();
+        Container content=frame.getContentPane();
         content.setLayout(new BorderLayout());
 
-        frame.setSize(600, 100);
+        frame.setSize(600,100);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
 
-        create = new JButton("Create");
+        create=new JButton("Create");
         create.addActionListener(this);
-        login = new JButton("Login");
+        login=new JButton("Login");
         login.addActionListener(this);
-        exit = new JButton("Exit");
+        exit=new JButton("Exit");
         exit.addActionListener(this);
-        JPanel panel = new JPanel();
+        JPanel panel=new JPanel();
         panel.add(create);
         panel.add(login);
         panel.add(exit);
-        frame.add(panel, BorderLayout.NORTH);
+        frame.add(panel,BorderLayout.NORTH);
 
-    }
+        }
 
 
-    }
+        }
