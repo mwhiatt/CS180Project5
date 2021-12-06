@@ -66,6 +66,40 @@ public class Client implements ActionListener {
     }
 
     public void answerQuiz() {
+        frame6 = new JFrame("Quiz Answer");
+        frame6.setVisible(true);
+        frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame6.setSize(500, 140);
+        frame6.setLocation(430, 100);
+        JPanel panel = new JPanel();
+        JLabel lbl = new JLabel("Select an option click OK");
+        panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
+
+        String[] choices = {"Answer through GUI", "Answer through file imports"};
+
+        final JComboBox<String> cb = new JComboBox<String>(choices);
+
+        cb.setMaximumSize(cb.getPreferredSize());
+        panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
+        JButton ok3 = new JButton("OK");
+        panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+        ok3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                {
+                    String answerChoice = (String) cb.getSelectedItem();
+                    if (answerChoice.equals("Answer through GUI")) {
+                       //to-do
+                    } else {
+                        //to-do
+                    }
+                }
+            }
+        });
+
+        frame6.add(panel, BorderLayout.NORTH);
+
+
     }
 
     public void takeQuiz() {
