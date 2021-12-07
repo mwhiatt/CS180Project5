@@ -9,7 +9,7 @@ import java.awt.event.*;
  * Project 4 - Learning Management Quiz Tool - Driver
  * Main Method to Execute program
  * <p>
- * 
+ *
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
  * @version 11/15/2021
  */
@@ -21,11 +21,11 @@ public class Driver {
 		String invalidSelection = "Invalid Selection, Please Try Again.";
 		String wrongType = "Please Enter an Integer.";
 		String coursePrompt = "Enter a Course Name: ";
-		
+
 		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the Quiz Learning Program");
 		String user = null;
-		
+
 		//Start Menu
 		int choice;
 		do {
@@ -41,7 +41,7 @@ public class Driver {
 				System.out.println(wrongType);
 			}
 		} while (choice < 1 || choice > 3);
-		
+
 		if (choice == 1) {
 			//Create Account
 			//Enter classification
@@ -62,7 +62,7 @@ public class Driver {
 			} else {
 				classification = "Student";
 			}
-			
+
 			//Enter username
 			input.nextLine();
 			do {
@@ -75,7 +75,7 @@ public class Driver {
 					System.out.println("Username cannot be blank!");
 				}
 			} while (Login.isDuplicate(user) || user.isBlank());
-			
+
 			//Enter Password
 			String password;
 			do {
@@ -85,7 +85,7 @@ public class Driver {
 					System.out.println("You must enter a password!");
 				}
 			} while (password.isBlank());
-			
+
 			Login.writeNewUser(classification, user, password);
 		} else if (choice == 2) {
 			//Sign in
@@ -98,7 +98,7 @@ public class Driver {
 					System.out.println("Username not found, please try again.");
 				}
 			} while (!Login.isDuplicate(user));
-			
+
 			//Enter Password
 			String password;
 			do {
@@ -109,7 +109,7 @@ public class Driver {
 				}
 			} while (!Login.login(user, password));
 		}
-		
+
 		if (choice != 3) {
 			//control flow for teacher and student
 			String type = Login.getClassification(user);
@@ -138,29 +138,29 @@ public class Driver {
 						String courseName;
 						do {
 							System.out.println(coursePrompt);
-							courseName = input.nextLine(); 
+							courseName = input.nextLine();
 							if (courseName.isBlank()) {
 								System.out.println("Course Name cannot be blank!");
 							}
 						} while (courseName.isBlank());
-						
+
 						//check for duplicates in coursenames file
 						//new code
 						Teacher.createCourse(courseName);
-						
+
 					} else if (ongoingChoice == 2) {
 						//View C
 						//Can delete courses or view quiz
-						
+
 						//Finds course
 						//Displays course list
 						System.out.println("\nAvailable Courses:");
 						Teacher.printCourses();
 						System.out.println();
 						System.out.println(coursePrompt);
-						input.nextLine(); 
+						input.nextLine();
 						String course = input.nextLine();
-						
+
 						//view course menu
 						if (Teacher.checkCourseExistence(course)) {
 							do {
@@ -175,10 +175,10 @@ public class Driver {
 									System.out.println(wrongType);
 								}
 							} while (ongoingChoice < 1 || ongoingChoice > 2);
-							
+
 							if (ongoingChoice == 1) {
 								//delete course
-								//delete coursenamequizzes file and delete from coursenames 
+								//delete coursenamequizzes file and delete from coursenames
 								//file, delete all associated quizzes
 								Teacher.deleteCourse(course);
 							} else {
@@ -198,7 +198,7 @@ public class Driver {
 									}
 								} while (ongoingChoice < 1 || ongoingChoice > 4);
 								input.nextLine(); //clears return out of buffer
-								
+
 								if (ongoingChoice == 1) {
 									//Create Quiz
 									Teacher.createQuiz(input, course);
@@ -209,13 +209,13 @@ public class Driver {
 									Teacher.printQuizzes(course);
 									System.out.println();
 									System.out.println("Enter Quiz Name you wish to edit: ");
-									String quizName = input.nextLine(); 
+									String quizName = input.nextLine();
 									System.out.println();
 									//ensures quiz exists in coursenamesquizzes file
 									if (Teacher.checkQuizExistence(course, quizName)) {
 										Teacher.editQuiz(input, quizName, course);
 									}
-									
+
 								} else if (ongoingChoice == 3) {
 									//Delete Quiz
 									//deletes quiz file and removes it from coursenamequizlist file
@@ -243,7 +243,7 @@ public class Driver {
 										}
 									}
 								}
-								ongoingChoice = 1;	
+								ongoingChoice = 1;
 							}
 						}
 					}
@@ -262,11 +262,11 @@ public class Driver {
 							ongoingChoice = 4;
 							input.nextLine();
 						}
-						if (ongoingChoice < 1 || ongoingChoice > 3) 
+						if (ongoingChoice < 1 || ongoingChoice > 3)
 							System.out.println("Invalid selection");
-						
+
 					} while (ongoingChoice < 1 || ongoingChoice > 3);
-					
+
 					if (ongoingChoice == 1) {
 						//Takes quiz
 						//lists courses
@@ -280,16 +280,16 @@ public class Driver {
 							System.out.println("\nAvailable Quizzes:");
 							Teacher.printQuizzes(course);
 							System.out.println("Which quiz would you like to take: ");
-							String quiz = input.nextLine(); //ensure exists in coursenamesquizzes	
+							String quiz = input.nextLine(); //ensure exists in coursenamesquizzes
 							if (Teacher.checkQuizExistence(course, quiz)) {
-								
+
 								ArrayList<String> submission = Student.answer(input, course, quiz);
 								String total = submission.get(submission.size() - 1);
 								submission.remove(submission.size() - 1);
 								Student.writeFile(course, quiz, user, submission, total);
 							}
 						}
-						
+
 					} else if (ongoingChoice == 2) {
 						//views submissions
 						//lists courses
@@ -303,7 +303,7 @@ public class Driver {
 							System.out.println("\nAvailable Quizzes:");
 							Teacher.printQuizzes(course);
 							System.out.println("Which quiz would you like to view your submissions for: ");
-							String quiz = input.nextLine(); //ensure exists in coursenamesquizzes	
+							String quiz = input.nextLine(); //ensure exists in coursenamesquizzes
 							if (Teacher.checkQuizExistence(course, quiz)) {
 								Student.viewSubmissions(input, course, quiz, user);
 							}

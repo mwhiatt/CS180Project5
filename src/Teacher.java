@@ -18,7 +18,7 @@ public class Teacher {
 			File newFileQuiz = new File(nameAndQuiz);
 
 			if (newFileQuiz.createNewFile()) {
-				JOptionPane.showMessageDialog(null, "New File Created!", "File Status",
+				JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
 						JOptionPane.INFORMATION_MESSAGE);
 				PrintWriter myWriter = new PrintWriter(new FileOutputStream("CourseNames.txt", true));
 				myWriter.write(courseName + "\n");
@@ -430,6 +430,8 @@ public class Teacher {
 				choices.add(line);
 			}
 			bfr.close();
+			JOptionPane.showMessageDialog(null,
+					choices, "All Courses", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Quizzes",
 					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
@@ -455,6 +457,8 @@ public class Teacher {
 
 			}
 			bfr.close();
+			JOptionPane.showMessageDialog(null,
+					choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
 					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
