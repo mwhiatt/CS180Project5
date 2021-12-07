@@ -11,6 +11,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Client implements ActionListener {
+    ArrayList<String> currentPoints;
+    ArrayList<String> currentAnswerList;
+    ArrayList<String> currentQuizAndAnswers;
     JFrame frame;
     JFrame frame2;
     JFrame frame3;
@@ -134,10 +137,45 @@ public class Client implements ActionListener {
             });
         }
         ArrayList<String> points = Student.grading(answerList, quizAndAnswers);
-        //implement write file here 
+        setCurrentPoints(points);
+        setCurrentAnswerList(answerList);
+        setCurrentQuizAndAnswers(quizAndAnswers);
+        //implement write file here
 
 
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void setCurrentPoints(ArrayList<String> points) {
+        currentPoints = points;
+    }
+
+    public void setCurrentAnswerList(ArrayList<String> answerList) {
+        currentAnswerList = answerList;
+    }
+    public void setCurrentQuizAndAnswers(ArrayList<String> quizAndAnswers) {
+        currentQuizAndAnswers = quizAndAnswers;
+    }
+
+    public ArrayList<String> getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public ArrayList<String> getCurrentAnswerList() {
+        return currentAnswerList;
+    }
+
+    public ArrayList<String> getCurrentQuizAndAnswers() {
+        return currentQuizAndAnswers;
+    }
+
 
     public void takeQuiz() {
         frame5 = new JFrame("Available Quizzes");
@@ -178,13 +216,9 @@ public class Client implements ActionListener {
                         public void actionPerformed(ActionEvent e) {
                             if (Teacher.checkQuizExistence(courseName, quiz)) {
                                 frame5.setVisible(false);
-//                                ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
-//                                answerQuiz(quizAndAnswers);
-
-//                                ArrayList<String> submission = Student.answer(input, course, quiz);
-//                                String total = submission.get(submission.size() - 1);
-//                                submission.remove(submission.size() - 1);
-//                                Student.writeFile(course, quiz, user, submission, total);
+                                ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
+                                answerQuiz(quizAndAnswers);
+                                Student.writeFile(getUsername(), courseName, quiz, getCurrentPoints(), getCurrentQuizAndAnswers(), getCurrentAnswerList());
                             }
                         }
                     });
@@ -199,6 +233,7 @@ public class Client implements ActionListener {
 
 
     }
+
 
 
 
