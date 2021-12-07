@@ -209,7 +209,12 @@ public class Teacher {
 			PrintWriter myWriter;
 			String importOrCreate = JOptionPane.showInputDialog(null,
 							"Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
-									+ "file inside terminal immediately)");
+									+ "file inside the program immediately)");
+			if (importOrCreate == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			// ^^checks if importing or creating
 			// checks for valid input
 			if (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
@@ -217,13 +222,23 @@ public class Teacher {
 					importOrCreate = JOptionPane.showInputDialog(null,
 							"Please input a valid answer, Yes or No.\n" + "Would you like to import a quiz? " +
 									"Yes or No (If no, you will be directed to "
-									+ "create a file inside terminal immediately");
+									+ "create a file inside program immediately");
+					if (importOrCreate == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 				}
 			}
 			if (importOrCreate.equalsIgnoreCase("yes")) { // if importing, do this
 				String premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
 						"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 						+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
+				if (premadeFile == null) {
+					JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+							"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
 				boolean check = false;
 				do {
 					try {
@@ -235,6 +250,11 @@ public class Teacher {
 						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
 								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
+						if (premadeFile == null) {
+							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
 					} catch (IOException e) {
 						check = true;
 						JOptionPane.showMessageDialog(null, "Error, please try again.",
@@ -242,11 +262,21 @@ public class Teacher {
 						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
 								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
+						if (premadeFile == null) {
+							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
 					}
 				} while (check);
 			} else { // if creating, do this
 				do {
 					fileName = JOptionPane.showInputDialog(null, "What would you like to name the quiz?");
+					if (fileName == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 					if (fileName.isBlank()) {
 						JOptionPane.showMessageDialog(null, "Quiz title cannot be blank.",
 								"File Status", JOptionPane.ERROR_MESSAGE);
@@ -263,26 +293,93 @@ public class Teacher {
 				}
 				File newQuizSubmissions = new File(courseName + fileName + "Submissions.txt");
 				myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt", true));
+				String upcomingAnswersValid = "";
+				String pointsAdded = "";
+				String pointsGiven = "";
 				do { // looping for each question
-					myWriter.write(JOptionPane.showInputDialog(null, "Please write the question") + "\n");
-					myWriter.write("A." + JOptionPane.showInputDialog(null, "Please write answer A):") + "\n");
-					myWriter.write("B." + JOptionPane.showInputDialog(null, "Please write answer B):") + "\n");
-					myWriter.write("C." + JOptionPane.showInputDialog(null, "Please write answer C):") + "\n");
-					myWriter.write("D." + JOptionPane.showInputDialog(null, "Please write answer D):") + "\n");
-					myWriter.write(JOptionPane.showInputDialog(null,
-							"Please write which letter is the answer") + "\n");
-					if (JOptionPane.showInputDialog(null,
-							"What you like to put a point value in? Yes or No").equalsIgnoreCase("yes")) {
-						myWriter.write(JOptionPane.showInputDialog(null,
-								"Please input a value (digit): ") + "\n");
+					upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write the question");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write(upcomingAnswersValid + "\n");
+					}
+					upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer A):");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write("A." + upcomingAnswersValid + "\n");
+					}
+					upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer B):");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write("B." +  upcomingAnswersValid + "\n");
+					}
+					upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer C):");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write("C." +  upcomingAnswersValid + "\n");
+					}
+					upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer D):");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write("D." +  upcomingAnswersValid + "\n");
+					}
+					upcomingAnswersValid = JOptionPane.showInputDialog(null,
+							"Please write which letter is the answer");
+					if (upcomingAnswersValid == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						myWriter.write( upcomingAnswersValid + "\n");
+					}
+					pointsAdded = JOptionPane.showInputDialog(null,
+							"What you like to put a point value in? Yes or No");
+					if (pointsAdded == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else if (pointsAdded.equalsIgnoreCase("yes")) {
+						pointsGiven = JOptionPane.showInputDialog(null,
+								"Please input a value (digit): ");
+						if (pointsGiven == null) {
+							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							return;
+						} else {
+							myWriter.write(pointsGiven + "\n");
+						}
 					} else {
 						myWriter.write("1\n");
 					}
 					String another = JOptionPane.showInputDialog(null,
 							"Would you like to write another question? Yes or No");
+					if (another == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 					while (!(another.equalsIgnoreCase("yes") || another.equalsIgnoreCase("no"))) {
 						another = JOptionPane.showInputDialog(null, "Please input a valid answer, " +
 								"Yes or No." + "Would you like to write another question? Yes or No");
+						if (another == null) {
+							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
 					}
 					if (another.equalsIgnoreCase("yes")) {
 						contWriting = true;
@@ -335,8 +432,16 @@ public class Teacher {
 			boolean converted = false;
 			boolean properNumber = false;
 			String editQuestion = JOptionPane.showInputDialog(null,"Which question would you like to edit?");
+			if (editQuestion == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			int convertNumber = 0;
 			int questionNumber = 0;
+			String validResponse = "";
+			String pointsResponse = "";
+			String pointsGiven2 = "";
 			while (properNumber == false) {
 				while (converted == false) {
 					try {
@@ -345,6 +450,11 @@ public class Teacher {
 					} catch (NumberFormatException e) {
 						editQuestion = JOptionPane.showInputDialog(null,"Please input a valid integer." +
 								"Which question would you like to edit?");
+						if (editQuestion == null) {
+							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
 					}
 				}
 				// in case when a new input is needed, needs to convert to integer again.
@@ -352,31 +462,90 @@ public class Teacher {
 				if (convertNumber < 1) {
 					editQuestion = JOptionPane.showInputDialog(null,
 							"Please input a valid question number. Which question would you like to edit?");
+					if (editQuestion == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 				}
 				questionNumber = ((convertNumber - 1) * 7);
 				if (questionNumber > (courseQuizQuestions.size() / 7)) {
 					editQuestion = JOptionPane.showInputDialog(null,
 							"Please input a valid question number. Which question would you like to edit?");
+					if (editQuestion == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 				} else {
 					properNumber = true;
 				}
 			}
-			courseQuizQuestions.set(questionNumber, JOptionPane.showInputDialog(null,
-					"Please write the question"));
-			courseQuizQuestions.set((questionNumber + 1), "A. " + JOptionPane.showInputDialog(null,
-					"Please write answer A):"));
-			courseQuizQuestions.set((questionNumber + 2), "B. " + JOptionPane.showInputDialog(null,
-					"Please write answer B):"));
-			courseQuizQuestions.set((questionNumber + 3), "C. " + JOptionPane.showInputDialog(null,
-					"Please write answer C):"));
-			courseQuizQuestions.set((questionNumber + 4), "D. " + JOptionPane.showInputDialog(null,
-					"Please write answer D):"));
-			courseQuizQuestions.set(questionNumber + 5, JOptionPane.showInputDialog(null,
-					"Please write which letter is the answer:"));
-			if (JOptionPane.showInputDialog(null,
-					"What you like to put a point value in? Yes or No").equalsIgnoreCase("yes")) {
-				courseQuizQuestions.set(questionNumber + 6, JOptionPane.showInputDialog(null,
-						"Please input a value (digit): "));
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write the question");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set(questionNumber, validResponse);
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write answer A):");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set((questionNumber + 1), "A. " + validResponse);
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write answer B):");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set((questionNumber + 2), "B. " + validResponse);
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write answer C):");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set((questionNumber + 3), "C. " + validResponse);
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write answer D):");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set((questionNumber + 4), "D. " + validResponse);
+			validResponse = JOptionPane.showInputDialog(null,
+					"Please write which letter is the answer:");
+			if (validResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			courseQuizQuestions.set((questionNumber + 5), validResponse);
+			//right here
+			pointsResponse = JOptionPane.showInputDialog(null,
+					"What you like to put a point value in? Yes or No");
+			if (pointsResponse == null) {
+				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			} else if (pointsResponse.equalsIgnoreCase("yes")) {
+					pointsGiven2 = JOptionPane.showInputDialog(null,
+							"Please input a value (digit): ");
+					if (pointsGiven2 == null) {
+						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						courseQuizQuestions.set(questionNumber + 6, pointsGiven2);
+					}
 			} else {
 				courseQuizQuestions.set(questionNumber + 6, "1");
 			}

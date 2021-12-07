@@ -364,9 +364,19 @@ public class Client implements ActionListener {
                 public void actionPerformed(ActionEvent e) {
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
                     while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
                         courseNameRequested = JOptionPane.showInputDialog(null,
                                 "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
                     }
                     Teacher.createCourse(courseNameRequested);
                 }
@@ -378,9 +388,21 @@ public class Client implements ActionListener {
                     teacherMainMenu.setVisible(false);
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        teacherMainMenu.setVisible(true);
+                        return;
+                    }
                     while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
                         courseNameRequested = JOptionPane.showInputDialog(null,
                                 "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            teacherMainMenu.setVisible(true);
+                            return;
+                        }
                     }
                     if (Teacher.checkCourseExistence(courseNameRequested)) {
                         teacherViewCourse(courseNameRequested);
@@ -437,6 +459,11 @@ public class Client implements ActionListener {
 
                 String quizNameToDelete = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToDelete == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 teacherViewCourseMenu.setVisible(false);
                 Teacher.deleteQuiz(quizNameToDelete, courseName);
                 teacherViewCourseMenu.setVisible(true);
@@ -458,6 +485,11 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToEdit == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 Teacher.editQuiz(quizNameToEdit, courseName);
                 teacherViewCourseMenu.setVisible(true);
             }
@@ -469,8 +501,18 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToEdit == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 String submissionToView = JOptionPane.showInputDialog(null,
                         "Please enter name of submission.");
+                if (submissionToView == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 Teacher.viewSubmission(courseName, quizNameToEdit, submissionToView);
                 teacherViewCourseMenu.setVisible(true);
             }
@@ -499,6 +541,11 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
                 String quizNameToView = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToView == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 Teacher.printSubmissions(courseName, quizNameToView);
                 teacherViewCourseMenu.setVisible(true);
             }
