@@ -15,6 +15,15 @@ import java.util.Scanner;
 public class Student {
     public static ArrayList<String> grading(ArrayList<String> answerList, ArrayList<String> quizAndAnswers) {
         ArrayList<String> points = new ArrayList<>();
+        int j = 1;
+        for (int i = 0; i < answerList.size(); i++) {
+        	if(answerList.get(i).equals(quizAndAnswers.get(j))) {
+        		points.add(quizAndAnswers.get(i));
+			} else {
+        		points.add("0");
+			}
+        	j += 2;
+		}
         return points;
     }
     public static ArrayList<String> readQuiz (String course, String quiz) {
