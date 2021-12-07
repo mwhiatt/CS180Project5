@@ -11,9 +11,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Client implements ActionListener {
-    ArrayList<String> currentPoints;
-    ArrayList<String> currentAnswerList;
-    ArrayList<String> currentQuizAndAnswers;
+    ArrayList<String> currentPoints = new ArrayList<>();
+    ArrayList<String> currentAnswerList =  new ArrayList<>();
+    ArrayList<String> currentQuizAndAnswers =  new ArrayList<>();
+    int currentCount = 0;
     String currentCourse;
     String currentQuiz;
     String username;
@@ -24,32 +25,15 @@ public class Client implements ActionListener {
     JFrame frame5;
     JFrame frame6;
     JFrame frame7;
-
-    JFrame teacherMainMenu;
-    JFrame teacherViewCourseMenu;
+    JFrame frame8;
+    JFrame frame9;
 
     JButton create; // create quiz
     JButton login; // login
     JButton exit;
     JButton takeQuiz;
     JButton viewSubmissions;
-    //all teacher functions below
-    JButton createCourse;
-    JButton viewCourse;
-    JButton viewAllCourses;
-    JButton goBack;
 
-    JButton deleteCourse;
-    JButton deleteQuiz;
-    JButton createQuiz;
-    JButton editQuiz;
-    JButton viewSubmission;
-    JButton printCourse;
-    JButton printQuizzes;
-    JButton printSubmissions;
-    JButton checkSubmissionExistence;
-
-    //all teacher functions/buttons above
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == create) {
@@ -69,85 +53,134 @@ public class Client implements ActionListener {
             this.takeQuiz();
             frame4.setVisible(false);
         }
-//            if (e.getSource() == answerQuiz) {
-//                this.answerQuiz();
-//
-//            }
+    }
+
+    public void viewSubmissions() {
+        frame8 = new JFrame("View Submissions");
+        frame8.setVisible(true);
+        frame8.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame8.setSize(500, 250);
+        frame8.setLocation(430, 100);
+        JPanel panel = new JPanel();
+        ArrayList<String> userSubmissions = Student.printSubmissions(getCurrentCourse(), getCurrentQuiz(), getUsername());
+        String[] userSubmissionsArray = new String[userSubmissions.size()];
+        for (int c = 0; c < userSubmissions.size(); c++) {
+            userSubmissionsArray[c] = userSubmissions.get(c);
+        }
+        JLabel lbl = new JLabel("Select an option click OK");
+        panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
+        final JComboBox<String> cb = new JComboBox<String>(userSubmissionsArray);
+        cb.setMaximumSize(cb.getPreferredSize());
+        panel.add(lbl, BorderLayout.EAST);
+        panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
+        JButton ok = new JButton("OK");
+        panel.add(ok, BorderLayout.AFTER_LINE_ENDS);
+        frame8.add(panel, BorderLayout.NORTH);
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame8.setVisible(false);
+                frame9 = new JFrame("View Submissions");
+                frame9.setVisible(true);
+                frame9.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame9.setSize(500, 250);
+                frame9.setLocation(430, 100);
+                JPanel panel = new JPanel();
+                String submission = Student.viewSubmissions((String) cb.getSelectedItem());
+                JTextArea selectedSubmission = new JTextArea(submission);
+                JButton ok2 = new JButton("Continue viewing other submissions?");
+                panel.add(selectedSubmission, BorderLayout.NORTH);
+                panel.add(ok2, BorderLayout.AFTER_LINE_ENDS);
+                frame9.add(panel, BorderLayout.NORTH);
+                ok2.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        frame9.setVisible(false);
+                        frame8.setVisible(true);
+                    }
+                });
+                frame9.setVisible(true);
+            }
+        });
+        frame8.setVisible(true);
 
     }
 
+
     public void answerQuiz(ArrayList<String> quizAndAnswers) {
-        ArrayList<String> answerList = new ArrayList<>();
-        for (int c = 0; c < quizAndAnswers.size(); c+=3) {
-            frame6 = new JFrame("Quiz Answer");
-            frame6.setVisible(true);
-            frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame6.setSize(500, 250);
-            frame6.setLocation(430, 100);
-            JPanel panel = new JPanel();
-            JPanel panelForQuestion = new JPanel();
-            JTextArea question = new JTextArea(quizAndAnswers.get(c));
-            panelForQuestion.add(question, BorderLayout.AFTER_LINE_ENDS);
-            JLabel lbl = new JLabel("Select an option click OK");
-            panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
-
-            String[] choices = {"Answer through GUI", "Answer through file imports"};
-
-            final JComboBox<String> cb = new JComboBox<String>(choices);
-
-            cb.setMaximumSize(cb.getPreferredSize());
-            panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
-            JButton ok3 = new JButton("OK");
-            panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
-            frame6.add(panelForQuestion, BorderLayout.NORTH);
-            frame6.add(panel, BorderLayout.SOUTH);
-            ok3.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    {
-                        frame6.setVisible(false);
-                        String answerChoice = (String) cb.getSelectedItem();
-                        if (answerChoice.equals("Answer through GUI")) {
-                            frame7 = new JFrame("Answer through GUI");
-                            frame7.setSize(500, 250);
-                            frame7.setLocation(430, 100);
-                            JPanel panelForQuestion = new JPanel();
-//                            JTextArea question = new JTextArea(quizAndAnswers.get(c));
-                            panelForQuestion.add(question, BorderLayout.AFTER_LINE_ENDS);
-                            JLabel answerLabel = new JLabel("Answer:");
-                            JPanel panel3 = new JPanel();
-                            JTextField answer = new JTextField(8);
-                            panel3.add(answerLabel, BorderLayout.WEST);
-                            panel3.add(answer, BorderLayout.AFTER_LINE_ENDS);
-                            JButton ok4 = new JButton("OK");
-                            panel3.add(ok4, BorderLayout.AFTER_LINE_ENDS);
-                            ok4.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    answerList.add(answer.getText());
-                                }
-                            });
-                            frame7.add(panelForQuestion, BorderLayout.NORTH);
-                            frame7.add(panel3, BorderLayout.CENTER);
-                            frame7.setVisible(true);
-
-
-                        } else {
-                            //to-do
-                        }
-                    }
-                }
-            });
+        if (quizAndAnswers.size() <= getCurrentCount()) {
+            return;
         }
-        ArrayList<String> points = Student.grading(answerList, quizAndAnswers);
-        setCurrentPoints(points);
-        setCurrentAnswerList(answerList);
-        setCurrentQuizAndAnswers(quizAndAnswers);
+//        ArrayList<String> answerList = new ArrayList<>();
+        frame6 = new JFrame("Quiz Answer");
+        frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame6.setSize(800, 600);
+        frame6.setLocation(430, 100);
+        JPanel panel = new JPanel();
+        JPanel panelForQuestion = new JPanel();
+        JTextArea question = new JTextArea(quizAndAnswers.get(getCurrentCount()));
+        panelForQuestion.add(question, BorderLayout.AFTER_LINE_ENDS);
+        JLabel lbl = new JLabel("Select an option click OK");
+        panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
+
+        String[] choices = {"Answer through GUI", "Answer through file imports"};
+
+        final JComboBox<String> cb = new JComboBox<String>(choices);
+
+        cb.setMaximumSize(cb.getPreferredSize());
+        panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
+        JButton ok3 = new JButton("OK");
+        JButton finishQuiz = new JButton ("Finish Quiz");
+        panel.add(finishQuiz, BorderLayout.AFTER_LINE_ENDS);
+        finishQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame6.setVisible(false);
+                ArrayList<String> points = Student.grading(getCurrentAnswerList(), quizAndAnswers);
+                setCurrentPoints(points);
+//                System.out.println(answerList);
+//                System.out.println(points);
+                Student.writeFile(getCurrentCourse(), getCurrentQuiz(), getUsername(), getCurrentPoints(), getCurrentAnswerList());
+                setCurrentAnswerList(new ArrayList<String>());
+            }
+        });
+        panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+        frame6.add(panelForQuestion, BorderLayout.NORTH);
+        frame6.add(panel, BorderLayout.SOUTH);
+        ok3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                {
+                    panelForQuestion.remove(question);
+                    frame6.setVisible(false);
+                    String answerChoice = (String) cb.getSelectedItem();
+                    if (answerChoice.equals("Answer through GUI")) {
+                        String answer = JOptionPane.showInputDialog(null, "Answer:");
+                        currentAnswerList.add(answer);
+
+                    } else {
+                        //to-do
+                    }
+                    setCurrentCount(getCurrentCount() + 3);
+                    answerQuiz(quizAndAnswers);
+                }
+            }
+        });
+        frame6.setVisible(true);
+
         //implement write file here
 
 
     }
-    
+
+    public int getCurrentCount() {
+        return currentCount;
+    }
+
+    public void setCurrentCount(int currentCount) {
+        this.currentCount = currentCount;
+    }
+
     public String getCurrentCourse() {
         return currentCourse;
     }
@@ -164,7 +197,6 @@ public class Client implements ActionListener {
         this.currentQuiz = currentQuiz;
     }
 
-
     public String getUsername() {
         return username;
     }
@@ -172,7 +204,7 @@ public class Client implements ActionListener {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
     public void setCurrentPoints(ArrayList<String> points) {
         currentPoints = points;
     }
@@ -220,6 +252,7 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 {
                     String courseName = (String) cb.getSelectedItem();
+                    setCurrentCourse(courseName);
                     JPanel panel2 = new JPanel();
                     JLabel lbl2 = new JLabel("Select an option click OK");
                     panel2.add(lbl2, BorderLayout.AFTER_LINE_ENDS);
@@ -230,6 +263,14 @@ public class Client implements ActionListener {
                     cb2.setMaximumSize(cb2.getPreferredSize());
                     panel2.add(cb2, BorderLayout.AFTER_LINE_ENDS);
                     String quiz = (String) cb2.getSelectedItem();
+                    setCurrentQuiz(quiz);
+                    viewSubmissions = new JButton("View Submissions");
+                    viewSubmissions.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            viewSubmissions();
+                        }
+                    });
                     JButton ok4 = new JButton("OK");
                     ok4.addActionListener(new ActionListener() {
                         @Override
@@ -238,10 +279,10 @@ public class Client implements ActionListener {
                                 frame5.setVisible(false);
                                 ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
                                 answerQuiz(quizAndAnswers);
-                                Student.writeFile(getUsername(), courseName, quiz, getCurrentPoints(), getCurrentQuizAndAnswers(), getCurrentAnswerList());
                             }
                         }
                     });
+                    panel2.add(viewSubmissions, BorderLayout.AFTER_LINE_ENDS);
                     panel2.add(ok4, BorderLayout.AFTER_LINE_ENDS);
 
                     frame5.add(panel2, BorderLayout.SOUTH);
@@ -253,8 +294,6 @@ public class Client implements ActionListener {
 
 
     }
-
-
 
 
     public void create() {
@@ -315,6 +354,7 @@ public class Client implements ActionListener {
                     }
                     if (prompt) {
                         Login.writeNewUser(classification, username.getText(), password.getText());
+                        setUsername(username.getText());
                         StudentMenu(username.getText());
                         frame2.setVisible(false);
                     }
@@ -371,9 +411,9 @@ public class Client implements ActionListener {
 
     }
 
-    public void exit() { //nullpointerexception thrown
-            JOptionPane.showMessageDialog(null, "Logged Out\nHave a Good Day", "Welcome",
-                    JOptionPane.INFORMATION_MESSAGE);
+    public void exit() {
+        JOptionPane.showMessageDialog(null, "Logged Out\nHave a Good Day", "Welcome",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
@@ -386,6 +426,7 @@ public class Client implements ActionListener {
             }
         });
     }
+
     public void StudentMenu(String username) {
         String type = Login.getClassification(username);
         if (type.equals("Student")) {
@@ -393,98 +434,17 @@ public class Client implements ActionListener {
             frame4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame4.setSize(500, 100);
             frame4.setLocation(430, 100);
-            viewSubmissions = new JButton("View Submissions");
-            viewSubmissions.addActionListener(this);
             takeQuiz = new JButton("Take Quiz");
             takeQuiz.addActionListener(this);
             exit = new JButton("Exit");
             exit.addActionListener(this);
             JPanel panel2 = new JPanel();
-            panel2.add(viewSubmissions);
             panel2.add(takeQuiz);
             panel2.add(exit);
             frame4.add(panel2, BorderLayout.NORTH);
             frame4.setVisible(true);
         } else if (type.equals("Teacher")) {
-            // created december 5
-            teacherMainMenu = new JFrame("Welcome Teacher " + username);
-            teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            teacherMainMenu.setSize(500, 100);
-            teacherMainMenu.setLocation(430, 100);
-            //general shape of frame created
-            JPanel teacherFirstMenu = new JPanel();
-            //same 3 options provided! just coded differently
-            createCourse = new JButton("Create Course");
-            createCourse.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String courseNameRequested = JOptionPane.showInputDialog(null,
-                            "Please enter the course name.");
-                    if (courseNameRequested == null) {
-                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
-                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
-                        courseNameRequested = JOptionPane.showInputDialog(null,
-                                "Enter something. Please enter the course name.");
-                        if (courseNameRequested == null) {
-                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                            return;
-                        }
-                    }
-                    Teacher.createCourse(courseNameRequested);
-                }
-            });
-            viewCourse = new JButton("View Specific Course");
-            viewCourse.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    teacherMainMenu.setVisible(false);
-                    String courseNameRequested = JOptionPane.showInputDialog(null,
-                            "Please enter the course name.");
-                    if (courseNameRequested == null) {
-                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                        teacherMainMenu.setVisible(true);
-                        return;
-                    }
-                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
-                        courseNameRequested = JOptionPane.showInputDialog(null,
-                                "Enter something. Please enter the course name.");
-                        if (courseNameRequested == null) {
-                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                            teacherMainMenu.setVisible(true);
-                            return;
-                        }
-                    }
-                    if (Teacher.checkCourseExistence(courseNameRequested)) {
-                        teacherViewCourse(courseNameRequested);
-                    } else {
-                        teacherMainMenu.setVisible(true);
-                    }
-                }
-            });
-            viewAllCourses = new JButton("View All Current Courses");
-            viewAllCourses.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    teacherMainMenu.setVisible(false);
-                    Teacher.printCourses();
-                    teacherMainMenu.setVisible(true);
-                }
-            });
-            //general same exit button
-            exit = new JButton("Exit");
-            exit.addActionListener(this);
-            teacherFirstMenu.add(createCourse);
-            teacherFirstMenu.add(viewCourse);
-            teacherFirstMenu.add(viewAllCourses);
-            teacherFirstMenu.add(exit);
-            teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
-            teacherMainMenu.setVisible(true);
+            //TO-DO
         }
     }
 
