@@ -14,6 +14,9 @@ public class Client implements ActionListener {
     ArrayList<String> currentPoints;
     ArrayList<String> currentAnswerList;
     ArrayList<String> currentQuizAndAnswers;
+    String currentCourse;
+    String currentQuiz;
+    String username;
     JFrame frame;
     JFrame frame2;
     JFrame frame3;
@@ -144,6 +147,23 @@ public class Client implements ActionListener {
 
 
     }
+    
+    public String getCurrentCourse() {
+        return currentCourse;
+    }
+
+    public void setCurrentCourse(String currentCourse) {
+        this.currentCourse = currentCourse;
+    }
+
+    public String getCurrentQuiz() {
+        return currentQuiz;
+    }
+
+    public void setCurrentQuiz(String currentQuiz) {
+        this.currentQuiz = currentQuiz;
+    }
+
 
     public String getUsername() {
         return username;
@@ -338,6 +358,7 @@ public class Client implements ActionListener {
                     prompt2 = false;
                 }
                 if (prompt2) {
+                    setUsername(username.getText());
                     StudentMenu(username.getText());
                     frame3.setVisible(false);
                 }
