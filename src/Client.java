@@ -69,6 +69,7 @@ public class Client implements ActionListener {
     }
 
     public void answerQuiz(ArrayList<String> quizAndAnswers) {
+        ArrayList<String> answerList = new ArrayList<>();
         for (int c = 0; c < quizAndAnswers.size(); c+=3) {
             frame6 = new JFrame("Quiz Answer");
             frame6.setVisible(true);
@@ -98,7 +99,6 @@ public class Client implements ActionListener {
                     {
                         frame6.setVisible(false);
                         String answerChoice = (String) cb.getSelectedItem();
-                        ArrayList<String> answerList = new ArrayList<>();
                         if (answerChoice.equals("Answer through GUI")) {
                             frame7 = new JFrame("Answer through GUI");
                             frame7.setSize(500, 250);
@@ -131,8 +131,8 @@ public class Client implements ActionListener {
                 }
             });
         }
-
-
+        ArrayList<String> points = Student.grading(answerList, quizAndAnswers);
+        //implement write file here 
 
 
     }
