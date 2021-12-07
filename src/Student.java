@@ -13,11 +13,10 @@ import java.util.Scanner;
  * @version 11/15/2021
  */
 public class Student {
-    public static ArrayList<String> grading(ArrayList<String> answerList) {
+    public static ArrayList<String> grading(ArrayList<String> answerList, ArrayList<String> quizAndAnswers) {
         ArrayList<String> points = new ArrayList<>();
         return points;
     }
-
     public static ArrayList<String> readQuiz (String course, String quiz) {
         String courseQuizFileName = course + quiz + ".txt";
         ArrayList<String> list = new ArrayList<>();
