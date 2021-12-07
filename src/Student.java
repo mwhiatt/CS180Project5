@@ -17,15 +17,16 @@ public class Student {
         ArrayList<String> points = new ArrayList<>();
         int j = 1;
         for (int i = 0; i < answerList.size(); i++) {
-        	if(answerList.get(i).equals(quizAndAnswers.get(j))) {
-        		points.add(quizAndAnswers.get(i));
-			} else {
-        		points.add("0");
-			}
-        	j += 2;
-		}
+            if(answerList.get(i).equals(quizAndAnswers.get(j))) {
+                points.add(quizAndAnswers.get(j+1));
+            } else {
+                points.add("0");
+            }
+            j += 2;
+        }
         return points;
     }
+
     public static ArrayList<String> readQuiz (String course, String quiz) {
         String courseQuizFileName = course + quiz + ".txt";
         ArrayList<String> list = new ArrayList<>();
@@ -202,14 +203,14 @@ public class Student {
 //    }
 
     //TO-DO
-    public static void writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> quizAndAnswers, ArrayList<String> answerList) {
+    public static void writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> answerList) {
         String totalString;
         int total = 0;
         for (int y = 0; y < points.size(); y++) {
             total = total + Integer.valueOf(points.get(y));
         }
         totalString = String.valueOf(total);
-        
+
         int i = 1;
         int n = 1;
         String fileName = course + quiz + user + ".txt";
@@ -243,6 +244,7 @@ public class Student {
         }
     }
 
+
     public static String answerImportFile(String fileName) throws IOException {
         File f = null;
         FileReader fileReader = null;
@@ -266,7 +268,7 @@ public class Student {
     // Asks user whether he/she/they want to view previous submissions after they
     // enter course and quiz name
     //TO-DO
-    public static void viewSubmissions(Scanner input, String course, String quiz, String user) {
+    public static ArrayList<String> printSubmissions(String course, String quiz, String user) {
         String fileName = course + quiz + "Submissions.txt";
         ArrayList<String> userSubmissions = new ArrayList<>(); // ArrayList that holds a particular user's submissions
         String prompt = "";
@@ -285,40 +287,26 @@ public class Student {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        do {
-            System.out.println("Which submission would you like to view?");
-            for (int i = 0; i < userSubmissions.size(); i++) {
-                System.out.println(i + 1 + ". " + userSubmissions.get(i)); // prints list of user submissions
-            }
-            String submissionToView = input.nextLine();
-            int requestedSubmission = 0;
-            while (!properInput) {
-                try {
-                    requestedSubmission = Integer.parseInt(submissionToView) - 1;
-                    properInput = true;
-                } catch (NumberFormatException e) {
-                    System.out.println(
-                            "Please input an integer, not the name. " + "Which submission would you like to view?");
-                    submissionToView = input.nextLine(); // index of submission user wants to view
-                }
-            }
-            properInput = false;
-            try (BufferedReader bfr = new BufferedReader(new FileReader(userSubmissions.get(requestedSubmission)))) {
+        return userSubmissions;
+    }
+    public static String viewSubmissions(String requestedSubmission) {
+        String returnString = "";
+            try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
                 String s = bfr.readLine();
                 while (s != null) {
-                    System.out.println(s); // prints the user submission line by line
+                    returnString = returnString + s + "\n"; // prints the user submission line by line
                     s = bfr.readLine();
                 }
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Would you like to view more submissions? [Y/N]"); // checks if user wants to
-            // view more submissions
-            prompt = input.nextLine();
-        } while (prompt.equalsIgnoreCase("Y")); // continues while the user says yes
+            return returnString;
+//            System.out.println("Would you like to view more submissions? [Y/N]"); // checks if user wants to
+//            // view more submissions
+//            prompt = input.nextLine();
+//        } while (prompt.equalsIgnoreCase("Y")); // continues while the user says yes
     }
 
 }
