@@ -7,9 +7,9 @@ import java.net.Socket;
 import java.util.Scanner;
 /**
  * Project 5 - Learning Management Quiz Tool - Server
- * Server class to receive connections from multiple users and store information. 
+ * Server class to receive connections from multiple users and store information.
  * <p>
- * 
+ *
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
  * @version 11/15/2021
  */
@@ -18,13 +18,13 @@ public class Server implements Runnable {
 	public Server(Socket socket) {
 		this.socket = socket;
 	}
-	
+
 	public void run() {
 		try {
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			Scanner input = new Scanner(socket.getInputStream());
 			//handling
-			
+
 			pw.close();
 			input.close();
 		} catch (IOException e) {
@@ -32,7 +32,7 @@ public class Server implements Runnable {
 		}
 	}
 	public static void main(String[] args) throws IOException {
-		//Creates Login File 
+		//Creates Login File
 		File logins = new File("login.txt");
 		if (!logins.exists()) {
 			try {
@@ -41,7 +41,7 @@ public class Server implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		
+
 		//Creates coursenames file
 		File courseNames = new File("CourseNames.txt");
 		if (!courseNames.exists()) {
@@ -51,15 +51,15 @@ public class Server implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		
+
 		ServerSocket serverSocket = new ServerSocket(4343);
-		
+
 		while (true) {
 			Socket socket = serverSocket.accept();
 			Server server = new Server(socket);
 			new Thread(server).start();
 		}
-		
+
 
 	}
 
@@ -77,7 +77,7 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		while (true) {
 			Socket socket = null;
 			try {

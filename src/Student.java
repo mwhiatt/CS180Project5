@@ -202,7 +202,14 @@ public class Student {
 //    }
 
     //TO-DO
-    public static void writeFile(String course, String quiz, String user, ArrayList<String> listToWrite, String total) {
+    public static void writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> quizAndAnswers, ArrayList<String> answerList) {
+        String totalString;
+        int total = 0;
+        for (int y = 0; y < points.size(); y++) {
+            total = total + Integer.valueOf(points.get(y));
+        }
+        totalString = String.valueOf(total);
+        
         int i = 1;
         int n = 1;
         String fileName = course + quiz + user + ".txt";
@@ -214,19 +221,14 @@ public class Student {
         }
         try (PrintWriter pw = new PrintWriter(new FileOutputStream(fileName, false))) {
             pw.println("Name: " + user);
-            for (int c = 2; c < listToWrite.size(); c += 3) {
-                String ans = "Student Answer: " + listToWrite.get(c);
-                String points;
-                if (listToWrite.get(c).toLowerCase().equals(listToWrite.get(c - 2).toLowerCase())) {
-                    points = "Correct: " + listToWrite.get(c - 1);
-                } else {
-                    points = "Incorrect: 0";
-                }
-                String fileInput = n + ". " + ans + ", " + points;
+            for (int c = 0; c < answerList.size(); c ++) {
+                String ans = "Student Answer: " + answerList.get(c);
+                String point = points.get(c);
+                String fileInput = n + ". " + ans + ", " + point;
                 n++;
                 pw.println(fileInput);
             }
-            pw.println("Points Earned : " + total);
+            pw.println("Points Earned : " + totalString);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
             pw.println("Timestamp: " + timeStamp);
         } catch (FileNotFoundException e) {

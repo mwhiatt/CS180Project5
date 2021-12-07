@@ -11,6 +11,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Client implements ActionListener {
+    ArrayList<String> currentPoints;
+    ArrayList<String> currentAnswerList;
+    ArrayList<String> currentQuizAndAnswers;
+    String currentCourse;
+    String currentQuiz;
+    String username;
     JFrame frame;
     JFrame frame2;
     JFrame frame3;
@@ -30,6 +36,8 @@ public class Client implements ActionListener {
     //all teacher functions below
     JButton createCourse;
     JButton viewCourse;
+    JButton viewAllCourses;
+    JButton goBack;
 
     JButton deleteCourse;
     JButton deleteQuiz;
@@ -132,10 +140,62 @@ public class Client implements ActionListener {
             });
         }
         ArrayList<String> points = Student.grading(answerList, quizAndAnswers);
-        //implement write file here 
+        setCurrentPoints(points);
+        setCurrentAnswerList(answerList);
+        setCurrentQuizAndAnswers(quizAndAnswers);
+        //implement write file here
 
 
     }
+    
+    public String getCurrentCourse() {
+        return currentCourse;
+    }
+
+    public void setCurrentCourse(String currentCourse) {
+        this.currentCourse = currentCourse;
+    }
+
+    public String getCurrentQuiz() {
+        return currentQuiz;
+    }
+
+    public void setCurrentQuiz(String currentQuiz) {
+        this.currentQuiz = currentQuiz;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void setCurrentPoints(ArrayList<String> points) {
+        currentPoints = points;
+    }
+
+    public void setCurrentAnswerList(ArrayList<String> answerList) {
+        currentAnswerList = answerList;
+    }
+    public void setCurrentQuizAndAnswers(ArrayList<String> quizAndAnswers) {
+        currentQuizAndAnswers = quizAndAnswers;
+    }
+
+    public ArrayList<String> getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public ArrayList<String> getCurrentAnswerList() {
+        return currentAnswerList;
+    }
+
+    public ArrayList<String> getCurrentQuizAndAnswers() {
+        return currentQuizAndAnswers;
+    }
+
 
     public void takeQuiz() {
         frame5 = new JFrame("Available Quizzes");
@@ -178,11 +238,7 @@ public class Client implements ActionListener {
                                 frame5.setVisible(false);
                                 ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
                                 answerQuiz(quizAndAnswers);
-
-//                                ArrayList<String> submission = Student.answer(input, course, quiz);
-//                                String total = submission.get(submission.size() - 1);
-//                                submission.remove(submission.size() - 1);
-//                                Student.writeFile(course, quiz, user, submission, total);
+                                Student.writeFile(getUsername(), courseName, quiz, getCurrentPoints(), getCurrentQuizAndAnswers(), getCurrentAnswerList());
                             }
                         }
                     });
@@ -197,6 +253,7 @@ public class Client implements ActionListener {
 
 
     }
+
 
 
 
@@ -301,6 +358,7 @@ public class Client implements ActionListener {
                     prompt2 = false;
                 }
                 if (prompt2) {
+                    setUsername(username.getText());
                     StudentMenu(username.getText());
                     frame3.setVisible(false);
                 }
@@ -313,9 +371,9 @@ public class Client implements ActionListener {
 
     }
 
-    public void exit() {
-        JOptionPane.showMessageDialog(null, "Logged Out\nHave a Good Day", "Welcome",
-                JOptionPane.INFORMATION_MESSAGE);
+    public void exit() { //nullpointerexception thrown
+            JOptionPane.showMessageDialog(null, "Logged Out\nHave a Good Day", "Welcome",
+                    JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
@@ -328,7 +386,6 @@ public class Client implements ActionListener {
             }
         });
     }
-
     public void StudentMenu(String username) {
         String type = Login.getClassification(username);
         if (type.equals("Student")) {
@@ -352,7 +409,7 @@ public class Client implements ActionListener {
             // created december 5
             teacherMainMenu = new JFrame("Welcome Teacher " + username);
             teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            teacherMainMenu.setSize(500, 500);
+            teacherMainMenu.setSize(500, 100);
             teacherMainMenu.setLocation(430, 100);
             //general shape of frame created
             JPanel teacherFirstMenu = new JPanel();
@@ -363,17 +420,60 @@ public class Client implements ActionListener {
                 public void actionPerformed(ActionEvent e) {
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
+                        courseNameRequested = JOptionPane.showInputDialog(null,
+                                "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                    }
                     Teacher.createCourse(courseNameRequested);
                 }
             });
-            viewCourse = new JButton("View Courses");
+            viewCourse = new JButton("View Specific Course");
             viewCourse.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     teacherMainMenu.setVisible(false);
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
-                    teacherViewCourse(courseNameRequested);
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        teacherMainMenu.setVisible(true);
+                        return;
+                    }
+                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
+                        courseNameRequested = JOptionPane.showInputDialog(null,
+                                "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            teacherMainMenu.setVisible(true);
+                            return;
+                        }
+                    }
+                    if (Teacher.checkCourseExistence(courseNameRequested)) {
+                        teacherViewCourse(courseNameRequested);
+                    } else {
+                        teacherMainMenu.setVisible(true);
+                    }
+                }
+            });
+            viewAllCourses = new JButton("View All Current Courses");
+            viewAllCourses.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    teacherMainMenu.setVisible(false);
+                    Teacher.printCourses();
+                    teacherMainMenu.setVisible(true);
                 }
             });
             //general same exit button
@@ -381,6 +481,7 @@ public class Client implements ActionListener {
             exit.addActionListener(this);
             teacherFirstMenu.add(createCourse);
             teacherFirstMenu.add(viewCourse);
+            teacherFirstMenu.add(viewAllCourses);
             teacherFirstMenu.add(exit);
             teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
             teacherMainMenu.setVisible(true);
@@ -392,51 +493,84 @@ public class Client implements ActionListener {
         //viewCourseMenuCode
         teacherViewCourseMenu = new JFrame("Please choose an option:");
         teacherViewCourseMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        teacherViewCourseMenu.setSize(500, 500);
+        teacherViewCourseMenu.setSize(500, 150);
         teacherViewCourseMenu.setLocation(430, 100);
         JPanel viewCourseMenu = new JPanel();
+        JPanel viewCourseMenu2 = new JPanel();
+        JPanel viewCourseMenu3 = new JPanel();
         //same options provided before all on one screen as buttons
         deleteCourse = new JButton("Delete Course");
         deleteCourse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 Teacher.deleteCourse(courseName);
+                teacherMainMenu.setVisible(true);
             }
         });
         deleteQuiz = new JButton("Delete Quiz");
         deleteQuiz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String quizNameToDelete = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
-                Teacher.deleteQuiz(courseName, quizNameToDelete);
+                if (quizNameToDelete == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                teacherViewCourseMenu.setVisible(false);
+                Teacher.deleteQuiz(quizNameToDelete, courseName);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
         createQuiz = new JButton("Create Quiz");
         createQuiz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 Teacher.createQuiz(courseName);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
         editQuiz = new JButton("Edit Quiz");
         editQuiz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
-                Teacher.editQuiz(courseName, quizNameToEdit);
+                if (quizNameToEdit == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                Teacher.editQuiz(quizNameToEdit, courseName);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
         viewSubmission = new JButton("View Submission");
         viewSubmission.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToEdit == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 String submissionToView = JOptionPane.showInputDialog(null,
                         "Please enter name of submission.");
+                if (submissionToView == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 Teacher.viewSubmission(courseName, quizNameToEdit, submissionToView);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
         //Potential work around to display all courses and quizzes and submissions without it being directly in code.
@@ -447,33 +581,52 @@ public class Client implements ActionListener {
 //                Teacher.printCourses();
 //            }
 //        });
-        printQuizzes = new JButton("Print All Quiz Names For" + courseName);
+        printQuizzes = new JButton("Print All Quizzes For " + courseName);
         printQuizzes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 Teacher.printQuizzes(courseName);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
-        printSubmissions = new JButton("Print All Submission Names for Specified Quiz in " + courseName);
+        printSubmissions = new JButton("Print Submission Names for Specified Quiz in " + courseName);
         printSubmissions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
                 String quizNameToView = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
+                if (quizNameToView == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 Teacher.printSubmissions(courseName, quizNameToView);
+                teacherViewCourseMenu.setVisible(true);
             }
         });
-        exit = new JButton("Exit");
-        exit.addActionListener(this);
+        goBack = new JButton("Go Back");
+        goBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                teacherMainMenu.setVisible(true);
+                teacherViewCourseMenu.setVisible(false);
+            }
+        });
+
         viewCourseMenu.add(deleteCourse);
         viewCourseMenu.add(deleteQuiz);
         viewCourseMenu.add(createQuiz);
-        viewCourseMenu.add(editQuiz);
-        viewCourseMenu.add(viewSubmission);
-        viewCourseMenu.add(printQuizzes);
-        viewCourseMenu.add(printSubmissions);
-        viewCourseMenu.add(exit);
+        viewCourseMenu2.add(editQuiz);
+        viewCourseMenu2.add(viewSubmission);
+        viewCourseMenu2.add(printQuizzes);
+        viewCourseMenu3.add(printSubmissions);
+        viewCourseMenu3.add(goBack);
+
         teacherViewCourseMenu.add(viewCourseMenu, BorderLayout.NORTH);
+        teacherViewCourseMenu.add(viewCourseMenu2, BorderLayout.CENTER);
+        teacherViewCourseMenu.add(viewCourseMenu3, BorderLayout.SOUTH);
         teacherViewCourseMenu.setVisible(true);
 
     }
