@@ -705,7 +705,18 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
-                Teacher.deleteCourse(courseName);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("DELETECOURSE|" + courseName);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherMainMenu.setVisible(true);
             }
         });
@@ -722,7 +733,18 @@ public class Client implements ActionListener {
                     return;
                 }
                 teacherViewCourseMenu.setVisible(false);
-                Teacher.deleteQuiz(quizNameToDelete, courseName);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -731,7 +753,18 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
-                Teacher.createQuiz(courseName);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("CREATEQUIZ|" + courseName);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -747,7 +780,18 @@ public class Client implements ActionListener {
                             "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-                Teacher.editQuiz(quizNameToEdit, courseName);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("EDITQUIZ|" + quizNameToEdit + "|" + courseName);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -770,7 +814,18 @@ public class Client implements ActionListener {
                             "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-                Teacher.viewSubmission(courseName, quizNameToEdit, submissionToView);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("VIEWSUBMISSION|" + courseName + "|" + quizNameToEdit + "|" + submissionToView);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -787,7 +842,18 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
-                Teacher.printQuizzes(courseName);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("PRINTQUIZZES2|" + courseName);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -803,7 +869,18 @@ public class Client implements ActionListener {
                             "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-                Teacher.printSubmissions(courseName, quizNameToView);
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("PRINTSUBMISSIONS|" + courseName + "|" + quizNameToView);
+            		pw.flush();
+            		
+            		socket.close();
+            		pw.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -833,27 +910,6 @@ public class Client implements ActionListener {
     }
 
 public void createGUI(){
-
-        //Creates Login File
-        File logins=new File("login.txt");
-        if(!logins.exists()){
-        try{
-        logins.createNewFile();
-        }catch(IOException e){
-        e.printStackTrace();
-        }
-        }
-
-        //Creates coursenames file
-        File courseNames=new File("CourseNames.txt");
-        if(!courseNames.exists()){
-        try{
-        courseNames.createNewFile();
-        }catch(IOException e){
-        e.printStackTrace();
-        }
-        }
-
 
         frame=new JFrame("Welcome to the Quiz Learning Program");
 
