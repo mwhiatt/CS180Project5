@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.*;
 /**
  * Project 5 - Learning Management Quiz Tool - Server
- * Server class to receive connections from multiple users and store information.
+ * Server class to receive connections from multiple users and store information. 
  * <p>
- *
+ * 
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
  * @version 11/15/2021
  */
@@ -18,49 +18,160 @@ public class Server implements Runnable {
 	public Server(Socket socket) {
 		this.socket = socket;
 	}
-
+	
 	public void run() {
 		try {
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
-			Scanner input = new Scanner(socket.getInputStream());
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			//handling
-
+			String message = "Not Blank";
+			while (message != null) {
+				message = bfr.readLine();
+				ArrayList<String> arguments = parseMessage(message);
+				String method = arguments.get(0);
+				if (method.equals("CREATECOURSE")) {
+					
+				} else if (method.equals("DELETECOURSE")) {
+					
+				} else if (method.equals("DELETEQUIZ")) {
+					
+				} else if (method.equals("CREATEQUIZ")) {
+					
+				} else if (method.equals("EDITQUIZ")) {
+					
+				} else if (method.equals("VIEWSUBMISSION")) {
+					
+				} else if (method.equals("PRINTCOURSES")) {
+					String[] courses = Teacher.printCourses();
+					String courseStr = "";
+					for (int i = 0; i < courses.length; i++) {
+						courseStr += courses[i] + "|";
+					}
+					String ret = courseStr.substring(0, courseStr.length() - 1);
+					pw.write(ret);
+					pw.flush();
+				} else if (method.equals("PRINTQUIZZES")) {
+					String[] quizzes = Teacher.printQuizzes(arguments.get(1));
+					String quizStr = "";
+					for (int i = 0; i < quizzes.length; i++) {
+						quizStr += quizzes[i] + "|";
+					}
+					String ret = quizStr.substring(0, quizStr.length() - 1);
+					pw.write(ret);
+					pw.flush();
+				} else if (method.equals("PRINTSUBMISSIONS")) {
+					ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2), arguments.get(3));
+					String submissionsStr = "";
+					for (int i = 0; i < submissions.size(); i++) {
+						submissionsStr += submissions.get(i) + "|";
+					}
+					String ret = submissionsStr.substring(0, submissionsStr.length() - 1);
+					pw.write(ret);
+					pw.flush();
+				} else if (method.equals("CHECKSUBMISSION")) {
+					
+				} else if (method.equals("CHECKQUIZ")) {
+					if (Teacher.checkQuizExistence(arguments.get(1), arguments.get(2))) {
+						pw.write("true");
+						pw.flush();
+					} else {
+						pw.write("false");
+						pw.flush();
+					}
+				} else if (method.equals("CHECKCOURSE")) {
+					
+				} else if (method.equals("QUIZIMPORT")) {
+					
+				} else if (method.equals("GRADING")) {
+					ArrayList<String> arg1 = parseList(arguments.get(1));
+					ArrayList<String> arg2 = parseList(arguments.get(2));
+					ArrayList<String> points = Student.grading(arg1, arg2);
+					String pointsStr = "";
+					for (int i = 0; i < points.size(); i++) {
+						pointsStr += points.get(i) + "|";
+					}
+					String ret = pointsStr.substring(0, pointsStr.length() - 1);
+					pw.write(ret);
+					pw.flush();
+				} else if (method.equals("READQUIZ")) {
+					ArrayList<String> quizAndAnswers = Student.readQuiz(arguments.get(1), arguments.get(2));
+					String quizAndAnswersStr = "";
+					for (int i = 0; i < quizAndAnswers.size(); i++) {
+						quizAndAnswersStr += quizAndAnswers.get(i) + "|";
+					}
+					String ret = quizAndAnswersStr.substring(0, quizAndAnswersStr.length() - 1);
+					pw.write(ret);
+					pw.flush();
+				} else if (method.equals("WRITEFILE")) {
+					Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
+							parseList(arguments.get(4)), parseList(arguments.get(5)));
+				} else if (method.equals("ANSWERIMPORTFILE")) {
+					
+				} else if (method.equals("PRINTSUBMISSIONS")) {
+					
+				} else if (method.equals("VIEWSUBMISSIONS")) {
+					String submission = Student.viewSubmissions(arguments.get(1));
+					pw.write(submission);
+					pw.flush();
+				} else if (method.equals("LOGIN")) {
+					if (Login.login(arguments.get(1), arguments.get(2))) {
+						pw.write("true");
+						pw.flush();
+					} else {
+						pw.write("false");
+						pw.flush();
+					}
+				} else if (method.equals("WRITENEWUSER")) {
+					Login.writeNewUser(arguments.get(1), arguments.get(2), arguments.get(3));
+				} else if (method.equals("ISDUPLICATE")) {
+					if (Login.isDuplicate(arguments.get(1))) {
+						pw.write("true");
+						pw.flush();
+					} else {
+						pw.write("false");
+						pw.flush();
+					}
+				} else if (method.equals("GETCLASSIFICATION")) {
+					pw.write(Login.getClassification(arguments.get(1)));
+				}
+			}
+			
 			pw.close();
-			input.close();
+			bfr.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	public static void main(String[] args) throws IOException {
-		//Creates Login File
-		File logins = new File("login.txt");
-		if (!logins.exists()) {
-			try {
-				logins.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		//Creates coursenames file
-		File courseNames = new File("CourseNames.txt");
-		if (!courseNames.exists()) {
-			try {
-				courseNames.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 		ServerSocket serverSocket = new ServerSocket(4343);
-
+		
 		while (true) {
 			Socket socket = serverSocket.accept();
 			Server server = new Server(socket);
 			new Thread(server).start();
 		}
+		
 
-
+	}
+	
+	public static ArrayList<String> parseMessage(String message) {
+		ArrayList<String> arguments = new ArrayList<String>();
+		while (message.indexOf('|') != -1) {
+			arguments.add(message.substring(0, message.indexOf('|')));
+			message = message.substring(message.indexOf('|') + 1);
+	    }
+		arguments.add(message);
+		return arguments;
+	}
+	
+	public static ArrayList<String> parseList(String message) {
+		ArrayList<String> parsedList = new ArrayList<String>();
+		while (message.indexOf('`') != -1) {
+			parsedList.add(message.substring(0, message.indexOf('`')));
+			message = message.substring(message.indexOf('`') + 1);
+	    }
+		parsedList.add(message);
+		return parsedList;
 	}
 
 }
@@ -77,7 +188,7 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		while (true) {
 			Socket socket = null;
 			try {
