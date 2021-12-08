@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Project 4 - Learning Management Quiz Tool - Student Contains methods for
+ * Project 5 - Learning Management Quiz Tool - Student Contains methods for
  * student functionality
  * <p>
  *
