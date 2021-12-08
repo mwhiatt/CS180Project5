@@ -2,15 +2,40 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.net.*;
 
 public class Client implements ActionListener {
+	
+	public static ArrayList<String> parseMessage(String message) {
+		ArrayList<String> parsedMessage = new ArrayList<String>();
+		while (message.indexOf('|') != -1) {
+			parsedMessage.add(message.substring(0, message.indexOf('|')));
+			message = message.substring(message.indexOf('|') + 1);
+	    }
+		parsedMessage.add(message);
+		return parsedMessage;
+	}
+	
+	public static String packageList(ArrayList<String> list) {
+		String packedList = "";
+		//packaging currentAnswers list to a string to be sent to server
+		for (int i = 0; i < list.size(); i++) {
+			packedList += list.get(i) + "`";
+		}
+		packedList = packedList.substring(0, packedList.length() - 1);
+		return packedList;
+	}
+	
     ArrayList<String> currentPoints = new ArrayList<>();
     ArrayList<String> currentAnswerList =  new ArrayList<>();
     ArrayList<String> currentQuizAndAnswers =  new ArrayList<>();
@@ -62,7 +87,23 @@ public class Client implements ActionListener {
         frame8.setSize(500, 250);
         frame8.setLocation(430, 100);
         JPanel panel = new JPanel();
-        ArrayList<String> userSubmissions = Student.printSubmissions(getCurrentCourse(), getCurrentQuiz(), getUsername());
+        String response = "";
+        try {
+    		Socket socket = new Socket("localhost", 4343);
+    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+    		
+    		pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername());
+    		pw.flush();
+    		response = bfr.readLine();
+    		
+    		bfr.close();
+    		pw.close();
+    		socket.close();
+    	} catch (IOException exception) {
+    		exception.printStackTrace();
+    	}
+        ArrayList<String> userSubmissions = parseMessage(response);
         String[] userSubmissionsArray = new String[userSubmissions.size()];
         for (int c = 0; c < userSubmissions.size(); c++) {
             userSubmissionsArray[c] = userSubmissions.get(c);
@@ -86,7 +127,22 @@ public class Client implements ActionListener {
                 frame9.setSize(500, 250);
                 frame9.setLocation(430, 100);
                 JPanel panel = new JPanel();
-                String submission = Student.viewSubmissions((String) cb.getSelectedItem());
+                String submission = "";
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("VIEWSUBMISSIONS|" + (String) cb.getSelectedItem());
+            		pw.flush();
+            		submission = bfr.readLine();
+            		
+            		bfr.close();
+            		pw.close();
+            		socket.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 JTextArea selectedSubmission = new JTextArea(submission);
                 JButton ok2 = new JButton("Continue viewing other submissions?");
                 panel.add(selectedSubmission, BorderLayout.NORTH);
@@ -136,11 +192,57 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame6.setVisible(false);
-                ArrayList<String> points = Student.grading(getCurrentAnswerList(), quizAndAnswers);
+                ArrayList<String> points = new ArrayList<>();
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		ArrayList<String> currentAnswers = getCurrentAnswerList();
+            		String currentAnswersStr = "";
+            		//packaging currentAnswers list to a string to be sent to server
+            		for (int i = 0; i < currentAnswers.size(); i++) {
+            			currentAnswersStr += currentAnswers.get(i) + "`";
+            		}
+            		currentAnswersStr = currentAnswersStr.substring(0, currentAnswersStr.length() - 1);
+            		
+            		//packaging quizAndAnswers list to a string to be sent to server
+            		String quizStr = "";
+            		for (int i = 0; i < quizAndAnswers.size(); i++) {
+            			quizStr += quizAndAnswers.get(i) + "`";
+            		}
+            		quizStr = quizStr.substring(0, quizStr.length() - 1);
+            		
+            		//Sending to server to be graded
+            		pw.write("GRADING|" + currentAnswersStr + "|" + quizStr);
+            		pw.flush();
+            		
+            		points = parseMessage(bfr.readLine());
+            		
+            		bfr.close();
+            		pw.close();
+            		socket.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 setCurrentPoints(points);
+                
 //                System.out.println(answerList);
 //                System.out.println(points);
-                Student.writeFile(getCurrentCourse(), getCurrentQuiz(), getUsername(), getCurrentPoints(), getCurrentAnswerList());
+                //writes file
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		//Sending to server to be written
+            		pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
+            			+ "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()));
+            		pw.flush();
+            		
+            		pw.close();
+            		socket.close();
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
                 setCurrentAnswerList(new ArrayList<String>());
             }
         });
@@ -238,8 +340,28 @@ public class Client implements ActionListener {
         JPanel panel = new JPanel();
         JLabel lbl = new JLabel("Select an option click OK");
         panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
-
-        String[] choices = Teacher.printCourses();
+        ArrayList<String> courseList = new ArrayList<>();
+        try {
+    		Socket socket = new Socket("localhost", 4343);
+    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+    		
+    		//Sending to server to be written
+    		pw.write("PRINTCOURSES");
+    		pw.flush();
+    		
+    		courseList = parseMessage(bfr.readLine());
+    		
+    		bfr.close();
+    		pw.close();
+    		socket.close();
+    	} catch (IOException exception) {
+    		exception.printStackTrace();
+    	}
+        String[] choices = new String[courseList.size()];
+        for (int i = 0; i < choices.length; i++) {
+        	choices[i] = courseList.get(i);
+        }
 
         final JComboBox<String> cb = new JComboBox<String>(choices);
 
@@ -256,8 +378,28 @@ public class Client implements ActionListener {
                     JPanel panel2 = new JPanel();
                     JLabel lbl2 = new JLabel("Select an option click OK");
                     panel2.add(lbl2, BorderLayout.AFTER_LINE_ENDS);
-
-                    String[] choicesQuizzes = Teacher.printQuizzes(courseName);
+                    ArrayList<String> quizList = new ArrayList<>();
+                    try {
+                		Socket socket = new Socket("localhost", 4343);
+                		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                		
+                		//Sending to server to be written
+                		pw.write("PRINTCOURSES|" + courseName);
+                		pw.flush();
+                		
+                		quizList = parseMessage(bfr.readLine());
+                		
+                		bfr.close();
+                		pw.close();
+                		socket.close();
+                	} catch (IOException exception) {
+                		exception.printStackTrace();
+                	}
+                    String[] choicesQuizzes = new String[quizList.size()];
+                    for (int i = 0; i < choices.length; i++) {
+                    	choicesQuizzes[i] = quizList.get(i);
+                    }
                     final JComboBox<String> cb2 = new JComboBox<String>(choicesQuizzes);
 
                     cb2.setMaximumSize(cb2.getPreferredSize());
@@ -275,11 +417,28 @@ public class Client implements ActionListener {
                     ok4.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            if (Teacher.checkQuizExistence(courseName, quiz)) {
-                                frame5.setVisible(false);
-                                ArrayList<String> quizAndAnswers = Student.readQuiz(courseName, quiz);
-                                answerQuiz(quizAndAnswers);
-                            }
+                        	try {
+                        		Socket socket = new Socket("localhost", 4343);
+                        		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                        		
+                        		pw.write("CHECKQUIZ|" + courseName + "|" + quiz);
+                        		pw.flush();
+                        		String response = bfr.readLine();
+                        		if (response.equals("true")) {
+                        			frame5.setVisible(false);
+                        			pw.write("READQUIZ|" + courseName + "|" + quiz);
+                                    ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
+                                    answerQuiz(quizAndAnswers);
+                        		} else {
+                        			//GUI implementation saying quiz doesn't exist
+                        		}
+                        		pw.close();
+                        		bfr.close();
+                        		socket.close();
+                        	} catch (IOException exception) {
+                        		exception.printStackTrace();
+                        	}
                         }
                     });
                     panel2.add(viewSubmissions, BorderLayout.AFTER_LINE_ENDS);
@@ -342,7 +501,24 @@ public class Client implements ActionListener {
                         prompt = false;
 
                     }
-                    if (Login.isDuplicate(username.getText())) {
+                    String dupResponse = "";
+                    try {
+                		Socket socket = new Socket("localhost", 4343);
+                		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                		
+                		pw.write("ISDUPLICATE|" + username.getText());
+                		pw.flush();
+                		dupResponse = bfr.readLine();
+                		
+                		socket.close();
+                		bfr.close();
+                		pw.close();
+                		
+                	} catch (IOException exception) {
+                		exception.printStackTrace();
+                	}
+                    if (dupResponse.equals("true")) {
                         JOptionPane.showMessageDialog(null, "Sorry that username is taken, please try a new one.", "Username Error",
                                 JOptionPane.ERROR_MESSAGE);
                         prompt = false;
@@ -353,7 +529,22 @@ public class Client implements ActionListener {
                         prompt = false;
                     }
                     if (prompt) {
-                        Login.writeNewUser(classification, username.getText(), password.getText());
+                    	try {
+                    		Socket socket = new Socket("localhost", 4343);
+                    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                    		
+                    		pw.write("WRITENEWUSER|" + classification + "|" + username.getText() + "|"
+                    				+ password.getText());
+                    		pw.flush();
+                    		
+                    		socket.close();
+                    		bfr.close();
+                    		pw.close();
+                    		
+                    	} catch (IOException exception) {
+                    		exception.printStackTrace();
+                    	}
                         setUsername(username.getText());
                         StudentMenu(username.getText());
                         frame2.setVisible(false);
@@ -387,12 +578,46 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean prompt2 = true;
-                if (!Login.isDuplicate(username.getText())) {
+                String dupResponse = "0";
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("ISDUPLICATE|" + username.getText());
+            		pw.flush();
+            		dupResponse = bfr.readLine();
+            		
+            		socket.close();
+            		bfr.close();
+            		pw.close();
+            		
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
+                if (!dupResponse.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Username not found, please try again.", "Username Error",
                             JOptionPane.ERROR_MESSAGE);
                     prompt2 = false;
                 }
-                if (!Login.login(username.getText(), password.getText())) {
+                String loginResponse = "";
+                try {
+            		Socket socket = new Socket("localhost", 4343);
+            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            		
+            		pw.write("LOGIN|" + username.getText() + "|" + password.getText());
+            		pw.flush();
+            		loginResponse = bfr.readLine();
+            		
+            		socket.close();
+            		bfr.close();
+            		pw.close();
+            		
+            	} catch (IOException exception) {
+            		exception.printStackTrace();
+            	}
+                if (!loginResponse.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Incorrect password, please try again.", "Username Error",
                             JOptionPane.ERROR_MESSAGE);
                     prompt2 = false;
@@ -428,7 +653,23 @@ public class Client implements ActionListener {
     }
 
     public void StudentMenu(String username) {
-        String type = Login.getClassification(username);
+    	String type = "";
+    	try {
+    		Socket socket = new Socket("localhost", 4343);
+    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+    		
+    		pw.write("GETCLASSIFICATION|" + username);
+    		pw.flush();
+    		type = bfr.readLine();
+    		
+    		socket.close();
+    		bfr.close();
+    		pw.close();
+    		
+    	} catch (IOException exception) {
+    		exception.printStackTrace();
+    	}
         if (type.equals("Student")) {
             frame4 = new JFrame("Welcome Student " + username);
             frame4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
