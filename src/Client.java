@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.net.*;
 
 public class Client implements ActionListener {
-	
+
 	public static ArrayList<String> parseMessage(String message) {
 		ArrayList<String> parsedMessage = new ArrayList<String>();
 		while (message.indexOf('|') != -1) {
@@ -52,6 +52,25 @@ public class Client implements ActionListener {
     JFrame frame7;
     JFrame frame8;
     JFrame frame9;
+    JFrame teacherMainMenu;
+    JFrame teacherViewCourseMenu;
+    //all teacher functions below
+    JButton createCourse;
+    JButton viewCourse;
+    JButton viewAllCourses;
+    JButton goBack;
+
+    JButton deleteCourse;
+    JButton deleteQuiz;
+    JButton createQuiz;
+    JButton editQuiz;
+    JButton viewSubmission;
+    JButton printCourse;
+    JButton printQuizzes;
+    JButton printSubmissions;
+    JButton checkSubmissionExistence;
+
+    //all teacher functions/buttons above
 
     JButton create; // create quiz
     JButton login; // login
