@@ -32,15 +32,15 @@ public class Server implements Runnable {
 				if (method.equals("CREATECOURSE")) {
 					
 				} else if (method.equals("DELETECOURSE")) {
-					
+					Teacher.deleteCourse(arguments.get(1));
 				} else if (method.equals("DELETEQUIZ")) {
-					
+					Teacher.deleteQuiz(arguments.get(1), arguments.get(2));
 				} else if (method.equals("CREATEQUIZ")) {
-					
+					Teacher.createQuiz(arguments.get(1));
 				} else if (method.equals("EDITQUIZ")) {
-					
+					Teacher.editQuiz(arguments.get(1), arguments.get(2));
 				} else if (method.equals("VIEWSUBMISSION")) {
-					
+					Teacher.viewSubmission(arguments.get(1), arguments.get(2), arguments.get(3));
 				} else if (method.equals("PRINTCOURSES")) {
 					String[] courses = Teacher.printCourses();
 					String courseStr = "";
@@ -59,6 +59,8 @@ public class Server implements Runnable {
 					String ret = quizStr.substring(0, quizStr.length() - 1);
 					pw.write(ret);
 					pw.flush();
+				} else if (method.equals("PRINTQUIZZES2")) {
+					Teacher.printQuizzes(arguments.get(1));
 				} else if (method.equals("PRINTSUBMISSIONS")) {
 					ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2), arguments.get(3));
 					String submissionsStr = "";
@@ -108,7 +110,7 @@ public class Server implements Runnable {
 				} else if (method.equals("ANSWERIMPORTFILE")) {
 					
 				} else if (method.equals("PRINTSUBMISSIONS")) {
-					
+					Teacher.printSubmissions(arguments.get(1), arguments.get(2));
 				} else if (method.equals("VIEWSUBMISSIONS")) {
 					String submission = Student.viewSubmissions(arguments.get(1));
 					pw.write(submission);
