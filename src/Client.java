@@ -504,7 +504,7 @@ public class Client implements ActionListener {
         frame2.add(panel2, BorderLayout.CENTER);
 
         JLabel lbl3 = new JLabel("Password");
-        JTextField password = new JTextField(8);
+        JPasswordField password = new JPasswordField(8);
         panel3.add(lbl3, BorderLayout.EAST);
         panel3.add(password, BorderLayout.AFTER_LINE_ENDS);
         JButton ok3 = new JButton("OK");
@@ -589,7 +589,7 @@ public class Client implements ActionListener {
         panel.add(username, BorderLayout.AFTER_LINE_ENDS);
         frame3.add(panel, BorderLayout.NORTH);
         JLabel lbl3 = new JLabel("Password");
-        JTextField password = new JTextField(8);
+        JPasswordField password = new JPasswordField(8);
         panel2.add(lbl3, BorderLayout.EAST);
         panel2.add(password, BorderLayout.AFTER_LINE_ENDS);
         JButton ok = new JButton("OK");
