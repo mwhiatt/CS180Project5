@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,9 +58,11 @@ public class Student {
                }
            } while (s != null);
        } catch (FileNotFoundException e) {
-           e.printStackTrace();
+           JOptionPane.showMessageDialog(null, e.getMessage(),
+                   "Read Quiz Error", JOptionPane.ERROR_MESSAGE);
        } catch (IOException e) {
-           e.printStackTrace();
+           JOptionPane.showMessageDialog(null, e.getMessage(),
+                   "Read Quiz Error", JOptionPane.ERROR_MESSAGE);
        }
        list.remove(list.size() - 1);
        return list;
@@ -99,14 +102,16 @@ public class Student {
 	            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 	            pw.println("Timestamp: " + timeStamp);
 	        } catch (FileNotFoundException e) {
-	            e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Write submissions Error", JOptionPane.ERROR_MESSAGE);
 	        }
 	
 	        String masterFileName = course + quiz + "Submissions.txt";
 	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
 	            pw.println(fileName);
 	        } catch (FileNotFoundException e) {
-	            e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Write submissions Error", JOptionPane.ERROR_MESSAGE);
 	        }
         }
     }
@@ -117,7 +122,7 @@ public class Student {
 	        File f = null;
 	        FileReader fileReader = null;
 	        BufferedReader bufferedReader = null;
-	        String ans;
+	        String ans = "";
 	        try {
 	            f = new File(fileName + ".txt");
 	            fileReader = new FileReader(f);
@@ -125,9 +130,11 @@ public class Student {
 	            ans = bufferedReader.readLine();
 	
 	        } catch (FileNotFoundException e) {
-	            throw new FileNotFoundException();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Answering through Imports Error", JOptionPane.ERROR_MESSAGE);
 	        } catch (IOException e) {
-	            throw new IOException();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Answering through Imports Error", JOptionPane.ERROR_MESSAGE);
 	        }
 	        bufferedReader.close();
 	        return ans;
@@ -151,9 +158,11 @@ public class Student {
 	            }
 	
 	        } catch (FileNotFoundException e) {
-	            e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Print Submissions Error", JOptionPane.ERROR_MESSAGE);
 	        } catch (IOException e) {
-	            e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "Print Submissions Error", JOptionPane.ERROR_MESSAGE);
 	        }
 	        return userSubmissions;
         }
@@ -168,9 +177,11 @@ public class Student {
                     s = bfr.readLine();
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "View Submissions Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                        "View Submissions Error", JOptionPane.ERROR_MESSAGE);
             }
             return returnString;
         }
