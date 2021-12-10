@@ -1,8 +1,6 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 /**
  * Project 5 - Learning Management Quiz Tool - Student Contains methods for
