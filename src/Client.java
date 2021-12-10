@@ -43,15 +43,14 @@ public class Client implements ActionListener {
     String currentCourse;
     String currentQuiz;
     String username;
-    JFrame frame;
-    JFrame frame2;
-    JFrame frame3;
-    JFrame frame4;
-    JFrame frame5;
-    JFrame frame6;
-    JFrame frame7;
-    JFrame frame8;
-    JFrame frame9;
+    JFrame createGUIFrame;
+    JFrame createAccountFrame;
+    JFrame loginFrame;
+    JFrame studentMenuFrame;
+    JFrame takeQuizFrame;
+    JFrame answerQuizFrame;
+    JFrame viewSubmissionsFrame;
+    JFrame viewingSubmissionsFrame;
     JFrame teacherMainMenu;
     JFrame teacherViewCourseMenu;
     //all teacher functions below
@@ -82,29 +81,29 @@ public class Client implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == create) {
             this.create();
-            frame.setVisible(false);
+            createGUIFrame.setVisible(false);
         }
         if (e.getSource() == login) {
             this.login();
-            frame.setVisible(false);
+            createGUIFrame.setVisible(false);
         }
         if (e.getSource() == exit) {
             this.exit();
-            frame.setVisible(false);
-            frame4.setVisible(false);
+            createGUIFrame.setVisible(false);
+            studentMenuFrame.setVisible(false);
         }
         if (e.getSource() == takeQuiz) {
             this.takeQuiz();
-            frame4.setVisible(false);
+            studentMenuFrame.setVisible(false);
         }
     }
-
+    //allows a student to view their previous submissions
     public void viewSubmissions() {
-        frame8 = new JFrame("View Submissions");
-        frame8.setVisible(true);
-        frame8.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame8.setSize(500, 250);
-        frame8.setLocation(430, 100);
+        viewSubmissionsFrame = new JFrame("View Submissions");
+        viewSubmissionsFrame.setVisible(true);
+        viewSubmissionsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        viewSubmissionsFrame.setSize(500, 250);
+        viewSubmissionsFrame.setLocation(430, 100);
         JPanel panel = new JPanel();
         String response = "";
         try {
@@ -135,16 +134,16 @@ public class Client implements ActionListener {
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok = new JButton("OK");
         panel.add(ok, BorderLayout.AFTER_LINE_ENDS);
-        frame8.add(panel, BorderLayout.NORTH);
+        viewSubmissionsFrame.add(panel, BorderLayout.NORTH);
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame8.setVisible(false);
-                frame9 = new JFrame("View Submissions");
-                frame9.setVisible(true);
-                frame9.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame9.setSize(500, 250);
-                frame9.setLocation(430, 100);
+                viewSubmissionsFrame.setVisible(false);
+                viewingSubmissionsFrame = new JFrame("View Submissions");
+                viewingSubmissionsFrame.setVisible(true);
+                viewingSubmissionsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                viewingSubmissionsFrame.setSize(500, 250);
+                viewingSubmissionsFrame.setLocation(430, 100);
                 JPanel panel = new JPanel();
                 String submission = "";
                 try {
@@ -166,31 +165,87 @@ public class Client implements ActionListener {
                 JButton ok2 = new JButton("Continue viewing other submissions?");
                 panel.add(selectedSubmission, BorderLayout.NORTH);
                 panel.add(ok2, BorderLayout.AFTER_LINE_ENDS);
-                frame9.add(panel, BorderLayout.NORTH);
+                viewingSubmissionsFrame.add(panel, BorderLayout.NORTH);
                 ok2.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        frame9.setVisible(false);
-                        frame8.setVisible(true);
+                        viewingSubmissionsFrame.setVisible(false);
+                        viewSubmissionsFrame.setVisible(true);
                     }
                 });
-                frame9.setVisible(true);
+                viewingSubmissionsFrame.setVisible(true);
             }
         });
-        frame8.setVisible(true);
+        viewSubmissionsFrame.setVisible(true);
 
     }
 
-
+    //allows a student to answer a quiz
     public void answerQuiz(ArrayList<String> quizAndAnswers) {
         if (quizAndAnswers.size() <= getCurrentCount()) {
+            answerQuizFrame.setVisible(false);
+            ArrayList<String> points = Student.grading(getCurrentAnswerList(), quizAndAnswers);
+            setCurrentPoints(points);
+            setCurrentAnswerList(new ArrayList<String>());
+            setCurrentCount(0);
+            try {
+                Socket socket = new Socket("localhost", 4343);
+                BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                ArrayList<String> currentAnswers = getCurrentAnswerList();
+                String currentAnswersStr = "";
+                //packaging currentAnswers list to a string to be sent to server
+                for (int i = 0; i < currentAnswers.size(); i++) {
+                    currentAnswersStr += currentAnswers.get(i) + "`";
+                }
+                currentAnswersStr = currentAnswersStr.substring(0, currentAnswersStr.length() - 1);
+
+                //packaging quizAndAnswers list to a string to be sent to server
+                String quizStr = "";
+                for (int i = 0; i < quizAndAnswers.size(); i++) {
+                    quizStr += quizAndAnswers.get(i) + "`";
+                }
+                quizStr = quizStr.substring(0, quizStr.length() - 1);
+
+                //Sending to server to be graded
+                pw.write("GRADING|" + currentAnswersStr + "|" + quizStr);
+                pw.flush();
+
+                points = parseMessage(bfr.readLine());
+
+                bfr.close();
+                pw.close();
+                socket.close();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            setCurrentPoints(points);
+
+//                System.out.println(answerList);
+//                System.out.println(points);
+            //writes file
+            try {
+                Socket socket = new Socket("localhost", 4343);
+                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                //Sending to server to be written
+                pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
+                        + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()));
+                pw.flush();
+
+                pw.close();
+                socket.close();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            setCurrentAnswerList(new ArrayList<String>());
             return;
         }
 //        ArrayList<String> answerList = new ArrayList<>();
-        frame6 = new JFrame("Quiz Answer");
-        frame6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame6.setSize(800, 600);
-        frame6.setLocation(430, 100);
+        answerQuizFrame = new JFrame("Quiz Answer");
+        answerQuizFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        answerQuizFrame.setSize(800, 600);
+        answerQuizFrame.setLocation(430, 100);
         JPanel panel = new JPanel();
         JPanel panelForQuestion = new JPanel();
         JTextArea question = new JTextArea(quizAndAnswers.get(getCurrentCount()));
@@ -205,75 +260,13 @@ public class Client implements ActionListener {
         cb.setMaximumSize(cb.getPreferredSize());
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok3 = new JButton("OK");
-        JButton finishQuiz = new JButton("Finish Quiz");
-        panel.add(finishQuiz, BorderLayout.AFTER_LINE_ENDS);
-        finishQuiz.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame6.setVisible(false);
-                ArrayList<String> points = new ArrayList<>();
-                try {
-                    Socket socket = new Socket("localhost", 4343);
-                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
-                    ArrayList<String> currentAnswers = getCurrentAnswerList();
-                    String currentAnswersStr = "";
-                    //packaging currentAnswers list to a string to be sent to server
-                    for (int i = 0; i < currentAnswers.size(); i++) {
-                        currentAnswersStr += currentAnswers.get(i) + "`";
-                    }
-                    currentAnswersStr = currentAnswersStr.substring(0, currentAnswersStr.length() - 1);
-
-                    //packaging quizAndAnswers list to a string to be sent to server
-                    String quizStr = "";
-                    for (int i = 0; i < quizAndAnswers.size(); i++) {
-                        quizStr += quizAndAnswers.get(i) + "`";
-                    }
-                    quizStr = quizStr.substring(0, quizStr.length() - 1);
-
-                    //Sending to server to be graded
-                    pw.write("GRADING|" + currentAnswersStr + "|" + quizStr);
-                    pw.flush();
-
-                    points = parseMessage(bfr.readLine());
-
-                    bfr.close();
-                    pw.close();
-                    socket.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                setCurrentPoints(points);
-
-//                System.out.println(answerList);
-//                System.out.println(points);
-                //writes file
-                try {
-                    Socket socket = new Socket("localhost", 4343);
-                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
-                    //Sending to server to be written
-                    pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
-                            + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()));
-                    pw.flush();
-
-                    pw.close();
-                    socket.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                setCurrentAnswerList(new ArrayList<String>());
-            }
-        });
         panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
-        frame6.add(panelForQuestion, BorderLayout.NORTH);
-        frame6.add(panel, BorderLayout.SOUTH);
+        answerQuizFrame.add(panelForQuestion, BorderLayout.NORTH);
+        answerQuizFrame.add(panel, BorderLayout.SOUTH);
         ok3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 {
-                    panelForQuestion.remove(question);
-                    frame6.setVisible(false);
                     String answerChoice = (String) cb.getSelectedItem();
                     if (answerChoice.equals("Answer through GUI")) {
                         String answer = JOptionPane.showInputDialog(null, "Answer:");
@@ -289,11 +282,14 @@ public class Client implements ActionListener {
                         }
                     }
                     setCurrentCount(getCurrentCount() + 3);
+                    answerQuizFrame.removeAll();
+                    answerQuizFrame.setVisible(false);
                     answerQuiz(quizAndAnswers);
+                    //answerQuizFrame.setVisible(false);
                 }
             }
         });
-        frame6.setVisible(true);
+        answerQuizFrame.setVisible(true);
 
         //implement write file here
 
@@ -356,13 +352,13 @@ public class Client implements ActionListener {
         return currentQuizAndAnswers;
     }
 
-
+    //allows students to take a quiz
     public void takeQuiz() {
-        frame5 = new JFrame("Available Quizzes");
-        frame5.setVisible(true);
-        frame5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame5.setSize(500, 140);
-        frame5.setLocation(430, 100);
+        takeQuizFrame = new JFrame("Available Quizzes");
+        takeQuizFrame.setVisible(true);
+        takeQuizFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        takeQuizFrame.setSize(500, 140);
+        takeQuizFrame.setLocation(430, 100);
         JPanel panel = new JPanel();
         JLabel lbl = new JLabel("Select an option click OK");
         panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
@@ -399,6 +395,7 @@ public class Client implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 {
+                    takeQuizFrame.setVisible(false);
                     String courseName = (String) cb.getSelectedItem();
                     setCurrentCourse(courseName);
                     JPanel panel2 = new JPanel();
@@ -452,7 +449,7 @@ public class Client implements ActionListener {
                                 pw.flush();
                                 String response = bfr.readLine();
                                 if (response.equals("true")) {
-                                    frame5.setVisible(false);
+                                    takeQuizFrame.setVisible(false);
                                     pw.write("READQUIZ|" + courseName + "|" + quiz);
                                     ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
                                     answerQuiz(quizAndAnswers);
@@ -470,23 +467,24 @@ public class Client implements ActionListener {
                     panel2.add(viewSubmissions, BorderLayout.AFTER_LINE_ENDS);
                     panel2.add(ok4, BorderLayout.AFTER_LINE_ENDS);
 
-                    frame5.add(panel2, BorderLayout.SOUTH);
+                    takeQuizFrame.add(panel2, BorderLayout.SOUTH);
+                    takeQuizFrame.setVisible(true);
                 }
             }
         });
 
-        frame5.add(panel, BorderLayout.NORTH);
+        takeQuizFrame.add(panel, BorderLayout.NORTH);
 
 
     }
 
-
+    //allows users to create a new account
     public void create() {
-        frame2 = new JFrame("Create Account");
-        frame2.setVisible(true);
-        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame2.setSize(500, 140);
-        frame2.setLocation(430, 100);
+        createAccountFrame = new JFrame("Create Account");
+        createAccountFrame.setVisible(true);
+        createAccountFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        createAccountFrame.setSize(500, 140);
+        createAccountFrame.setLocation(430, 100);
 
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
@@ -502,13 +500,13 @@ public class Client implements ActionListener {
         cb.setMaximumSize(cb.getPreferredSize());
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
 
-        frame2.add(panel, BorderLayout.NORTH);
+        createAccountFrame.add(panel, BorderLayout.NORTH);
 
         JLabel lbl2 = new JLabel("Username");
         JTextField username = new JTextField(8);
         panel2.add(lbl2, BorderLayout.EAST);
         panel2.add(username, BorderLayout.AFTER_LINE_ENDS);
-        frame2.add(panel2, BorderLayout.CENTER);
+        createAccountFrame.add(panel2, BorderLayout.CENTER);
 
         JLabel lbl3 = new JLabel("Password");
         JPasswordField password = new JPasswordField(8);
@@ -573,28 +571,28 @@ public class Client implements ActionListener {
                         }
                         setUsername(username.getText());
                         StudentMenu(username.getText());
-                        frame2.setVisible(false);
+                        createAccountFrame.setVisible(false);
                     }
                 }
             }
         });
         panel3.add(ok3, BorderLayout.AFTER_LINE_ENDS);
-        frame2.add(panel3, BorderLayout.SOUTH);
-//        frame2.setVisible(true);
+        createAccountFrame.add(panel3, BorderLayout.SOUTH);
+//        createAccountFrame.setVisible(true);
     }
-
+    //allows users to login
     public void login() {
-        frame3 = new JFrame("Login");
+        loginFrame = new JFrame("Login");
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
-        frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame3.setSize(500, 120);
-        frame3.setLocation(430, 100);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setSize(500, 120);
+        loginFrame.setLocation(430, 100);
         JLabel lbl2 = new JLabel("Username");
         JTextField username = new JTextField(8);
         panel.add(lbl2, BorderLayout.EAST);
         panel.add(username, BorderLayout.AFTER_LINE_ENDS);
-        frame3.add(panel, BorderLayout.NORTH);
+        loginFrame.add(panel, BorderLayout.NORTH);
         JLabel lbl3 = new JLabel("Password");
         JPasswordField password = new JPasswordField(8);
         panel2.add(lbl3, BorderLayout.EAST);
@@ -651,14 +649,14 @@ public class Client implements ActionListener {
                 if (prompt2) {
                     setUsername(username.getText());
                     StudentMenu(username.getText());
-                    frame3.setVisible(false);
+                    loginFrame.setVisible(false);
                 }
             }
         });
         panel2.add(ok, BorderLayout.AFTER_LINE_ENDS);
-        frame3.add(panel2, BorderLayout.CENTER);
+        loginFrame.add(panel2, BorderLayout.CENTER);
 
-        frame3.setVisible(true);
+        loginFrame.setVisible(true);
 
     }
 
@@ -677,7 +675,7 @@ public class Client implements ActionListener {
             }
         });
     }
-
+    //menu shown for Teacher/Student
     public void StudentMenu(String username) {
         String type = "";
         try {
@@ -697,10 +695,10 @@ public class Client implements ActionListener {
             exception.printStackTrace();
         }
         if (type.equals("Student")) {
-            frame4 = new JFrame("Welcome Student " + username);
-            frame4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame4.setSize(500, 100);
-            frame4.setLocation(430, 100);
+            studentMenuFrame = new JFrame("Welcome Student " + username);
+            studentMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            studentMenuFrame.setSize(500, 100);
+            studentMenuFrame.setLocation(430, 100);
             takeQuiz = new JButton("Take Quiz");
             takeQuiz.addActionListener(this);
             exit = new JButton("Exit");
@@ -708,8 +706,8 @@ public class Client implements ActionListener {
             JPanel panel2 = new JPanel();
             panel2.add(takeQuiz);
             panel2.add(exit);
-            frame4.add(panel2, BorderLayout.NORTH);
-            frame4.setVisible(true);
+            studentMenuFrame.add(panel2, BorderLayout.NORTH);
+            studentMenuFrame.setVisible(true);
         } else if (type.equals("Teacher")) {
             // created december 5
             teacherMainMenu = new JFrame("Welcome Teacher " + username);
@@ -743,56 +741,56 @@ public class Client implements ActionListener {
                 }
             });
             viewCourse = new JButton("View Specific Course");
-        viewCourse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                teacherMainMenu.setVisible(false);
-                String courseNameRequested = JOptionPane.showInputDialog(null,
-                        "Please enter the course name.");
-                if (courseNameRequested == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                    teacherMainMenu.setVisible(true);
-                    return;
-                }
-                while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
-                    courseNameRequested = JOptionPane.showInputDialog(null,
-                            "Enter something. Please enter the course name.");
+            viewCourse.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    teacherMainMenu.setVisible(false);
+                    String courseNameRequested = JOptionPane.showInputDialog(null,
+                            "Please enter the course name.");
                     if (courseNameRequested == null) {
                         JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
                                 "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                         teacherMainMenu.setVisible(true);
                         return;
                     }
+                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
+                        courseNameRequested = JOptionPane.showInputDialog(null,
+                                "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            teacherMainMenu.setVisible(true);
+                            return;
+                        }
+                    }
+                    if (Teacher.checkCourseExistence(courseNameRequested, false)) {
+                        teacherViewCourse(courseNameRequested);
+                    } else {
+                        teacherMainMenu.setVisible(true);
+                    }
                 }
-                if (Teacher.checkCourseExistence(courseNameRequested, false)) {
-                    teacherViewCourse(courseNameRequested);
-                } else {
+            });
+            viewAllCourses = new JButton("View All Current Courses");
+            viewAllCourses.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    teacherMainMenu.setVisible(false);
+                    Teacher.printCourses();
                     teacherMainMenu.setVisible(true);
                 }
-            }
-        });
-        viewAllCourses = new JButton("View All Current Courses");
-        viewAllCourses.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                teacherMainMenu.setVisible(false);
-                Teacher.printCourses();
-                teacherMainMenu.setVisible(true);
-            }
-        });
-        //general same exit button
-        exit = new JButton("Exit");
-        exit.addActionListener(this);
-        teacherFirstMenu.add(createCourse);
-        teacherFirstMenu.add(viewCourse);
-        teacherFirstMenu.add(viewAllCourses);
-        teacherFirstMenu.add(exit);
-        teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
-        teacherMainMenu.setVisible(true);
-    }
+            });
+            //general same exit button
+            exit = new JButton("Exit");
+            exit.addActionListener(this);
+            teacherFirstMenu.add(createCourse);
+            teacherFirstMenu.add(viewCourse);
+            teacherFirstMenu.add(viewAllCourses);
+            teacherFirstMenu.add(exit);
+            teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
+            teacherMainMenu.setVisible(true);
+        }
 
-}
+    }
 
     // NEED TO FIGURE OUT HOW TO IMPLEMENT SHOWING THE QUIZZES OR SUBMISSIONS DURING QUESTIONS
     public void teacherViewCourse(String courseName) {
@@ -1013,18 +1011,18 @@ public class Client implements ActionListener {
         teacherViewCourseMenu.setVisible(true);
 
     }
-
+    //creates the first menu that users interact with
     public void createGUI() {
 
-        frame = new JFrame("Welcome to the Quiz Learning Program");
+        createGUIFrame = new JFrame("Welcome to the Quiz Learning Program");
 
-        Container content = frame.getContentPane();
+        Container content = createGUIFrame.getContentPane();
         content.setLayout(new BorderLayout());
 
-        frame.setSize(600, 100);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
+        createGUIFrame.setSize(600, 100);
+        createGUIFrame.setLocationRelativeTo(null);
+        createGUIFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        createGUIFrame.setVisible(true);
 
         create = new JButton("Create");
         create.addActionListener(this);
@@ -1036,67 +1034,7 @@ public class Client implements ActionListener {
         panel.add(create);
         panel.add(login);
         panel.add(exit);
-        frame.add(panel, BorderLayout.NORTH);
+        createGUIFrame.add(panel, BorderLayout.NORTH);
     }
 }
 
-//        int ongoingChoice;
-//        do {
-//            do {
-//                try {
-//                    System.out.println("1. Take Quiz\n2. View Submissions\n3. Exit");
-//                    ongoingChoice = input.nextInt();
-//                } catch (InputMismatchException e) {
-//                    System.out.println("Enter a integer choice");
-//                    ongoingChoice = 4;
-//                    input.nextLine();
-//                }
-//                if (ongoingChoice < 1 || ongoingChoice > 3)
-//                    System.out.println("Invalid selection");
-//
-//            } while (ongoingChoice < 1 || ongoingChoice > 3);
-//
-//            if (ongoingChoice == 1) {
-//                //Takes quiz
-//                //lists courses
-//                input.nextLine();
-//                System.out.println("\nAvailable Courses:");
-//                Teacher.printCourses();
-//                System.out.println("Which course would you like to access: ");
-//                String course = input.nextLine(); //check to sure exists in coursenames.txt
-//                if (Teacher.checkCourseExistence(course)) {
-//                    //lists quizzes in course
-//                    System.out.println("\nAvailable Quizzes:");
-//                    Teacher.printQuizzes(course);
-//                    System.out.println("Which quiz would you like to take: ");
-//                    String quiz = input.nextLine(); //ensure exists in coursenamesquizzes
-//                    if (Teacher.checkQuizExistence(course, quiz)) {
-//
-//                        ArrayList<String> submission = Student.answer(input, course, quiz);
-//                        String total = submission.get(submission.size() - 1);
-//                        submission.remove(submission.size() - 1);
-//                        Student.writeFile(course, quiz, user, submission, total);
-//                    }
-//                }
-//
-//            } else if (ongoingChoice == 2) {
-//                //views submissions
-//                //lists courses
-//                input.nextLine();
-//                System.out.println("\nAvailable Courses:");
-//                Teacher.printCourses();
-//                System.out.println("Which course would you like to access: ");
-//                String course = input.nextLine(); //check to sure exists in coursenames.txt
-//                if (Teacher.checkCourseExistence(course)) {
-//                    //lists quizzes in course
-//                    System.out.println("\nAvailable Quizzes:");
-//                    Teacher.printQuizzes(course);
-//                    System.out.println("Which quiz would you like to view your submissions for: ");
-//                    String quiz = input.nextLine(); //ensure exists in coursenamesquizzes
-//                    if (Teacher.checkQuizExistence(course, quiz)) {
-//                        Student.viewSubmissions(input, course, quiz, user);
-//                    }
-//                }
-//            }
-//        } while(ongoingChoice == 1 || ongoingChoice == 2);
-//    }
