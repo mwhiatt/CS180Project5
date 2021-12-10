@@ -16,29 +16,29 @@ import java.net.*;
 
 public class Client implements ActionListener {
 
-	public static ArrayList<String> parseMessage(String message) {
-		ArrayList<String> parsedMessage = new ArrayList<String>();
-		while (message.indexOf('|') != -1) {
-			parsedMessage.add(message.substring(0, message.indexOf('|')));
-			message = message.substring(message.indexOf('|') + 1);
-	    }
-		parsedMessage.add(message);
-		return parsedMessage;
-	}
-	
-	public static String packageList(ArrayList<String> list) {
-		String packedList = "";
-		//packaging currentAnswers list to a string to be sent to server
-		for (int i = 0; i < list.size(); i++) {
-			packedList += list.get(i) + "`";
-		}
-		packedList = packedList.substring(0, packedList.length() - 1);
-		return packedList;
-	}
-	
+    public static ArrayList<String> parseMessage(String message) {
+        ArrayList<String> parsedMessage = new ArrayList<String>();
+        while (message.indexOf('|') != -1) {
+            parsedMessage.add(message.substring(0, message.indexOf('|')));
+            message = message.substring(message.indexOf('|') + 1);
+        }
+        parsedMessage.add(message);
+        return parsedMessage;
+    }
+
+    public static String packageList(ArrayList<String> list) {
+        String packedList = "";
+        //packaging currentAnswers list to a string to be sent to server
+        for (int i = 0; i < list.size(); i++) {
+            packedList += list.get(i) + "`";
+        }
+        packedList = packedList.substring(0, packedList.length() - 1);
+        return packedList;
+    }
+
     ArrayList<String> currentPoints = new ArrayList<>();
-    ArrayList<String> currentAnswerList =  new ArrayList<>();
-    ArrayList<String> currentQuizAndAnswers =  new ArrayList<>();
+    ArrayList<String> currentAnswerList = new ArrayList<>();
+    ArrayList<String> currentQuizAndAnswers = new ArrayList<>();
     int currentCount = 0;
     String currentCourse;
     String currentQuiz;
@@ -108,20 +108,20 @@ public class Client implements ActionListener {
         JPanel panel = new JPanel();
         String response = "";
         try {
-    		Socket socket = new Socket("localhost", 4343);
-    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-    		
-    		pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername());
-    		pw.flush();
-    		response = bfr.readLine();
-    		
-    		bfr.close();
-    		pw.close();
-    		socket.close();
-    	} catch (IOException exception) {
-    		exception.printStackTrace();
-    	}
+            Socket socket = new Socket("localhost", 4343);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+            pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername());
+            pw.flush();
+            response = bfr.readLine();
+
+            bfr.close();
+            pw.close();
+            socket.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
         ArrayList<String> userSubmissions = parseMessage(response);
         String[] userSubmissionsArray = new String[userSubmissions.size()];
         for (int c = 0; c < userSubmissions.size(); c++) {
@@ -148,20 +148,20 @@ public class Client implements ActionListener {
                 JPanel panel = new JPanel();
                 String submission = "";
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("VIEWSUBMISSIONS|" + (String) cb.getSelectedItem());
-            		pw.flush();
-            		submission = bfr.readLine();
-            		
-            		bfr.close();
-            		pw.close();
-            		socket.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("VIEWSUBMISSIONS|" + (String) cb.getSelectedItem());
+                    pw.flush();
+                    submission = bfr.readLine();
+
+                    bfr.close();
+                    pw.close();
+                    socket.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 JTextArea selectedSubmission = new JTextArea(submission);
                 JButton ok2 = new JButton("Continue viewing other submissions?");
                 panel.add(selectedSubmission, BorderLayout.NORTH);
@@ -205,7 +205,7 @@ public class Client implements ActionListener {
         cb.setMaximumSize(cb.getPreferredSize());
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok3 = new JButton("OK");
-        JButton finishQuiz = new JButton ("Finish Quiz");
+        JButton finishQuiz = new JButton("Finish Quiz");
         panel.add(finishQuiz, BorderLayout.AFTER_LINE_ENDS);
         finishQuiz.addActionListener(new ActionListener() {
             @Override
@@ -213,55 +213,55 @@ public class Client implements ActionListener {
                 frame6.setVisible(false);
                 ArrayList<String> points = new ArrayList<>();
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		ArrayList<String> currentAnswers = getCurrentAnswerList();
-            		String currentAnswersStr = "";
-            		//packaging currentAnswers list to a string to be sent to server
-            		for (int i = 0; i < currentAnswers.size(); i++) {
-            			currentAnswersStr += currentAnswers.get(i) + "`";
-            		}
-            		currentAnswersStr = currentAnswersStr.substring(0, currentAnswersStr.length() - 1);
-            		
-            		//packaging quizAndAnswers list to a string to be sent to server
-            		String quizStr = "";
-            		for (int i = 0; i < quizAndAnswers.size(); i++) {
-            			quizStr += quizAndAnswers.get(i) + "`";
-            		}
-            		quizStr = quizStr.substring(0, quizStr.length() - 1);
-            		
-            		//Sending to server to be graded
-            		pw.write("GRADING|" + currentAnswersStr + "|" + quizStr);
-            		pw.flush();
-            		
-            		points = parseMessage(bfr.readLine());
-            		
-            		bfr.close();
-            		pw.close();
-            		socket.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                    ArrayList<String> currentAnswers = getCurrentAnswerList();
+                    String currentAnswersStr = "";
+                    //packaging currentAnswers list to a string to be sent to server
+                    for (int i = 0; i < currentAnswers.size(); i++) {
+                        currentAnswersStr += currentAnswers.get(i) + "`";
+                    }
+                    currentAnswersStr = currentAnswersStr.substring(0, currentAnswersStr.length() - 1);
+
+                    //packaging quizAndAnswers list to a string to be sent to server
+                    String quizStr = "";
+                    for (int i = 0; i < quizAndAnswers.size(); i++) {
+                        quizStr += quizAndAnswers.get(i) + "`";
+                    }
+                    quizStr = quizStr.substring(0, quizStr.length() - 1);
+
+                    //Sending to server to be graded
+                    pw.write("GRADING|" + currentAnswersStr + "|" + quizStr);
+                    pw.flush();
+
+                    points = parseMessage(bfr.readLine());
+
+                    bfr.close();
+                    pw.close();
+                    socket.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 setCurrentPoints(points);
-                
+
 //                System.out.println(answerList);
 //                System.out.println(points);
                 //writes file
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		//Sending to server to be written
-            		pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
-            			+ "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()));
-            		pw.flush();
-            		
-            		pw.close();
-            		socket.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    //Sending to server to be written
+                    pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
+                            + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()));
+                    pw.flush();
+
+                    pw.close();
+                    socket.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 setCurrentAnswerList(new ArrayList<String>());
             }
         });
@@ -339,6 +339,7 @@ public class Client implements ActionListener {
     public void setCurrentAnswerList(ArrayList<String> answerList) {
         currentAnswerList = answerList;
     }
+
     public void setCurrentQuizAndAnswers(ArrayList<String> quizAndAnswers) {
         currentQuizAndAnswers = quizAndAnswers;
     }
@@ -367,25 +368,25 @@ public class Client implements ActionListener {
         panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
         ArrayList<String> courseList = new ArrayList<>();
         try {
-    		Socket socket = new Socket("localhost", 4343);
-    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-    		
-    		//Sending to server to be written
-    		pw.write("PRINTCOURSES");
-    		pw.flush();
-    		
-    		courseList = parseMessage(bfr.readLine());
-    		
-    		bfr.close();
-    		pw.close();
-    		socket.close();
-    	} catch (IOException exception) {
-    		exception.printStackTrace();
-    	}
+            Socket socket = new Socket("localhost", 4343);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+            //Sending to server to be written
+            pw.write("PRINTCOURSES");
+            pw.flush();
+
+            courseList = parseMessage(bfr.readLine());
+
+            bfr.close();
+            pw.close();
+            socket.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
         String[] choices = new String[courseList.size()];
         for (int i = 0; i < choices.length; i++) {
-        	choices[i] = courseList.get(i);
+            choices[i] = courseList.get(i);
         }
 
         final JComboBox<String> cb = new JComboBox<String>(choices);
@@ -405,25 +406,25 @@ public class Client implements ActionListener {
                     panel2.add(lbl2, BorderLayout.AFTER_LINE_ENDS);
                     ArrayList<String> quizList = new ArrayList<>();
                     try {
-                		Socket socket = new Socket("localhost", 4343);
-                		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-                		
-                		//Sending to server to be written
-                		pw.write("PRINTCOURSES|" + courseName);
-                		pw.flush();
-                		
-                		quizList = parseMessage(bfr.readLine());
-                		
-                		bfr.close();
-                		pw.close();
-                		socket.close();
-                	} catch (IOException exception) {
-                		exception.printStackTrace();
-                	}
+                        Socket socket = new Socket("localhost", 4343);
+                        BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                        //Sending to server to be written
+                        pw.write("PRINTCOURSES|" + courseName);
+                        pw.flush();
+
+                        quizList = parseMessage(bfr.readLine());
+
+                        bfr.close();
+                        pw.close();
+                        socket.close();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                     String[] choicesQuizzes = new String[quizList.size()];
                     for (int i = 0; i < choices.length; i++) {
-                    	choicesQuizzes[i] = quizList.get(i);
+                        choicesQuizzes[i] = quizList.get(i);
                     }
                     final JComboBox<String> cb2 = new JComboBox<String>(choicesQuizzes);
 
@@ -442,28 +443,28 @@ public class Client implements ActionListener {
                     ok4.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                        	try {
-                        		Socket socket = new Socket("localhost", 4343);
-                        		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-                        		
-                        		pw.write("CHECKQUIZ|" + courseName + "|" + quiz);
-                        		pw.flush();
-                        		String response = bfr.readLine();
-                        		if (response.equals("true")) {
-                        			frame5.setVisible(false);
-                        			pw.write("READQUIZ|" + courseName + "|" + quiz);
+                            try {
+                                Socket socket = new Socket("localhost", 4343);
+                                BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                                pw.write("CHECKQUIZ|" + courseName + "|" + quiz);
+                                pw.flush();
+                                String response = bfr.readLine();
+                                if (response.equals("true")) {
+                                    frame5.setVisible(false);
+                                    pw.write("READQUIZ|" + courseName + "|" + quiz);
                                     ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
                                     answerQuiz(quizAndAnswers);
-                        		} else {
-                        			//GUI implementation saying quiz doesn't exist
-                        		}
-                        		pw.close();
-                        		bfr.close();
-                        		socket.close();
-                        	} catch (IOException exception) {
-                        		exception.printStackTrace();
-                        	}
+                                } else {
+                                    //GUI implementation saying quiz doesn't exist
+                                }
+                                pw.close();
+                                bfr.close();
+                                socket.close();
+                            } catch (IOException exception) {
+                                exception.printStackTrace();
+                            }
                         }
                     });
                     panel2.add(viewSubmissions, BorderLayout.AFTER_LINE_ENDS);
@@ -528,21 +529,21 @@ public class Client implements ActionListener {
                     }
                     String dupResponse = "";
                     try {
-                		Socket socket = new Socket("localhost", 4343);
-                		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-                		
-                		pw.write("ISDUPLICATE|" + username.getText());
-                		pw.flush();
-                		dupResponse = bfr.readLine();
-                		
-                		socket.close();
-                		bfr.close();
-                		pw.close();
-                		
-                	} catch (IOException exception) {
-                		exception.printStackTrace();
-                	}
+                        Socket socket = new Socket("localhost", 4343);
+                        BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                        pw.write("ISDUPLICATE|" + username.getText());
+                        pw.flush();
+                        dupResponse = bfr.readLine();
+
+                        socket.close();
+                        bfr.close();
+                        pw.close();
+
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                     if (dupResponse.equals("true")) {
                         JOptionPane.showMessageDialog(null, "Sorry that username is taken, please try a new one.", "Username Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -554,22 +555,22 @@ public class Client implements ActionListener {
                         prompt = false;
                     }
                     if (prompt) {
-                    	try {
-                    		Socket socket = new Socket("localhost", 4343);
-                    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-                    		
-                    		pw.write("WRITENEWUSER|" + classification + "|" + username.getText() + "|"
-                    				+ password.getText());
-                    		pw.flush();
-                    		
-                    		socket.close();
-                    		bfr.close();
-                    		pw.close();
-                    		
-                    	} catch (IOException exception) {
-                    		exception.printStackTrace();
-                    	}
+                        try {
+                            Socket socket = new Socket("localhost", 4343);
+                            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                            pw.write("WRITENEWUSER|" + classification + "|" + username.getText() + "|"
+                                    + password.getText());
+                            pw.flush();
+
+                            socket.close();
+                            bfr.close();
+                            pw.close();
+
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
                         setUsername(username.getText());
                         StudentMenu(username.getText());
                         frame2.setVisible(false);
@@ -605,21 +606,21 @@ public class Client implements ActionListener {
                 boolean prompt2 = true;
                 String dupResponse = "0";
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("ISDUPLICATE|" + username.getText());
-            		pw.flush();
-            		dupResponse = bfr.readLine();
-            		
-            		socket.close();
-            		bfr.close();
-            		pw.close();
-            		
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("ISDUPLICATE|" + username.getText());
+                    pw.flush();
+                    dupResponse = bfr.readLine();
+
+                    socket.close();
+                    bfr.close();
+                    pw.close();
+
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 if (!dupResponse.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Username not found, please try again.", "Username Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -627,21 +628,21 @@ public class Client implements ActionListener {
                 }
                 String loginResponse = "";
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("LOGIN|" + username.getText() + "|" + password.getText());
-            		pw.flush();
-            		loginResponse = bfr.readLine();
-            		
-            		socket.close();
-            		bfr.close();
-            		pw.close();
-            		
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("LOGIN|" + username.getText() + "|" + password.getText());
+                    pw.flush();
+                    loginResponse = bfr.readLine();
+
+                    socket.close();
+                    bfr.close();
+                    pw.close();
+
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 if (!loginResponse.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Incorrect password, please try again.", "Username Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -678,23 +679,23 @@ public class Client implements ActionListener {
     }
 
     public void StudentMenu(String username) {
-    	String type = "";
-    	try {
-    		Socket socket = new Socket("localhost", 4343);
-    		BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-    		
-    		pw.write("GETCLASSIFICATION|" + username);
-    		pw.flush();
-    		type = bfr.readLine();
-    		
-    		socket.close();
-    		bfr.close();
-    		pw.close();
-    		
-    	} catch (IOException exception) {
-    		exception.printStackTrace();
-    	}
+        String type = "";
+        try {
+            Socket socket = new Socket("localhost", 4343);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+            pw.write("GETCLASSIFICATION|" + username);
+            pw.flush();
+            type = bfr.readLine();
+
+            socket.close();
+            bfr.close();
+            pw.close();
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
         if (type.equals("Student")) {
             frame4 = new JFrame("Welcome Student " + username);
             frame4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -710,9 +711,88 @@ public class Client implements ActionListener {
             frame4.add(panel2, BorderLayout.NORTH);
             frame4.setVisible(true);
         } else if (type.equals("Teacher")) {
-            //TO-DO
-        }
+            // created december 5
+            teacherMainMenu = new JFrame("Welcome Teacher " + username);
+            teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            teacherMainMenu.setSize(500, 100);
+            teacherMainMenu.setLocation(430, 100);
+            //general shape of frame created
+            JPanel teacherFirstMenu = new JPanel();
+            //same 3 options provided! just coded differently
+            createCourse = new JButton("Create Course");
+            createCourse.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String courseNameRequested = JOptionPane.showInputDialog(null,
+                            "Please enter the course name.");
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                    while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
+                        courseNameRequested = JOptionPane.showInputDialog(null,
+                                "Enter something. Please enter the course name.");
+                        if (courseNameRequested == null) {
+                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                    }
+                    Teacher.createCourse(courseNameRequested);
+                }
+            });
+            viewCourse = new JButton("View Specific Course");
+        viewCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                teacherMainMenu.setVisible(false);
+                String courseNameRequested = JOptionPane.showInputDialog(null,
+                        "Please enter the course name.");
+                if (courseNameRequested == null) {
+                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    teacherMainMenu.setVisible(true);
+                    return;
+                }
+                while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
+                    courseNameRequested = JOptionPane.showInputDialog(null,
+                            "Enter something. Please enter the course name.");
+                    if (courseNameRequested == null) {
+                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        teacherMainMenu.setVisible(true);
+                        return;
+                    }
+                }
+                if (Teacher.checkCourseExistence(courseNameRequested, false)) {
+                    teacherViewCourse(courseNameRequested);
+                } else {
+                    teacherMainMenu.setVisible(true);
+                }
+            }
+        });
+        viewAllCourses = new JButton("View All Current Courses");
+        viewAllCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                teacherMainMenu.setVisible(false);
+                Teacher.printCourses();
+                teacherMainMenu.setVisible(true);
+            }
+        });
+        //general same exit button
+        exit = new JButton("Exit");
+        exit.addActionListener(this);
+        teacherFirstMenu.add(createCourse);
+        teacherFirstMenu.add(viewCourse);
+        teacherFirstMenu.add(viewAllCourses);
+        teacherFirstMenu.add(exit);
+        teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
+        teacherMainMenu.setVisible(true);
     }
+
+}
 
     // NEED TO FIGURE OUT HOW TO IMPLEMENT SHOWING THE QUIZZES OR SUBMISSIONS DURING QUESTIONS
     public void teacherViewCourse(String courseName) {
@@ -731,17 +811,17 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("DELETECOURSE|" + courseName);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("DELETECOURSE|" + courseName);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherMainMenu.setVisible(true);
             }
         });
@@ -759,17 +839,17 @@ public class Client implements ActionListener {
                 }
                 teacherViewCourseMenu.setVisible(false);
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -779,17 +859,17 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("CREATEQUIZ|" + courseName);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("CREATEQUIZ|" + courseName);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -806,17 +886,17 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("EDITQUIZ|" + quizNameToEdit + "|" + courseName);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("EDITQUIZ|" + quizNameToEdit + "|" + courseName);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -840,17 +920,17 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("VIEWSUBMISSION|" + courseName + "|" + quizNameToEdit + "|" + submissionToView);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("VIEWSUBMISSION|" + courseName + "|" + quizNameToEdit + "|" + submissionToView);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -868,17 +948,17 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("PRINTQUIZZES2|" + courseName);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("PRINTQUIZZES2|" + courseName);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -895,17 +975,17 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-            		Socket socket = new Socket("localhost", 4343);
-            		PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            		
-            		pw.write("PRINTSUBMISSIONS|" + courseName + "|" + quizNameToView);
-            		pw.flush();
-            		
-            		socket.close();
-            		pw.close();
-            	} catch (IOException exception) {
-            		exception.printStackTrace();
-            	}
+                    Socket socket = new Socket("localhost", 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                    pw.write("PRINTSUBMISSIONS|" + courseName + "|" + quizNameToView);
+                    pw.flush();
+
+                    socket.close();
+                    pw.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 teacherViewCourseMenu.setVisible(true);
             }
         });
@@ -934,30 +1014,30 @@ public class Client implements ActionListener {
 
     }
 
-public void createGUI(){
+    public void createGUI() {
 
-        frame=new JFrame("Welcome to the Quiz Learning Program");
+        frame = new JFrame("Welcome to the Quiz Learning Program");
 
-        Container content=frame.getContentPane();
+        Container content = frame.getContentPane();
         content.setLayout(new BorderLayout());
 
-        frame.setSize(600,100);
+        frame.setSize(600, 100);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
 
-        create=new JButton("Create");
+        create = new JButton("Create");
         create.addActionListener(this);
-        login=new JButton("Login");
+        login = new JButton("Login");
         login.addActionListener(this);
-        exit=new JButton("Exit");
+        exit = new JButton("Exit");
         exit.addActionListener(this);
-        JPanel panel=new JPanel();
+        JPanel panel = new JPanel();
         panel.add(create);
         panel.add(login);
         panel.add(exit);
-        frame.add(panel,BorderLayout.NORTH);
-        }
+        frame.add(panel, BorderLayout.NORTH);
+    }
 }
 
 //        int ongoingChoice;
