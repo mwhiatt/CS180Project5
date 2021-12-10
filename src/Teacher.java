@@ -12,10 +12,11 @@ import java.io.*;
  */
 
 public class Teacher {
-	public static Object gatekeeper = new Object();
+	public static Object courseGatekeeper = new Object();
+	public static Object quizGatekeeper = new Object();
 	
 	public static void createCourse(String courseName) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				String nameAndQuiz = courseName + "Quizzes.txt";
 				File newFileQuiz = new File(nameAndQuiz);
@@ -43,7 +44,7 @@ public class Teacher {
 	}
 
 	public static void deleteCourse(String courseName) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt")); // calling courseNames file
 				// READING IN ALL THE COURSES, THEN FINDING THE NAME AND DELETING, THEN
@@ -131,7 +132,7 @@ public class Teacher {
 
 	// DELETES QUIZ AND QUIZ SUBMISSIONS
 	public static void deleteQuiz(String courseName, String quizName) {
-		synchronized (gatekeeper) {
+		synchronized (quizGatekeeper) {
 			try {
 				// read file to get name of all submissions
 				BufferedReader bfrSubmissions = new BufferedReader(
@@ -213,7 +214,7 @@ public class Teacher {
 	}
 
 	public static void createQuiz(String courseName) {
-		synchronized (gatekeeper) {
+		synchronized (quizGatekeeper) {
 			try {
 				boolean contWriting = false; // variable for knowing if they want to keep writing quizzes (do while loop)
 				String fileName = "";
@@ -429,7 +430,7 @@ public class Teacher {
 
 	public static void editQuiz(String quizName, String courseName) {
 		// converting file into ArrayList
-		synchronized (gatekeeper) {
+		synchronized (quizGatekeeper) {
 			try {
 				BufferedReader bfrForEditing = new BufferedReader(new FileReader(courseName + quizName + ".txt"));
 				ArrayList<String> courseQuizQuestions = new ArrayList<String>();
@@ -580,7 +581,7 @@ public class Teacher {
 	}
 
 	public static void viewSubmission(String courseName, String quizName, String submissionName) {
-		synchronized (gatekeeper) {
+		synchronized (quizGatekeeper) {
 			String fullSubmission = "";
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + submissionName + ".txt"));
@@ -604,7 +605,7 @@ public class Teacher {
 		
 
 	public static String[] printCourses() {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			ArrayList<String> choices = new ArrayList<>();
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt"));
@@ -632,7 +633,7 @@ public class Teacher {
 	}
 
 	public static String[] printQuizzes(String courseName) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			ArrayList<String> choices = new ArrayList<>();
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + "Quizzes.txt"));
@@ -662,7 +663,7 @@ public class Teacher {
 
 	public static void printSubmissions(String courseName, String quizName) {
 		String allSubmissions = "";
-		synchronized (gatekeeper) {
+		synchronized (quizGatekeeper) {
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + "Submissions.txt"));
 				while (true) {
@@ -686,7 +687,7 @@ public class Teacher {
 	}
 
 	public static boolean checkSubmissionExistence(String courseName, String quizName, String submission) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + "Submissions.txt"));
 				while (true) {
@@ -712,7 +713,7 @@ public class Teacher {
 	}
 
 	public static boolean checkQuizExistence(String courseName, String quizName) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + "Quizzes.txt"));
 				while (true) {
@@ -738,7 +739,7 @@ public class Teacher {
 	}
 
 	public static boolean checkCourseExistence(String courseName, boolean creating) {
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt"));
 				while (true) {
@@ -774,7 +775,7 @@ public class Teacher {
 		/*
 		 * File Format: // Creates file with teacher quiz //
 		 */
-		synchronized (gatekeeper) {
+		synchronized (courseGatekeeper) {
 			try {
 				File f = new File(fileName + ".txt");
 				FileReader fileReader = new FileReader(f);
