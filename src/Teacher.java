@@ -16,7 +16,9 @@ public class Teacher {
 		try {
 			String nameAndQuiz = courseName + "Quizzes.txt";
 			File newFileQuiz = new File(nameAndQuiz);
-
+			if (checkCourseExistence(courseName, true)) {
+				return;
+			}
 			if (newFileQuiz.createNewFile()) {
 				JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -710,7 +712,7 @@ public class Teacher {
 		}
 	}
 
-	public static boolean checkCourseExistence(String courseName) {
+	public static boolean checkCourseExistence(String courseName, boolean creating) {
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt"));
 			while (true) {
@@ -720,12 +722,19 @@ public class Teacher {
 				}
 				if (line.equals(courseName)) {
 					bfr.close();
+					if (creating) {
+						JOptionPane.showMessageDialog(null,
+								"Course already created. You can't make another!",
+								"File Status", JOptionPane.ERROR_MESSAGE);
+					}
 					return true;
 				}
 			}
 			bfr.close();
-			JOptionPane.showMessageDialog(null,
-					"Course Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			if (!creating) {
+				JOptionPane.showMessageDialog(null,
+						"Course Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			}
 			return false;
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,
