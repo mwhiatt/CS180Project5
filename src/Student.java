@@ -27,42 +27,43 @@ public class Student {
     }
    //reads the quiz to the student
    public static ArrayList<String> readQuiz (String course, String quiz) {
-        String courseQuizFileName = course + quiz + ".txt";
-        ArrayList<String> list = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(courseQuizFileName))) {
-            String s = " ";
-            String questionString = "";
-            do {
-                for (int c = 0; c < 5; c++) {
-                    s = bfr.readLine();
-                    if (s == null) {
-                        continue;
-                    }
-                    questionString = questionString + s + "\n";
-                }
-                list.add(questionString);
+	   synchronized (Teacher.gatekeeper) {
+       String courseQuizFileName = course + quiz + ".txt";
+       ArrayList<String> list = new ArrayList<>();
+       try (BufferedReader bfr = new BufferedReader(new FileReader(courseQuizFileName))) {
+           String s = " ";
+           String questionString = "";
+           do {
+               for (int c = 0; c < 5; c++) {
+                   s = bfr.readLine();
+                   if (s == null) {
+                       continue;
+                   }
+                   questionString = questionString + s + "\n";
+               }
+               list.add(questionString);
+               if (s == null) {
+                   continue;
+               }
 
-                if (s == null) {
-                    continue;
-                }
-
-                for (int c = 0; c < 2; c++) {
-                    if (c == 0) {
-                        s = bfr.readLine();
-                        list.add(s); // ans
-                    } else if (c == 1) {
-                        s = bfr.readLine();
-                        list.add(s); // points
-                    }
-                }
-            } while (s != null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        list.remove(list.size() - 1);
-        return list;
+               for (int c = 0; c < 2; c++) {
+                   if (c == 0) {
+                       s = bfr.readLine();
+                       list.add(s); // ans
+                   } else if (c == 1) {
+                       s = bfr.readLine();
+                       list.add(s); // points
+                   }
+               }
+           } while (s != null);
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       list.remove(list.size() - 1);
+       return list;
+	   }
 
 
     }
@@ -77,56 +78,60 @@ public class Student {
 
         int i = 1;
         int n = 1;
-        String fileName = course + quiz + user + ".txt";
-        File f = new File(fileName);
-        while (f.exists()) {
-            i++;
-            fileName = course + quiz + user + i + ".txt";
-            f = new File(fileName);
-        }
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(fileName, false))) {
-            pw.println("Name: " + user);
-            for (int c = 0; c < answerList.size(); c ++) {
-                String ans = "Student Answer: " + answerList.get(c);
-                String point = points.get(c);
-                String fileInput = n + ". " + ans + ", " + point;
-                n++;
-                pw.println(fileInput);
-            }
-            pw.println("Points Earned : " + totalString);
-            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-            pw.println("Timestamp: " + timeStamp);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        String masterFileName = course + quiz + "Submissions.txt";
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
-            pw.println(fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        synchronized (Teacher.gatekeeper) {
+	        String fileName = course + quiz + user + ".txt";
+	        File f = new File(fileName);
+	        while (f.exists()) {
+	            i++;
+	            fileName = course + quiz + user + i + ".txt";
+	            f = new File(fileName);
+	        }
+	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(fileName, false))) {
+	            pw.println("Name: " + user);
+	            for (int c = 0; c < answerList.size(); c ++) {
+	                String ans = "Student Answer: " + answerList.get(c);
+	                String point = points.get(c);
+	                String fileInput = n + ". " + ans + ", " + point;
+	                n++;
+	                pw.println(fileInput);
+	            }
+	            pw.println("Points Earned : " + totalString);
+	            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	            pw.println("Timestamp: " + timeStamp);
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        }
+	
+	        String masterFileName = course + quiz + "Submissions.txt";
+	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
+	            pw.println(fileName);
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        }
         }
     }
 
     //allows the student to answer through file imports
     public static String answerImportFile(String fileName) throws IOException {
-        File f = null;
-        FileReader fileReader = null;
-        BufferedReader bufferedReader = null;
-        String ans;
-        try {
-            f = new File(fileName + ".txt");
-            fileReader = new FileReader(f);
-            bufferedReader = new BufferedReader(fileReader);
-            ans = bufferedReader.readLine();
-
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException();
-        } catch (IOException e) {
-            throw new IOException();
-        }
-        bufferedReader.close();
-        return ans;
+    	synchronized (Teacher.gatekeeper) {
+	        File f = null;
+	        FileReader fileReader = null;
+	        BufferedReader bufferedReader = null;
+	        String ans;
+	        try {
+	            f = new File(fileName + ".txt");
+	            fileReader = new FileReader(f);
+	            bufferedReader = new BufferedReader(fileReader);
+	            ans = bufferedReader.readLine();
+	
+	        } catch (FileNotFoundException e) {
+	            throw new FileNotFoundException();
+	        } catch (IOException e) {
+	            throw new IOException();
+	        }
+	        bufferedReader.close();
+	        return ans;
+    	}
     }
 
     // Displays student the submission they have chosen to view
@@ -135,24 +140,27 @@ public class Student {
         ArrayList<String> userSubmissions = new ArrayList<>(); // ArrayList that holds a particular user's submissions
         String prompt = "";
         boolean properInput = false;
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String s = bfr.readLine();
-            while (s != null) {
-                if (s.contains(user)) { // checks whether a submission contains username
-                    userSubmissions.add(s); // adds it to ArrayList
-                }
-                s = bfr.readLine();
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (Teacher.gatekeeper) {
+	        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+	            String s = bfr.readLine();
+	            while (s != null) {
+	                if (s.contains(user)) { // checks whether a submission contains username
+	                    userSubmissions.add(s); // adds it to ArrayList
+	                }
+	                s = bfr.readLine();
+	            }
+	
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        return userSubmissions;
         }
-        return userSubmissions;
     }
     public static String viewSubmissions(String requestedSubmission) {
         String returnString = "";
+        synchronized (Teacher.gatekeeper) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
                 String s = bfr.readLine();
                 while (s != null) {
@@ -165,6 +173,7 @@ public class Student {
                 e.printStackTrace();
             }
             return returnString;
+        }
 //            System.out.println("Would you like to view more submissions? [Y/N]"); // checks if user wants to
 //            // view more submissions
 //            prompt = input.nextLine();
