@@ -281,6 +281,12 @@ public class Client implements ActionListener {
 
                     } else {
                         //to-do
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                        int result = fileChooser.showOpenDialog(null);
+                        if (result == JFileChooser.APPROVE_OPTION) {
+                            File selectedFile = fileChooser.getSelectedFile();
+                        }
                     }
                     setCurrentCount(getCurrentCount() + 3);
                     answerQuiz(quizAndAnswers);
