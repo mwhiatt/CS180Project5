@@ -30,7 +30,7 @@ public class Client implements ActionListener {
         packedList = packedList.substring(0, packedList.length() - 1);
         return packedList;
     }
-
+    final static String SERVERADDRESS = "localhost";
     ArrayList<String> currentPoints = new ArrayList<>();
     ArrayList<String> currentAnswerList = new ArrayList<>();
     ArrayList<String> currentQuizAndAnswers = new ArrayList<>();
@@ -102,7 +102,7 @@ public class Client implements ActionListener {
         JPanel panel = new JPanel();
         String response = "";
         try {
-            Socket socket = new Socket("localhost", 4343);
+            Socket socket = new Socket(SERVERADDRESS, 4343);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -142,7 +142,7 @@ public class Client implements ActionListener {
                 JPanel panel = new JPanel();
                 String submission = "";
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -184,7 +184,7 @@ public class Client implements ActionListener {
             setCurrentAnswerList(new ArrayList<String>());
             setCurrentCount(0);
             try {
-                Socket socket = new Socket("localhost", 4343);
+                Socket socket = new Socket(SERVERADDRESS, 4343);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
                 ArrayList<String> currentAnswers = getCurrentAnswerList();
@@ -220,7 +220,7 @@ public class Client implements ActionListener {
 //                System.out.println(points);
             //writes file
             try {
-                Socket socket = new Socket("localhost", 4343);
+                Socket socket = new Socket(SERVERADDRESS, 4343);
                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                 //Sending to server to be written
@@ -368,7 +368,7 @@ public class Client implements ActionListener {
         panel.add(lbl, BorderLayout.AFTER_LINE_ENDS);
         ArrayList<String> courseList = new ArrayList<>();
         try {
-            Socket socket = new Socket("localhost", 4343);
+            Socket socket = new Socket(SERVERADDRESS, 4343);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -409,7 +409,7 @@ public class Client implements ActionListener {
                     panel2.add(lbl2, BorderLayout.AFTER_LINE_ENDS);
                     ArrayList<String> quizList = new ArrayList<>();
                     try {
-                        Socket socket = new Socket("localhost", 4343);
+                        Socket socket = new Socket(SERVERADDRESS, 4343);
                         BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -447,7 +447,7 @@ public class Client implements ActionListener {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
-                                Socket socket = new Socket("localhost", 4343);
+                                Socket socket = new Socket(SERVERADDRESS, 4343);
                                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -540,7 +540,7 @@ public class Client implements ActionListener {
                     }
                     String dupResponse = "";
                     try {
-                        Socket socket = new Socket("localhost", 4343);
+                        Socket socket = new Socket(SERVERADDRESS, 4343);
                         BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -567,7 +567,7 @@ public class Client implements ActionListener {
                     }
                     if (prompt) {
                         try {
-                            Socket socket = new Socket("localhost", 4343);
+                            Socket socket = new Socket(SERVERADDRESS, 4343);
                             PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                             pw.write("WRITENEWUSER|" + classification + "|" + username.getText() + "|"
@@ -624,7 +624,7 @@ public class Client implements ActionListener {
                 boolean prompt2 = true;
                 String dupResponse = "0";
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -646,7 +646,7 @@ public class Client implements ActionListener {
                 }
                 String loginResponse = "";
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
@@ -708,7 +708,7 @@ public class Client implements ActionListener {
         String type = "";
         try {
         	System.out.println("Stuedent Menu get classification hit");
-            Socket socket = new Socket("localhost", 4343);
+            Socket socket = new Socket(SERVERADDRESS, 4343);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
             System.out.println("Connection for get established, user: " + username);
@@ -847,7 +847,7 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("DELETECOURSE|" + courseName + "\n");
@@ -875,7 +875,7 @@ public class Client implements ActionListener {
                 }
                 teacherViewCourseMenu.setVisible(false);
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete + "\n");
@@ -895,7 +895,7 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("CREATEQUIZ|" + courseName + "\n");
@@ -922,7 +922,7 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("EDITQUIZ|" + quizNameToEdit + "|" + courseName + "\n");
@@ -956,7 +956,7 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("VIEWSUBMISSION|" + courseName + "|" + quizNameToEdit + "|" + submissionToView + "\n");
@@ -984,7 +984,7 @@ public class Client implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 teacherViewCourseMenu.setVisible(false);
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("PRINTQUIZZES2|" + courseName + "\n");
@@ -1011,7 +1011,7 @@ public class Client implements ActionListener {
                     return;
                 }
                 try {
-                    Socket socket = new Socket("localhost", 4343);
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("PRINTSUBMISSIONS|" + courseName + "|" + quizNameToView + "\n");
