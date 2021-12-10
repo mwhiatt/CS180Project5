@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Project 4 - Learning Management Quiz Tool - Login Contains methods for login
+ * Project 5 - Learning Management Quiz Tool - Login Contains methods for login
  * system functionality
  * <p>
  * 
@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Login {
 
-	public static boolean isDuplicate(String user) {
+	public synchronized static boolean isDuplicate(String user) {
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(new File("login.txt")));
 			ArrayList<String> content = new ArrayList<>();
@@ -39,7 +39,7 @@ public class Login {
 		}
 	}
 
-	public static void writeNewUser(String classification, String user, String password) {
+	public synchronized static void writeNewUser(String classification, String user, String password) {
 		try {
 			PrintWriter pw = new PrintWriter(new FileOutputStream("login.txt", true));
 			pw.println(classification);
@@ -51,7 +51,7 @@ public class Login {
 		}
 	}
 
-	public static boolean login(String user, String password) {
+	public synchronized static boolean login(String user, String password) {
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(new File("login.txt")));
 			ArrayList<String> content = new ArrayList<>();
@@ -83,7 +83,7 @@ public class Login {
 		}
 	}
 
-	public static String getClassification(String user) {
+	public synchronized static String getClassification(String user) {
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(new File("login.txt")));
 			ArrayList<String> content = new ArrayList<>();
