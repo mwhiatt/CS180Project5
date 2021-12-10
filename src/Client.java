@@ -801,7 +801,7 @@ public class Client implements ActionListener {
                             return;
                         }
                     }
-                    if (Teacher.checkCourseExistence(courseNameRequested) == true) {
+                    if (Teacher.checkCourseExistence(courseNameRequested, false)) {
                         teacherViewCourse(courseNameRequested);
                     } else {
                         teacherMainMenu.setVisible(true);
