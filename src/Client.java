@@ -414,7 +414,7 @@ public class Client implements ActionListener {
                         PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                         //Sending to server to be written
-                        pw.write("PRINTCOURSES|" + courseName + "\n");
+                        pw.write("PRINTQUIZZES|" + courseName + "\n");
                         pw.flush();
 
                         quizList = parseMessage(bfr.readLine());
@@ -451,16 +451,17 @@ public class Client implements ActionListener {
                                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-                                pw.write("CHECKQUIZ|" + courseName + "|" + quiz + "\n");
+                                pw.write("CHECKQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
                                 pw.flush();
                                 String response = bfr.readLine();
                                 if (response.equals("true")) {
                                     takeQuizFrame.setVisible(false);
-                                    pw.write("READQUIZ|" + courseName + "|" + quiz + "\n");
+                                    pw.write("READQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
                                     ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
+                                    setCurrentQuizAndAnswers(quizAndAnswers);
                                     answerQuiz(quizAndAnswers);
                                 } else {
-                                    //GUI implementation saying quiz doesn't exist
+                                    JOptionPane.showMessageDialog(null, "Quiz doesn't exist", "Check Quiz error", JOptionPane.ERROR_MESSAGE);                                    //GUI implementation saying quiz doesn't exist
                                 }
                                 pw.close();
                                 bfr.close();
