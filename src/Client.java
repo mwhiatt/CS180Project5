@@ -261,8 +261,17 @@ public class Client implements ActionListener {
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok3 = new JButton("OK");
         panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+        JButton backAnswerQuiz = new JButton("Back");
+        panel.add(backAnswerQuiz, BorderLayout.AFTER_LINE_ENDS);
         answerQuizFrame.add(panelForQuestion, BorderLayout.NORTH);
         answerQuizFrame.add(panel, BorderLayout.SOUTH);
+        backAnswerQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                answerQuizFrame.setVisible(false);
+                takeQuizFrame.setVisible(true);
+            }
+        });
         ok3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -390,7 +399,9 @@ public class Client implements ActionListener {
         cb.setMaximumSize(cb.getPreferredSize());
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok3 = new JButton("OK");
+        JButton backTakeQuiz = new JButton("Back");
         panel.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+        panel.add(backTakeQuiz, BorderLayout.AFTER_LINE_ENDS);
         ok3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -470,6 +481,13 @@ public class Client implements ActionListener {
                     takeQuizFrame.add(panel2, BorderLayout.SOUTH);
                     takeQuizFrame.setVisible(true);
                 }
+            }
+        });
+        backTakeQuiz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                takeQuizFrame.setVisible(false);
+                studentMenuFrame.setVisible(true);
             }
         });
 
@@ -576,7 +594,16 @@ public class Client implements ActionListener {
                 }
             }
         });
+        JButton backCreateAccount = new JButton("Back");
+        panel3.add(backCreateAccount, BorderLayout.AFTER_LINE_ENDS);
         panel3.add(ok3, BorderLayout.AFTER_LINE_ENDS);
+        backCreateAccount.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createAccountFrame.setVisible(false);
+                createGUIFrame.setVisible(true);
+            }
+        });
         createAccountFrame.add(panel3, BorderLayout.SOUTH);
 //        createAccountFrame.setVisible(true);
     }
@@ -598,6 +625,7 @@ public class Client implements ActionListener {
         panel2.add(lbl3, BorderLayout.EAST);
         panel2.add(password, BorderLayout.AFTER_LINE_ENDS);
         JButton ok = new JButton("OK");
+        JButton backLogin = new JButton("Back");
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -654,6 +682,14 @@ public class Client implements ActionListener {
             }
         });
         panel2.add(ok, BorderLayout.AFTER_LINE_ENDS);
+        panel2.add(backLogin, BorderLayout.AFTER_LINE_ENDS);
+        backLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginFrame.setVisible(false);
+                createGUIFrame.setVisible(true);
+            }
+        });
         loginFrame.add(panel2, BorderLayout.CENTER);
 
         loginFrame.setVisible(true);
@@ -703,9 +739,18 @@ public class Client implements ActionListener {
             takeQuiz.addActionListener(this);
             exit = new JButton("Exit");
             exit.addActionListener(this);
+            JButton backStudentMenu = new JButton("Back");
+            backStudentMenu.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    studentMenuFrame.setVisible(false);
+                    loginFrame.setVisible(true);
+                }
+            });
             JPanel panel2 = new JPanel();
             panel2.add(takeQuiz);
             panel2.add(exit);
+            panel2.add(backStudentMenu);
             studentMenuFrame.add(panel2, BorderLayout.NORTH);
             studentMenuFrame.setVisible(true);
         } else if (type.equals("Teacher")) {
