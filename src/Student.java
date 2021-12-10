@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class Student {
     }
    //reads the quiz to the student
    public static ArrayList<String> readQuiz (String course, String quiz) {
-	   synchronized (Teacher.gatekeeper) {
+	   synchronized (Teacher.quizGatekeeper) {
        String courseQuizFileName = course + quiz + ".txt";
        ArrayList<String> list = new ArrayList<>();
        try (BufferedReader bfr = new BufferedReader(new FileReader(courseQuizFileName))) {
@@ -58,11 +57,9 @@ public class Student {
                }
            } while (s != null);
        } catch (FileNotFoundException e) {
-           JOptionPane.showMessageDialog(null, e.getMessage(),
-                   "Read Quiz Error", JOptionPane.ERROR_MESSAGE);
+           e.printStackTrace();
        } catch (IOException e) {
-           JOptionPane.showMessageDialog(null, e.getMessage(),
-                   "Read Quiz Error", JOptionPane.ERROR_MESSAGE);
+           e.printStackTrace();
        }
        list.remove(list.size() - 1);
        return list;
@@ -81,7 +78,7 @@ public class Student {
 
         int i = 1;
         int n = 1;
-        synchronized (Teacher.gatekeeper) {
+        synchronized (Teacher.quizGatekeeper) {
 	        String fileName = course + quiz + user + ".txt";
 	        File f = new File(fileName);
 	        while (f.exists()) {
@@ -102,27 +99,25 @@ public class Student {
 	            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 	            pw.println("Timestamp: " + timeStamp);
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Write submissions Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
 	        }
 	
 	        String masterFileName = course + quiz + "Submissions.txt";
 	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
 	            pw.println(fileName);
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Write submissions Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
 	        }
         }
     }
 
     //allows the student to answer through file imports
     public static String answerImportFile(String fileName) throws IOException {
-    	synchronized (Teacher.gatekeeper) {
+    	synchronized (Teacher.quizGatekeeper) {
 	        File f = null;
 	        FileReader fileReader = null;
 	        BufferedReader bufferedReader = null;
-	        String ans = "";
+	        String ans;
 	        try {
 	            f = new File(fileName + ".txt");
 	            fileReader = new FileReader(f);
@@ -130,11 +125,9 @@ public class Student {
 	            ans = bufferedReader.readLine();
 	
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Answering through Imports Error", JOptionPane.ERROR_MESSAGE);
+	            throw new FileNotFoundException();
 	        } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Answering through Imports Error", JOptionPane.ERROR_MESSAGE);
+	            throw new IOException();
 	        }
 	        bufferedReader.close();
 	        return ans;
@@ -147,7 +140,7 @@ public class Student {
         ArrayList<String> userSubmissions = new ArrayList<>(); // ArrayList that holds a particular user's submissions
         String prompt = "";
         boolean properInput = false;
-        synchronized (Teacher.gatekeeper) {
+        synchronized (Teacher.quizGatekeeper) {
 	        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
 	            String s = bfr.readLine();
 	            while (s != null) {
@@ -158,18 +151,16 @@ public class Student {
 	            }
 	
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Print Submissions Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
 	        } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Print Submissions Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
 	        }
 	        return userSubmissions;
         }
     }
     public static String viewSubmissions(String requestedSubmission) {
         String returnString = "";
-        synchronized (Teacher.gatekeeper) {
+        synchronized (Teacher.quizGatekeeper) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
                 String s = bfr.readLine();
                 while (s != null) {
@@ -177,11 +168,9 @@ public class Student {
                     s = bfr.readLine();
                 }
             } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "View Submissions Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "View Submissions Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
             return returnString;
         }
