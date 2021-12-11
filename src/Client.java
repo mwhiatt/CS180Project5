@@ -64,6 +64,8 @@ public class Client implements ActionListener {
     JButton printQuizzes;
     JButton printSubmissions;
     JButton checkSubmissionExistence;
+    JButton firstMenuBack;
+    JButton secondMenuBack;
 
     //all teacher functions/buttons above
 
@@ -813,6 +815,15 @@ public class Client implements ActionListener {
             teacherFirstMenu.add(viewCourse);
             teacherFirstMenu.add(viewAllCourses);
             teacherFirstMenu.add(exit);
+            JPanel bottomLayer = new JPanel();
+            firstMenuBack = new JButton("Back");
+            firstMenuBack.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    studentMenuFrame.setVisible(false);
+                    loginFrame.setVisible(true);
+                }
+            });
             teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
             teacherMainMenu.setVisible(true);
         }
@@ -1022,7 +1033,14 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
             }
         });
-
+        secondMenuBack = new JButton("Back");
+        secondMenuBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                teacherViewCourseMenu.setVisible(false);
+                studentMenuFrame.setVisible(true);
+            }
+        });
         viewCourseMenu.add(deleteCourse);
         viewCourseMenu.add(deleteQuiz);
         viewCourseMenu.add(createQuiz);
