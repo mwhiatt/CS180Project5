@@ -40,7 +40,7 @@ public class Student {
                    if (s == null) {
                        continue;
                    }
-                   questionString = questionString + s + "\n";
+                   questionString = questionString + s + "~";
                }
                list.add(questionString);
                if (s == null) {
@@ -113,14 +113,14 @@ public class Student {
     }
 
     //allows the student to answer through file imports
-    public static String answerImportFile(String fileName) {
+    public static String answerImportFile(File fileName) {
     	synchronized (Teacher.quizGatekeeper) {
 	        File f = null;
 	        FileReader fileReader = null;
 	        BufferedReader bufferedReader = null;
 	        String ans = "";
 	        try {
-	            f = new File(fileName + ".txt");
+	            f = fileName;
 	            fileReader = new FileReader(f);
 	            bufferedReader = new BufferedReader(fileReader);
 	            ans = bufferedReader.readLine();

@@ -95,7 +95,9 @@ public class Server implements Runnable {
 					for (int i = 0; i < points.size(); i++) {
 						pointsStr += points.get(i) + "|";
 					}
+
 					String ret = pointsStr.substring(0, pointsStr.length() - 1);
+					System.out.println(ret);
 					pw.write(ret + "\n");
 					pw.flush();
 				} else if (method.equals("READQUIZ")) {
@@ -210,6 +212,7 @@ public class Server implements Runnable {
 	}
 	
 	public static ArrayList<String> parseList(String message) {
+		message = message.replace("~","\n");
 		ArrayList<String> parsedList = new ArrayList<String>();
 		while (message.indexOf('`') != -1) {
 			parsedList.add(message.substring(0, message.indexOf('`')));

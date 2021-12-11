@@ -12,6 +12,7 @@ import java.net.*;
 public class Client implements ActionListener {
 
     public static ArrayList<String> parseMessage(String message) {
+        message = message.replace("~","\n");
         ArrayList<String> parsedMessage = new ArrayList<String>();
         while (message.indexOf('|') != -1) {
             parsedMessage.add(message.substring(0, message.indexOf('|')));
@@ -180,9 +181,6 @@ public class Client implements ActionListener {
         if (quizAndAnswers.size() <= getCurrentCount()) {
             answerQuizFrame.setVisible(false);
             ArrayList<String> points = Student.grading(getCurrentAnswerList(), quizAndAnswers);
-            setCurrentPoints(points);
-            setCurrentAnswerList(new ArrayList<String>());
-            setCurrentCount(0);
             try {
                 Socket socket = new Socket(SERVERADDRESS, 4343);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -201,39 +199,26 @@ public class Client implements ActionListener {
                     quizStr += quizAndAnswers.get(i) + "`";
                 }
                 quizStr = quizStr.substring(0, quizStr.length() - 1);
-
                 //Sending to server to be graded
+                System.out.println(quizStr);
+                quizStr = quizStr.replace("\n","~");
                 pw.write("GRADING|" + currentAnswersStr + "|" + quizStr + "\n");
                 pw.flush();
 
                 points = parseMessage(bfr.readLine());
-
+                setCurrentPoints(points);
+                pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
+                        + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
+                pw.flush();
                 bfr.close();
                 pw.close();
                 socket.close();
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-            setCurrentPoints(points);
-
-//                System.out.println(answerList);
-//                System.out.println(points);
-            //writes file
-            try {
-                Socket socket = new Socket(SERVERADDRESS, 4343);
-                PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
-                //Sending to server to be written
-                pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
-                        + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
-                pw.flush();
-
-                pw.close();
-                socket.close();
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
             setCurrentAnswerList(new ArrayList<String>());
+            setCurrentCount(0);
+            setCurrentPoints(new ArrayList<String>());
             return;
         }
 //        ArrayList<String> answerList = new ArrayList<>();
@@ -275,7 +260,7 @@ public class Client implements ActionListener {
                     if (answerChoice.equals("Answer through GUI")) {
                         String answer = JOptionPane.showInputDialog(null, "Answer:");
                         currentAnswerList.add(answer);
-
+                        setCurrentAnswerList(currentAnswerList);
                     } else {
                         //to-do
                         JFileChooser fileChooser = new JFileChooser();
@@ -283,6 +268,8 @@ public class Client implements ActionListener {
                         int result = fileChooser.showOpenDialog(null);
                         if (result == JFileChooser.APPROVE_OPTION) {
                             File selectedFile = fileChooser.getSelectedFile();
+                            currentAnswerList.add(Student.answerImportFile(selectedFile));
+                            setCurrentAnswerList(currentAnswerList);
                         }
                     }
                     setCurrentCount(getCurrentCount() + 3);
@@ -426,7 +413,7 @@ public class Client implements ActionListener {
                         exception.printStackTrace();
                     }
                     String[] choicesQuizzes = new String[quizList.size()];
-                    for (int i = 0; i < choices.length; i++) {
+                    for (int i = 0; i < choices.length - 1; i++) {
                         choicesQuizzes[i] = quizList.get(i);
                     }
                     final JComboBox<String> cb2 = new JComboBox<String>(choicesQuizzes);
@@ -457,6 +444,7 @@ public class Client implements ActionListener {
                                 if (response.equals("true")) {
                                     takeQuizFrame.setVisible(false);
                                     pw.write("READQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
+                                    pw.flush();
                                     ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
                                     setCurrentQuizAndAnswers(quizAndAnswers);
                                     answerQuiz(quizAndAnswers);
