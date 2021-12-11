@@ -164,7 +164,7 @@ public class Student {
             try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
                 String s = bfr.readLine();
                 while (s != null) {
-                    returnString = returnString + s + "\n"; // prints the user submission line by line
+                    returnString = returnString + s + "~"; // prints the user submission line by line
                     s = bfr.readLine();
                 }
             } catch (FileNotFoundException e) {

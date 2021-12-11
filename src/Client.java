@@ -150,6 +150,7 @@ public class Client implements ActionListener {
                     pw.write("VIEWSUBMISSIONS|" + (String) cb.getSelectedItem() + "\n");
                     pw.flush();
                     submission = bfr.readLine();
+                    submission = submission.replace("~","\n");
 
                     bfr.close();
                     pw.close();
@@ -200,7 +201,6 @@ public class Client implements ActionListener {
                 }
                 quizStr = quizStr.substring(0, quizStr.length() - 1);
                 //Sending to server to be graded
-                System.out.println(quizStr);
                 quizStr = quizStr.replace("\n","~");
                 pw.write("GRADING|" + currentAnswersStr + "|" + quizStr + "\n");
                 pw.flush();

@@ -97,7 +97,6 @@ public class Server implements Runnable {
 					}
 
 					String ret = pointsStr.substring(0, pointsStr.length() - 1);
-					System.out.println(ret);
 					pw.write(ret + "\n");
 					pw.flush();
 				} else if (method.equals("READQUIZ")) {
