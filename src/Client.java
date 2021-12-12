@@ -24,6 +24,17 @@ public class Client implements ActionListener {
         parsedMessage.add(message);
         return parsedMessage;
     }
+    
+    public static ArrayList<String> parseList(String message) {
+		message = message.replace("~","\n");
+		ArrayList<String> parsedList = new ArrayList<String>();
+		while (message.indexOf('`') != -1) {
+			parsedList.add(message.substring(0, message.indexOf('`')));
+			message = message.substring(message.indexOf('`') + 1);
+	    }
+		parsedList.add(message);
+		return parsedList;
+	}
 
     public static String packageList(ArrayList<String> list) {
         String packedList = "";
@@ -995,15 +1006,159 @@ public class Client implements ActionListener {
 //                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
+                ArrayList<String> courseQuizQuestions = new ArrayList<>();
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
-                    pw.write("EDITQUIZ|" + quizNameToEdit + "|" + courseName + "\n");
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    pw.write("GETQUIZ|" + quizNameToEdit + "|" + courseName + "\n");
                     pw.flush();
+                    
+                    String packagedList = bfr.readLine();
+                    courseQuizQuestions = parseList(packagedList);
 
-                    socket.close();
+                    bfr.close();
                     pw.close();
+                    socket.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                
+                try {
+                    Socket socket = new Socket(SERVERADDRESS, 4343);
+                    PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    
+                    boolean converted = false;
+        			boolean properNumber = false;
+        			String editQuestion = JOptionPane.showInputDialog(null,"Which question would you like to edit?");
+        			if (editQuestion == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			int convertNumber = 0;
+        			int questionNumber = 0;
+        			String validResponse = "";
+        			String pointsResponse = "";
+        			String pointsGiven2 = "";
+        			while (properNumber == false) {
+        				while (converted == false) {
+        					try {
+        						convertNumber = Integer.parseInt(editQuestion);
+        						converted = true;
+        					} catch (NumberFormatException error) {
+        						editQuestion = JOptionPane.showInputDialog(null,"Please input a valid integer." +
+        								"Which question would you like to edit?");
+        						if (editQuestion == null) {
+//        							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        							return;
+        						}
+        					}
+        				}
+        				// in case when a new input is needed, needs to convert to integer again.
+        				converted = false;
+        				if (convertNumber < 1) {
+        					editQuestion = JOptionPane.showInputDialog(null,
+        							"Please input a valid question number. Which question would you like to edit?");
+        					if (editQuestion == null) {
+//        						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        						return;
+        					}
+        				}
+        				questionNumber = ((convertNumber - 1) * 7);
+        				if (questionNumber > (courseQuizQuestions.size() / 7)) {
+        					editQuestion = JOptionPane.showInputDialog(null,
+        							"Please input a valid question number. Which question would you like to edit?");
+        					if (editQuestion == null) {
+//        						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        						return;
+        					}
+        				} else {
+        					properNumber = true;
+        				}
+        			}
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write the question");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set(questionNumber, validResponse);
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write answer A):");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set((questionNumber + 1), "A. " + validResponse);
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write answer B):");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set((questionNumber + 2), "B. " + validResponse);
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write answer C):");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set((questionNumber + 3), "C. " + validResponse);
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write answer D):");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set((questionNumber + 4), "D. " + validResponse);
+        			validResponse = JOptionPane.showInputDialog(null,
+        					"Please write which letter is the answer:");
+        			if (validResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			}
+        			courseQuizQuestions.set((questionNumber + 5), validResponse);
+        			//right here
+        			pointsResponse = JOptionPane.showInputDialog(null,
+        					"What you like to put a point value in? Yes or No");
+        			if (pointsResponse == null) {
+//        				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        				return;
+        			} else if (pointsResponse.equalsIgnoreCase("yes")) {
+        					pointsGiven2 = JOptionPane.showInputDialog(null,
+        							"Please input a value (digit): ");
+        					if (pointsGiven2 == null) {
+//        						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//        								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        						return;
+        					} else {
+        						courseQuizQuestions.set(questionNumber + 6, pointsGiven2);
+        					}
+        			} else {
+        				courseQuizQuestions.set(questionNumber + 6, "1");
+        			}
+
+        			//CALL UPDATE
+        			String packagedQuestions = packageList(courseQuizQuestions);
+        			pw.write("UPDATEQUIZ|" + courseName + "|" + quizNameToEdit + "|" + packagedQuestions + "\n");
+                    pw.flush();
+                    
+                    
+                    bfr.close();
+                    pw.close();
+                    socket.close();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
@@ -1147,4 +1302,9 @@ public class Client implements ActionListener {
         panel.add(exit);
         createGUIFrame.add(panel, BorderLayout.NORTH);
     }
+    
+    public void editQuiz() {
+    	
+    }
+    
 }
