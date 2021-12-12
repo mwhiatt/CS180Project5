@@ -1037,14 +1037,14 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
             }
         });
-        secondMenuBack = new JButton("Back");
-        secondMenuBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                teacherViewCourseMenu.setVisible(false);
-                studentMenuFrame.setVisible(true);
-            }
-        });
+//        secondMenuBack = new JButton("Back");
+//        secondMenuBack.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                teacherViewCourseMenu.setVisible(false);
+//                studentMenuFrame.setVisible(true);
+//            }
+//        });
         viewCourseMenu.add(deleteCourse);
         viewCourseMenu.add(deleteQuiz);
         viewCourseMenu.add(createQuiz);

@@ -650,6 +650,15 @@ public class Teacher {
 				}
 				bfr.close();
 			}
+			if (choices.size() == 0) {
+				choices.add("No courses currently.");
+			} else {
+				for (int x = 0; x < choices.size(); x++) {
+					if (choices.get(x).equals("No courses currently.")) {
+						choices.remove(x);
+					}
+				}
+			}
 			JOptionPane.showMessageDialog(null,
 					choices, "All Courses", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
