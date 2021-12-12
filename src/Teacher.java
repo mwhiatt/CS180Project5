@@ -17,35 +17,35 @@ public class Teacher {
 	public static Object submissionListKeeper = new Object();
 	public static Object quizKeeper = new Object();
 	public static Object submissionKeeper = new Object();
-
-	public static void createCourse(String courseName) {
-
+	
+	public static String createCourse(String courseName) {
 		try {
 			String nameAndQuiz = courseName + "Quizzes.txt";
 			File newFileQuiz = new File(nameAndQuiz);
 			if (checkCourseExistence(courseName, true)) {
-				return;
+				return null;
 			}
 			if (newFileQuiz.createNewFile()) {
-				JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
-						JOptionPane.INFORMATION_MESSAGE);
 				synchronized (courseListKeeper) {
 					PrintWriter myWriter = new PrintWriter(new FileOutputStream("CourseNames.txt", true));
 					myWriter.write(courseName + "\n");
 					myWriter.close();
 				}
+				return "success";
 			} else {
 				JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
 						JOptionPane.ERROR_MESSAGE);
+				return null;
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Error writing to file. Try again.", "File Status",
 					JOptionPane.ERROR_MESSAGE);
+			return null;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Undocumented Error. Try again.", "File Status",
 					JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
-
 	}
 
 	public static void deleteCourse(String courseName) {
@@ -725,6 +725,8 @@ public class Teacher {
 						}
 					}
 				}
+				JOptionPane.showMessageDialog(null,
+						allSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
 				bfr.close();
 				JOptionPane.showMessageDialog(null,
 						listSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);

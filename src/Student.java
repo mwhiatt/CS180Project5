@@ -121,7 +121,7 @@ public class Student {
     }
 
     // Displays student the submission they have chosen to view
-    public static ArrayList<String> printSubmissions(String course, String quiz, String user) {
+    public static ArrayList<String> printSubmissions(String course, String quiz, String user) throws IOException {
         String fileName = course + quiz + "Submissions.txt";
         ArrayList<String> userSubmissions = new ArrayList<>(); // ArrayList that holds a particular user's submissions
         String prompt = "";
@@ -135,16 +135,14 @@ public class Student {
 	                }
 	                s = bfr.readLine();
 	            }
-	
-	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Print Submissions error", JOptionPane.ERROR_MESSAGE);
+
 	        } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Print Submissions error", JOptionPane.ERROR_MESSAGE);
+                throw e;
 	        }
 	        return userSubmissions;
         }
     }
-    public static String viewSubmissions(String requestedSubmission) {
+    public static String viewSubmissions(String requestedSubmission) throws IOException{
         String returnString = "";
         synchronized (Teacher.submissionKeeper) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
@@ -153,10 +151,8 @@ public class Student {
                     returnString = returnString + s + "~"; // prints the user submission line by line
                     s = bfr.readLine();
                 }
-            } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "View Submissions error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "View Submissions error", JOptionPane.ERROR_MESSAGE);
+            }  catch (IOException e) {
+                throw e;
             }
             return returnString;
         }
@@ -177,6 +173,4 @@ public class Student {
         }
         return points;
     }
-
-
 }

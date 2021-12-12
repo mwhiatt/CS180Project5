@@ -1,14 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.net.*;
-
+/**
+ * Project 5 - Learning Management Quiz Tool - Client
+ * Client side operations for user interactions, sends information to the server to be saved. 
+ * <p>
+ *
+ * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
+ * @version 12/12/2021
+ */
 public class Client implements ActionListener {
 
     public static ArrayList<String> parseMessage(String message) {
@@ -105,6 +108,7 @@ public class Client implements ActionListener {
         JPanel panel = new JPanel();
         String response = "";
         try {
+            viewSubmissionsFrame.setVisible(false);
             Socket socket = new Socket(SERVERADDRESS, 4343);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
@@ -112,13 +116,22 @@ public class Client implements ActionListener {
             pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername() + "\n");
             pw.flush();
             response = bfr.readLine();
+            if ( response == "") {
+                JOptionPane.showMessageDialog(null, "Unfortunately, this quiz has no submissions yet", "View Submissions Error", JOptionPane.ERROR_MESSAGE);
+                viewSubmissionsFrame.setVisible(false);
+                viewingSubmissionsFrame.setVisible(false);
+                takeQuizFrame.setVisible(true);
+                return;
+            }
 
             bfr.close();
             pw.close();
             socket.close();
+            viewSubmissionsFrame.setVisible(true);
         } catch (IOException exception) {
-            exception.printStackTrace();
+            JOptionPane.showMessageDialog(null, exception.getMessage(), "View Submissions Error", JOptionPane.ERROR_MESSAGE);
         }
+
         ArrayList<String> userSubmissions = parseMessage(response);
         String[] userSubmissionsArray = new String[userSubmissions.size()];
         for (int c = 0; c < userSubmissions.size(); c++) {
@@ -768,7 +781,23 @@ public class Client implements ActionListener {
                             return;
                         }
                     }
-                    Teacher.createCourse(courseNameRequested);
+                    try {
+                        Socket socket = new Socket(SERVERADDRESS, 4343);
+                        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                        BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        pw.write("CREATECOURSE|" + courseNameRequested + "\n");
+                        pw.flush();
+                        String response = bfr.readLine();
+                        if (response.equals("success")) {
+                        	JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
+            						JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        bfr.close();
+                        socket.close();
+                        pw.close();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                 }
             });
             viewCourse = new JButton("View Specific Course");
