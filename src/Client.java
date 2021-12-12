@@ -881,13 +881,26 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(false);
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
                     pw.write("DELETECOURSE|" + courseName + "\n");
                     pw.flush();
+                    String result = bfr.readLine();
+                    if (result == null || result.equals("fail")) {
+                    	JOptionPane.showMessageDialog(null, "Error deleting course." ,
+            					"File Status", JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("DNE")) {
+                    	JOptionPane.showMessageDialog(null, "No need to delete, " +
+								"that course doesn't exist", "File Status", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                    	JOptionPane.showMessageDialog(null, "Successfully deleted." ,
+        						"File Status", JOptionPane.INFORMATION_MESSAGE);
+                    }
 
-                    socket.close();
+                    bfr.close();
                     pw.close();
+                    socket.close();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
