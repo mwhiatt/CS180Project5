@@ -33,7 +33,9 @@ public class Server implements Runnable {
 				String method = arguments.get(0);
 				System.out.println("Method:" + method);
 				if (method.equals("CREATECOURSE")) {
-					
+					String result = Teacher.createCourse(arguments.get(1));
+					pw.write(result);
+					pw.flush();
 				} else if (method.equals("DELETECOURSE")) {
 					Teacher.deleteCourse(arguments.get(1));
 				} else if (method.equals("DELETEQUIZ")) {
