@@ -37,7 +37,7 @@ public class Server implements Runnable {
 					pw.write(result + "\n");
 					pw.flush();
 				} else if (method.equals("DELETEQUIZ")) {
-					pw.write(Teacher.deleteQuiz(arguments.get(1), arguments.get(2)));
+					pw.write(Teacher.deleteQuiz(arguments.get(1), arguments.get(2)) + "\n");
 					pw.flush();
 				} else if (method.equals("CREATEQUIZ")) {
 					Teacher.createQuiz(arguments.get(1));
@@ -51,7 +51,9 @@ public class Server implements Runnable {
 					ArrayList<String> questions = parseList(arguments.get(3));
 					Teacher.updateQuiz(arguments.get(1), arguments.get(2), questions);
 				} else if (method.equals("VIEWSUBMISSION")) {
-					Teacher.viewSubmission(arguments.get(1), arguments.get(2), arguments.get(3));
+					String result = Teacher.viewSubmission(arguments.get(1), arguments.get(2), arguments.get(3));
+					pw.write(result + "\n");
+					pw.flush();
 				} else if (method.equals("PRINTCOURSES")) {
 					String[] courses = Teacher.printCourses();
 					String courseStr = "";
@@ -88,7 +90,7 @@ public class Server implements Runnable {
 						pw.write(ret + "\n");
 						pw.flush();
 					} catch (IOException e) {
-						pw.write("");
+						pw.write("" + "\n");
 						pw.flush();
 					}
 				} else if (method.equals("CHECKQUIZ")) {
