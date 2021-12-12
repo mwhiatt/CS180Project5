@@ -8,7 +8,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.net.*;
-
+/**
+ * Project 5 - Learning Management Quiz Tool - Client
+ * Client side operations for user interactions, sends information to the server to be saved. 
+ * <p>
+ *
+ * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
+ * @version 12/12/2021
+ */
 public class Client implements ActionListener {
 
     public static ArrayList<String> parseMessage(String message) {
