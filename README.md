@@ -9,13 +9,14 @@ To run the project, ensure the following files are included in your directory:
 -Student.java
 -Teacher.java
 1. Run Server.java
-2. Run Client.java
+2. Run Client.java (Set SERVERADDRESS (Line 37) to desired server address)
 3. Follow directions on the User Interface
 Pointers: No login has been created so please create a login before proceeding
 
 Parts submitted by:
--Vocareum: Aryan Mathur
--Report on Brightspace: Aniket Mohanty
+-Vocareum: 
+-Report on Brightspace: 
+-Video Presentation: 
 Class Descriptions:
 
 
@@ -27,7 +28,8 @@ Class Descriptions:
  Teacher or Student classification of a given user. It was tested with test cases to ensure the methods are at full  
  functionality and all inputs that could be received as parameters from Client are handled. 
  
--Server:
+-Server: The server class receives written information from the client class. It handles the inputs and makes the appropriate method calls. Method calls and handling
+ are only done in Server so that all data is available to all our users and not stuck on a local machine. 
 
 -Client: The Client class handles all the GUI's and contains methods to handle our programs UI. 
    
