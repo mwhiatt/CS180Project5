@@ -126,7 +126,9 @@ public class Server implements Runnable {
 					Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
 							parseList(arguments.get(4)), parseList(arguments.get(5)));
 				} else if (method.equals("PRINTSUBMISSIONS2")) {
-					Teacher.printSubmissions(arguments.get(1), arguments.get(2));
+					String status = Teacher.printSubmissions(arguments.get(1), arguments.get(2));
+					pw.write(status + "\n");
+					pw.flush();
 				} else if (method.equals("VIEWSUBMISSIONS")) {
 					try {
 						String submission = Student.viewSubmissions(arguments.get(1));
