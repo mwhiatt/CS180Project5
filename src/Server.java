@@ -30,10 +30,12 @@ public class Server implements Runnable {
 				System.out.println("Method:" + method);
 				if (method.equals("CREATECOURSE")) {
 					String result = Teacher.createCourse(arguments.get(1));
-					pw.write(result);
+					pw.write(result + "\n");
 					pw.flush();
 				} else if (method.equals("DELETECOURSE")) {
-					Teacher.deleteCourse(arguments.get(1));
+					String result = Teacher.deleteCourse(arguments.get(1));
+					pw.write(result + "\n");
+					pw.flush();
 				} else if (method.equals("DELETEQUIZ")) {
 					Teacher.deleteQuiz(arguments.get(1), arguments.get(2));
 				} else if (method.equals("CREATEQUIZ")) {
@@ -232,5 +234,4 @@ public class Server implements Runnable {
 	}
 
 }
-
 
