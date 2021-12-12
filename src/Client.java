@@ -798,9 +798,15 @@ public class Client implements ActionListener {
                         pw.write("CREATECOURSE|" + courseNameRequested + "\n");
                         pw.flush();
                         String response = bfr.readLine();
-                        if (response.equals("success")) {
+                        if (response.equals("fail")) {
+                        	JOptionPane.showMessageDialog(null, "Error. Try again.", "File Status",
+                					JOptionPane.ERROR_MESSAGE);
+                        } else if (response.equals("success")) {
                         	JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
             						JOptionPane.INFORMATION_MESSAGE);
+                        } else if (response.equals("exists")) {
+                        	JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
+            						JOptionPane.ERROR_MESSAGE);
                         }
                         bfr.close();
                         socket.close();
@@ -933,11 +939,24 @@ public class Client implements ActionListener {
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete + "\n");
                     pw.flush();
-
-                    socket.close();
+                    String result = bfr.readLine();
+                    
+                    if (result.equals("fail")) {
+                    	JOptionPane.showMessageDialog(null,
+            					"Failed Deletion. Please try again!",
+            					"File Status", JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("success")) {
+                    	JOptionPane.showMessageDialog(null,
+    							"Successful Deletion",
+    							"File Status", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    
+                    bfr.close();
                     pw.close();
+                    socket.close();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
