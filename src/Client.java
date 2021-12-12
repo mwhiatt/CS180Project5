@@ -285,7 +285,17 @@ public class Client implements ActionListener {
                         int result = fileChooser.showOpenDialog(null);
                         if (result == JFileChooser.APPROVE_OPTION) {
                             File selectedFile = fileChooser.getSelectedFile();
-                            currentAnswerList.add(Student.answerImportFile(selectedFile));
+                	        String ans = "";
+                	        try {
+                	        	BufferedReader bfr = new BufferedReader(new FileReader(selectedFile));
+                	            ans = bfr.readLine();
+                	            bfr.close();
+                	        } catch (FileNotFoundException except) {
+                                JOptionPane.showMessageDialog(null, except.getMessage(), "Import Answers error", JOptionPane.ERROR_MESSAGE);
+                	        } catch (IOException except) {
+                                JOptionPane.showMessageDialog(null, except.getMessage(), "Import Answers error", JOptionPane.ERROR_MESSAGE);
+                	        }
+                            currentAnswerList.add(ans);
                             setCurrentAnswerList(currentAnswerList);
                         }
                     }
