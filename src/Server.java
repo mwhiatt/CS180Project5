@@ -119,8 +119,6 @@ public class Server implements Runnable {
 				} else if (method.equals("WRITEFILE")) {
 					Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
 							parseList(arguments.get(4)), parseList(arguments.get(5)));
-				} else if (method.equals("ANSWERIMPORTFILE")) {
-					
 				} else if (method.equals("PRINTSUBMISSIONS2")) {
 					Teacher.printSubmissions(arguments.get(1), arguments.get(2));
 				} else if (method.equals("VIEWSUBMISSIONS")) {
