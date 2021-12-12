@@ -81,8 +81,6 @@ public class Server implements Runnable {
 						pw.write("");
 						pw.flush();
 					}
-				} else if (method.equals("CHECKSUBMISSION")) {
-
 				} else if (method.equals("CHECKQUIZ")) {
 					if (Teacher.checkQuizExistence(arguments.get(1), arguments.get(2))) {
 						pw.write("true" + "\n");
