@@ -367,7 +367,6 @@ public class Client implements ActionListener {
             pw.flush();
 
             courseList = parseMessage(bfr.readLine());
-
             takeQuizFrame.setVisible(true);
 
             bfr.close();
