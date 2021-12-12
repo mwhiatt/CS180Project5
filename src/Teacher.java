@@ -545,7 +545,7 @@ public class Teacher {
 			JOptionPane.showMessageDialog(null,
 					choices, "All Courses", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Quizzes",
+			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Courses",
 					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
 		}
 		String[] choices2 = new String[choices.size()];
@@ -557,6 +557,7 @@ public class Teacher {
 
 	public static String[] printQuizzes(String courseName) {
 		ArrayList<String> choices = new ArrayList<>();
+		String status = "";
 		try {
 			synchronized (quizListKeeper) {
 				BufferedReader bfr = new BufferedReader(new FileReader(courseName + "Quizzes.txt"));
@@ -565,20 +566,16 @@ public class Teacher {
 					if (line == null) {
 						break;
 					}
-					//System.out.println(line);
 					choices.add(line);
-
 				}
-				bfr.close();
-				JOptionPane.showMessageDialog(null,
-						choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
+				status = "success";
+				bfr.close();	
 			}
-
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
-					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
+			status = "fail";
 		}
-		String[] choices2 = new String[choices.size()];
+		String[] choices2 = new String[choices.size() + 1];
+		choices2[choices.size()] = status;
 		for (int c = 0; c < choices.size(); c++) {
 			choices2[c] = choices.get(c);
 		}
