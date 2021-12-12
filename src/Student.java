@@ -12,20 +12,7 @@ import java.util.ArrayList;
  * @version 11/15/2021
  */
 public class Student {
-    //calculates the points obtained by a student
-    public static ArrayList<String> grading(ArrayList<String> answerList, ArrayList<String> quizAndAnswers) {
-        ArrayList<String> points = new ArrayList<>();
-        int j = 1;
-        for (int i = 0; i < answerList.size(); i++) {
-            if(answerList.get(i).equals(quizAndAnswers.get(j))) {
-                points.add(quizAndAnswers.get(j+1));
-            } else {
-                points.add("0");
-            }
-            j += 3;
-        }
-        return points;
-    }
+
    //reads the quiz to the student
    public static ArrayList<String> readQuiz (String course, String quiz) {
 	   synchronized (Teacher.quizGatekeeper) {
@@ -178,6 +165,21 @@ public class Student {
 //            // view more submissions
 //            prompt = input.nextLine();
 //        } while (prompt.equalsIgnoreCase("Y")); // continues while the user says yes
+    }
+
+    //calculates the points obtained by a student
+    public static ArrayList<String> grading(ArrayList<String> answerList, ArrayList<String> quizAndAnswers) {
+        ArrayList<String> points = new ArrayList<>();
+        int j = 1;
+        for (int i = 0; i < answerList.size(); i++) {
+            if(answerList.get(i).equals(quizAndAnswers.get(j))) {
+                points.add(quizAndAnswers.get(j+1));
+            } else {
+                points.add("0");
+            }
+            j += 3;
+        }
+        return points;
     }
 
 }
