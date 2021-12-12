@@ -37,7 +37,8 @@ public class Server implements Runnable {
 					pw.write(result + "\n");
 					pw.flush();
 				} else if (method.equals("DELETEQUIZ")) {
-					Teacher.deleteQuiz(arguments.get(1), arguments.get(2));
+					pw.write(Teacher.deleteQuiz(arguments.get(1), arguments.get(2)));
+					pw.flush();
 				} else if (method.equals("CREATEQUIZ")) {
 					Teacher.createQuiz(arguments.get(1));
 				} else if (method.equals("EDITQUIZ")) {
