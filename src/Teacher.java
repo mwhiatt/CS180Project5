@@ -725,8 +725,6 @@ public class Teacher {
 						}
 					}
 				}
-				JOptionPane.showMessageDialog(null,
-						allSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
 				bfr.close();
 				JOptionPane.showMessageDialog(null,
 						listSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
