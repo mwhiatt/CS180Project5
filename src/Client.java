@@ -1,11 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.net.*;
 
@@ -105,6 +101,7 @@ public class Client implements ActionListener {
         JPanel panel = new JPanel();
         String response = "";
         try {
+            viewSubmissionsFrame.setVisible(false);
             Socket socket = new Socket(SERVERADDRESS, 4343);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
@@ -112,13 +109,22 @@ public class Client implements ActionListener {
             pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername() + "\n");
             pw.flush();
             response = bfr.readLine();
+            if ( response == "") {
+                JOptionPane.showMessageDialog(null, "Unfortunately, this quiz has no submissions yet", "View Submissions Error", JOptionPane.ERROR_MESSAGE);
+                viewSubmissionsFrame.setVisible(false);
+                viewingSubmissionsFrame.setVisible(false);
+                takeQuizFrame.setVisible(true);
+                return;
+            }
 
             bfr.close();
             pw.close();
             socket.close();
+            viewSubmissionsFrame.setVisible(true);
         } catch (IOException exception) {
-            exception.printStackTrace();
+            JOptionPane.showMessageDialog(null, exception.getMessage(), "View Submissions Error", JOptionPane.ERROR_MESSAGE);
         }
+
         ArrayList<String> userSubmissions = parseMessage(response);
         String[] userSubmissionsArray = new String[userSubmissions.size()];
         for (int c = 0; c < userSubmissions.size(); c++) {

@@ -1,9 +1,5 @@
+import java.io.*;
 import java.net.ServerSocket;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 /**
@@ -70,14 +66,19 @@ public class Server implements Runnable {
 				} else if (method.equals("PRINTQUIZZES2")) {
 					Teacher.printQuizzes(arguments.get(1));
 				} else if (method.equals("PRINTSUBMISSIONS")) {
-					ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2), arguments.get(3));
-					String submissionsStr = "";
-					for (int i = 0; i < submissions.size(); i++) {
-						submissionsStr += submissions.get(i) + "|";
+					try {
+						ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2), arguments.get(3));
+						String submissionsStr = "";
+						for (int i = 0; i < submissions.size(); i++) {
+							submissionsStr += submissions.get(i) + "|";
+						}
+						String ret = submissionsStr.substring(0, submissionsStr.length() - 1);
+						pw.write(ret + "\n");
+						pw.flush();
+					} catch (IOException e) {
+						pw.write("");
+						pw.flush();
 					}
-					String ret = submissionsStr.substring(0, submissionsStr.length() - 1);
-					pw.write(ret + "\n");
-					pw.flush();
 				} else if (method.equals("CHECKSUBMISSION")) {
 					
 				} else if (method.equals("CHECKQUIZ")) {
@@ -121,8 +122,12 @@ public class Server implements Runnable {
 				} else if (method.equals("PRINTSUBMISSIONS")) {
 					Teacher.printSubmissions(arguments.get(1), arguments.get(2));
 				} else if (method.equals("VIEWSUBMISSIONS")) {
-					String submission = Student.viewSubmissions(arguments.get(1));
-					pw.write(submission + "\n");
+					try {
+						String submission = Student.viewSubmissions(arguments.get(1));
+						pw.write(submission + "\n");
+					} catch (IOException e) {
+						throw e;
+					}
 					pw.flush();
 				} else if (method.equals("LOGIN")) {
 					if (Login.login(arguments.get(1), arguments.get(2))) {
