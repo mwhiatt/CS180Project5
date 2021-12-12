@@ -417,7 +417,7 @@ public class Client implements ActionListener {
                         exception.printStackTrace();
                     }
                     String[] choicesQuizzes = new String[quizList.size()];
-                    for (int i = 0; i < choices.length - 1; i++) {
+                    for (int i = 0; i < choicesQuizzes.length; i++) {
                         choicesQuizzes[i] = quizList.get(i);
                     }
                     final JComboBox<String> cb2 = new JComboBox<String>(choicesQuizzes);
@@ -881,7 +881,6 @@ public class Client implements ActionListener {
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
                     pw.write("DELETEQUIZ|" + courseName + "|" + quizNameToDelete + "\n");
                     pw.flush();
 
