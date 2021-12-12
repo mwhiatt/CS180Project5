@@ -99,6 +99,8 @@ public class Student {
     }
 
     //allows the student to answer through file imports
+    //MOVING INTO CLIENT, DOESN'T DEAL WITH FILE CREATION SO IS SAFE IN CLIENT
+    /*
     public static String answerImportFile(File fileName) {
     	synchronized (Teacher.submissionKeeper) {
 	        File f = null;
@@ -111,6 +113,7 @@ public class Student {
 	            bufferedReader = new BufferedReader(fileReader);
 	            ans = bufferedReader.readLine();
 	
+	            bufferedReader.close();
 	        } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Import Answers error", JOptionPane.ERROR_MESSAGE);
 	        } catch (IOException e) {
@@ -119,6 +122,7 @@ public class Student {
 	        return ans;
     	}
     }
+    */
 
     // Displays student the submission they have chosen to view
     public static ArrayList<String> printSubmissions(String course, String quiz, String user) throws IOException {
