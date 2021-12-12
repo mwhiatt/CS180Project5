@@ -1187,12 +1187,23 @@ public class Client implements ActionListener {
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     pw.write("VIEWSUBMISSION|" + courseName + "|" + quizNameToEdit + "|" + submissionToView + "\n");
                     pw.flush();
+                    
+                    String result = bfr.readLine();
+                    ArrayList<String> resultArray = parseMessage(result);
+                    if (resultArray.get(0).equals("SUCCESS")) {
+                    	JOptionPane.showMessageDialog(null,
+        						resultArray.get(1), resultArray.get(2), JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                    	JOptionPane.showMessageDialog(null,
+            					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
+                    }
 
-                    socket.close();
+                    bfr.close();
                     pw.close();
+                    socket.close();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
