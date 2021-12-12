@@ -250,11 +250,7 @@ public class Teacher {
 			String importOrCreate = JOptionPane.showInputDialog(null,
 							"Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
 									+ "file inside the program immediately)");
-			if (importOrCreate == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
+
 			// ^^checks if importing or creating
 			// checks for valid input
 			if (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
@@ -273,7 +269,7 @@ public class Teacher {
 			if (importOrCreate.equalsIgnoreCase("yes")) { // if importing, do this
 				String premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
 						"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
-						+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
+						+ "Choice C\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 				if (premadeFile == null) {
 //					JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
 //							"Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -335,9 +331,11 @@ public class Teacher {
 				}
 				synchronized (submissionListKeeper) {
 					File newQuizSubmissions = new File(courseName + fileName + "Submissions.txt");
+					newQuizSubmissions.createNewFile();
 				}
 				synchronized (quizKeeper) {
 					myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt", true));
+					myWriter.write(fileName + "\n");
 					String upcomingAnswersValid = "";
 					String pointsAdded = "";
 					String pointsGiven = "";
