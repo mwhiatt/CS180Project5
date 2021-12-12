@@ -1,4 +1,0 @@
-CS180Quiz1S.txt
-CS180Quiz1S2.txt
-CS180Quiz1S3.txt
-CS180Quiz1S4.txt
