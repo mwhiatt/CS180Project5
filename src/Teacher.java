@@ -23,7 +23,7 @@ public class Teacher {
 			String nameAndQuiz = courseName + "Quizzes.txt";
 			File newFileQuiz = new File(nameAndQuiz);
 			if (checkCourseExistence(courseName, true)) {
-				return null;
+				return "exists";
 			}
 			if (newFileQuiz.createNewFile()) {
 				synchronized (courseListKeeper) {
@@ -33,18 +33,18 @@ public class Teacher {
 				}
 				return "success";
 			} else {
-				JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
-						JOptionPane.ERROR_MESSAGE);
-				return null;
+				//JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
+				//		JOptionPane.ERROR_MESSAGE);
+				return "fail";
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Error writing to file. Try again.", "File Status",
-					JOptionPane.ERROR_MESSAGE);
-			return null;
+			//JOptionPane.showMessageDialog(null, "Error writing to file. Try again.", "File Status",
+			//		JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Undocumented Error. Try again.", "File Status",
-					JOptionPane.ERROR_MESSAGE);
-			return null;
+			//JOptionPane.showMessageDialog(null, "Undocumented Error. Try again.", "File Status",
+			//		JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		}
 	}
 
@@ -83,13 +83,13 @@ public class Teacher {
 			}
 			// FINISHED REWRITING FILES AFTER DELETING NAME
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Error writing to file." ,
-					"File Status", JOptionPane.ERROR_MESSAGE);
+			//JOptionPane.showMessageDialog(null, "Error writing to file." ,
+			//		"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
-					"File Status", JOptionPane.ERROR_MESSAGE);
+			//JOptionPane.showMessageDialog(null, "Undocumented Error." ,
+			//		"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		}
 		// SEARCHING FOR ALL QUIZZES INSIDE courseName + Quizzes, then calling
@@ -146,7 +146,7 @@ public class Teacher {
 	}
 
 	// DELETES QUIZ AND QUIZ SUBMISSIONS
-	public static void deleteQuiz(String courseName, String quizName) {
+	public static String deleteQuiz(String courseName, String quizName) {
 		try {
 			// read file to get name of all submissions
 			synchronized (submissionListKeeper) {
@@ -168,8 +168,9 @@ public class Teacher {
 //							JOptionPane.showMessageDialog(null, "Successfully deleted the file " + allSubmissions.get(a) ,
 //									"File Status", JOptionPane.INFORMATION_MESSAGE);
 						} else {
-							JOptionPane.showMessageDialog(null, "Failed to delete file.",
-									"File Status", JOptionPane.ERROR_MESSAGE);
+							return "fail";
+							//JOptionPane.showMessageDialog(null, "Failed to delete file.",
+							//		"File Status", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -210,28 +211,33 @@ public class Teacher {
 //							"Successfully deleted the file " + courseName + quizName + ".txt",
 //							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Failed to delete file." + courseName + quizName + ".txt",
-							"File Status", JOptionPane.ERROR_MESSAGE);
+					return "fail";
+					//JOptionPane.showMessageDialog(null,
+					//		"Failed to delete file." + courseName + quizName + ".txt",
+					//		"File Status", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			synchronized (submissionListKeeper) {
 				File deletedSubmissionFile = new File(courseName + quizName + "Submissions.txt");
 				if (deletedSubmissionFile.delete()) {
+					return "success";
 //					JOptionPane.showMessageDialog(null,
 //							"Successfully deleted the file " + courseName + quizName + "Submissions.txt",
 //							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Failed to delete file.", "File Status", JOptionPane.ERROR_MESSAGE);
+					return "fail";
+					//JOptionPane.showMessageDialog(null,
+					//		"Failed to delete file.", "File Status", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null,
-					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
+			//JOptionPane.showMessageDialog(null,
+			//		"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
+			//JOptionPane.showMessageDialog(null,
+			//		"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
