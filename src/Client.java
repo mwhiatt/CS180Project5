@@ -775,7 +775,18 @@ public class Client implements ActionListener {
                             return;
                         }
                     }
-                    Teacher.createCourse(courseNameRequested);
+                    try {
+                        Socket socket = new Socket(SERVERADDRESS, 4343);
+                        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+
+                        pw.write("CREATECOURSE|" + courseNameRequested + "\n");
+                        pw.flush();
+
+                        socket.close();
+                        pw.close();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                 }
             });
             viewCourse = new JButton("View Specific Course");
