@@ -41,8 +41,15 @@ public class Server implements Runnable {
 					pw.flush();
 				} else if (method.equals("CREATEQUIZ")) {
 					Teacher.createQuiz(arguments.get(1));
-				} else if (method.equals("EDITQUIZ")) {
-					Teacher.editQuiz(arguments.get(1), arguments.get(2));
+				} else if (method.equals("GETQUIZ")) {
+					ArrayList<String> result = Teacher.getQuiz(arguments.get(1), arguments.get(2));
+					String packaged = packageList(result);
+					pw.write(packaged + "\n");
+					pw.flush();
+				} else if (method.equals("UPDATEQUIZ")) {
+					//Teacher.editQuiz(arguments.get(1), arguments.get(2));
+					ArrayList<String> questions = parseList(arguments.get(3));
+					Teacher.updateQuiz(arguments.get(1), arguments.get(2), questions);
 				} else if (method.equals("VIEWSUBMISSION")) {
 					Teacher.viewSubmission(arguments.get(1), arguments.get(2), arguments.get(3));
 				} else if (method.equals("PRINTCOURSES")) {
@@ -92,10 +99,6 @@ public class Server implements Runnable {
 						pw.write("false" + "\n");
 						pw.flush();
 					}
-				} else if (method.equals("CHECKCOURSE")) {
-					
-				} else if (method.equals("QUIZIMPORT")) {
-					
 				} else if (method.equals("GRADING")) {
 					ArrayList<String> arg1 = parseList(arguments.get(1));
 					ArrayList<String> arg2 = parseList(arguments.get(2));
@@ -231,6 +234,16 @@ public class Server implements Runnable {
 		parsedList.add(message);
 		return parsedList;
 	}
+	
+	public static String packageList(ArrayList<String> list) {
+        String packedList = "";
+        //packaging currentAnswers list to a string to be sent to server
+        for (int i = 0; i < list.size(); i++) {
+            packedList += list.get(i) + "`";
+        }
+        packedList = packedList.substring(0, packedList.length() - 1);
+        return packedList;
+    }
 
 }
 
