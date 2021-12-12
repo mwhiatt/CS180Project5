@@ -464,9 +464,8 @@ public class Teacher {
 		}
 
 	}
-
-	public static void editQuiz(String quizName, String courseName) {
-		// converting file into ArrayList
+	
+	public static ArrayList<String> getQuiz(String quizName, String courseName) {
 		try {
 			ArrayList<String> courseQuizQuestions = new ArrayList<String>();
 			synchronized (quizKeeper) {
@@ -477,131 +476,15 @@ public class Teacher {
 					quizContents = bfrForEditing.readLine();
 				}
 				bfrForEditing.close();
-			}
-			// first boolean to make sure valid input, second to make sure the requested
-			// question is an available
-			// question.
-			boolean converted = false;
-			boolean properNumber = false;
-			String editQuestion = JOptionPane.showInputDialog(null,"Which question would you like to edit?");
-			if (editQuestion == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			int convertNumber = 0;
-			int questionNumber = 0;
-			String validResponse = "";
-			String pointsResponse = "";
-			String pointsGiven2 = "";
-			while (properNumber == false) {
-				while (converted == false) {
-					try {
-						convertNumber = Integer.parseInt(editQuestion);
-						converted = true;
-					} catch (NumberFormatException e) {
-						editQuestion = JOptionPane.showInputDialog(null,"Please input a valid integer." +
-								"Which question would you like to edit?");
-						if (editQuestion == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-							return;
-						}
-					}
-				}
-				// in case when a new input is needed, needs to convert to integer again.
-				converted = false;
-				if (convertNumber < 1) {
-					editQuestion = JOptionPane.showInputDialog(null,
-							"Please input a valid question number. Which question would you like to edit?");
-					if (editQuestion == null) {
-//						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-				}
-				questionNumber = ((convertNumber - 1) * 7);
-				if (questionNumber > (courseQuizQuestions.size() / 7)) {
-					editQuestion = JOptionPane.showInputDialog(null,
-							"Please input a valid question number. Which question would you like to edit?");
-					if (editQuestion == null) {
-//						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-				} else {
-					properNumber = true;
-				}
-			}
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write the question");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set(questionNumber, validResponse);
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write answer A):");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set((questionNumber + 1), "A. " + validResponse);
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write answer B):");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set((questionNumber + 2), "B. " + validResponse);
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write answer C):");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set((questionNumber + 3), "C. " + validResponse);
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write answer D):");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set((questionNumber + 4), "D. " + validResponse);
-			validResponse = JOptionPane.showInputDialog(null,
-					"Please write which letter is the answer:");
-			if (validResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			courseQuizQuestions.set((questionNumber + 5), validResponse);
-			//right here
-			pointsResponse = JOptionPane.showInputDialog(null,
-					"What you like to put a point value in? Yes or No");
-			if (pointsResponse == null) {
-//				JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//						"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			} else if (pointsResponse.equalsIgnoreCase("yes")) {
-					pointsGiven2 = JOptionPane.showInputDialog(null,
-							"Please input a value (digit): ");
-					if (pointsGiven2 == null) {
-//						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
-						return;
-					} else {
-						courseQuizQuestions.set(questionNumber + 6, pointsGiven2);
-					}
-			} else {
-				courseQuizQuestions.set(questionNumber + 6, "1");
-			}
+			} 
+			return courseQuizQuestions;
+		} catch (IOException e) {
+				return null;
+		}
+	}
 
+	public static void updateQuiz(String courseName, String quizName, ArrayList<String> courseQuizQuestions) {
+		try {
 			synchronized (quizKeeper) {
 				PrintWriter myWriterToQuiz = new PrintWriter(new FileOutputStream(courseName + quizName + ".txt"));
 				for (int c = 0; c < courseQuizQuestions.size(); c++) {
@@ -609,12 +492,8 @@ public class Teacher {
 				}
 				myWriterToQuiz.close();
 			}
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null,
-					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
+			
 		}
 	}
 
