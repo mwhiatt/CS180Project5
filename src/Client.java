@@ -1253,12 +1253,25 @@ public class Client implements ActionListener {
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                     pw.write("PRINTSUBMISSIONS2|" + courseName + "|" + quizNameToView + "\n");
                     pw.flush();
+                    
+                    String returned = bfr.readLine();
+                    String status = returned.substring(0, returned.indexOf('|'));
+                    String listSubmissions = returned.substring(returned.indexOf('|'));
+                    if (status.equals("true")) {
+                    	JOptionPane.showMessageDialog(null,
+        						listSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                    	JOptionPane.showMessageDialog(null,
+            					"Error Displaying Submission.", "File Status", JOptionPane.ERROR_MESSAGE);
+                    }
 
-                    socket.close();
+                    bfr.close();
                     pw.close();
+                    socket.close();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
