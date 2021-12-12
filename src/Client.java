@@ -218,9 +218,11 @@ public class Client implements ActionListener {
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
+            JOptionPane.showMessageDialog(null,"You are done with this quiz!");
             setCurrentAnswerList(new ArrayList<String>());
             setCurrentCount(0);
             setCurrentPoints(new ArrayList<String>());
+            takeQuizFrame.setVisible(true);
             return;
         }
 //        ArrayList<String> answerList = new ArrayList<>();
@@ -741,7 +743,7 @@ public class Client implements ActionListener {
             // created december 5
             teacherMainMenu = new JFrame("Welcome Teacher " + username);
             teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            teacherMainMenu.setSize(500, 100);
+            teacherMainMenu.setSize(500, 140);
             teacherMainMenu.setLocation(430, 100);
             //general shape of frame created
             JPanel teacherFirstMenu = new JPanel();
@@ -820,10 +822,12 @@ public class Client implements ActionListener {
             firstMenuBack.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    studentMenuFrame.setVisible(false);
+                    teacherMainMenu.setVisible(false);
                     loginFrame.setVisible(true);
                 }
             });
+            bottomLayer.add(firstMenuBack);
+            teacherMainMenu.add(bottomLayer, BorderLayout.SOUTH);
             teacherMainMenu.add(teacherFirstMenu, BorderLayout.NORTH);
             teacherMainMenu.setVisible(true);
         }
