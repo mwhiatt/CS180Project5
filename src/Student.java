@@ -15,45 +15,43 @@ public class Student {
 
    //reads the quiz to the student
    public static ArrayList<String> readQuiz (String course, String quiz) {
-	   synchronized (Teacher.quizGatekeeper) {
        String courseQuizFileName = course + quiz + ".txt";
        ArrayList<String> list = new ArrayList<>();
-       try (BufferedReader bfr = new BufferedReader(new FileReader(courseQuizFileName))) {
-           String s = " ";
-           String questionString = "";
-           do {
-               for (int c = 0; c < 5; c++) {
-                   s = bfr.readLine();
-                   if (s == null) {
-                       continue;
-                   }
-                   questionString = questionString + s + "~";
-               }
-               list.add(questionString);
-               if (s == null) {
-                   continue;
-               }
-
-               for (int c = 0; c < 2; c++) {
-                   if (c == 0) {
-                       s = bfr.readLine();
-                       list.add(s); // ans
-                   } else if (c == 1) {
-                       s = bfr.readLine();
-                       list.add(s); // points
-                   }
-               }
-           } while (s != null);
-       } catch (FileNotFoundException e) {
-           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
-       } catch (IOException e) {
-           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+       synchronized (Teacher.quizKeeper) {
+	       try (BufferedReader bfr = new BufferedReader(new FileReader(courseQuizFileName))) {
+	           String s = " ";
+	           String questionString = "";
+	           do {
+	               for (int c = 0; c < 5; c++) {
+	                   s = bfr.readLine();
+	                   if (s == null) {
+	                       continue;
+	                   }
+	                   questionString = questionString + s + "~";
+	               }
+	               list.add(questionString);
+	               if (s == null) {
+	                   continue;
+	               }
+	
+	               for (int c = 0; c < 2; c++) {
+	                   if (c == 0) {
+	                       s = bfr.readLine();
+	                       list.add(s); // ans
+	                   } else if (c == 1) {
+	                       s = bfr.readLine();
+	                       list.add(s); // points
+	                   }
+	               }
+	           } while (s != null);
+	       } catch (FileNotFoundException e) {
+	           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+	       } catch (IOException e) {
+	           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+	       }
        }
        list.remove(list.size() - 1);
        return list;
-	   }
-
-
     }
     //writes the submission file for a student
     public static void writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> answerList) {
@@ -66,8 +64,8 @@ public class Student {
 
         int i = 1;
         int n = 1;
-        synchronized (Teacher.quizGatekeeper) {
-	        String fileName = course + quiz + user + ".txt";
+        String fileName = course + quiz + user + ".txt";
+        synchronized (Teacher.submissionKeeper) {
 	        File f = new File(fileName);
 	        while (f.exists()) {
 	            i++;
@@ -89,7 +87,8 @@ public class Student {
 	        } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Write Submissions error", JOptionPane.ERROR_MESSAGE);
 	        }
-	
+        }
+        synchronized (Teacher.submissionListKeeper) {
 	        String masterFileName = course + quiz + "Submissions.txt";
 	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
 	            pw.println(fileName);
@@ -101,7 +100,7 @@ public class Student {
 
     //allows the student to answer through file imports
     public static String answerImportFile(File fileName) {
-    	synchronized (Teacher.quizGatekeeper) {
+    	synchronized (Teacher.submissionKeeper) {
 	        File f = null;
 	        FileReader fileReader = null;
 	        BufferedReader bufferedReader = null;
@@ -127,7 +126,7 @@ public class Student {
         ArrayList<String> userSubmissions = new ArrayList<>(); // ArrayList that holds a particular user's submissions
         String prompt = "";
         boolean properInput = false;
-        synchronized (Teacher.quizGatekeeper) {
+        synchronized (Teacher.submissionListKeeper) {
 	        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
 	            String s = bfr.readLine();
 	            while (s != null) {
@@ -147,7 +146,7 @@ public class Student {
     }
     public static String viewSubmissions(String requestedSubmission) {
         String returnString = "";
-        synchronized (Teacher.quizGatekeeper) {
+        synchronized (Teacher.submissionKeeper) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(requestedSubmission))) {
                 String s = bfr.readLine();
                 while (s != null) {
@@ -181,5 +180,4 @@ public class Student {
         }
         return points;
     }
-
 }
