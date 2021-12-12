@@ -497,7 +497,7 @@ public class Teacher {
 		}
 	}
 
-	public static void viewSubmission(String courseName, String quizName, String submissionName) {
+	public static String viewSubmission(String courseName, String quizName, String submissionName) {
 		String fullSubmission = "";
 		try {
 			synchronized (submissionKeeper) {
@@ -507,18 +507,14 @@ public class Teacher {
 					fullSubmission += details + "\n";
 					details = bfr.readLine();
 				}
-				JOptionPane.showMessageDialog(null,
-						fullSubmission, submissionName, JOptionPane.INFORMATION_MESSAGE);
 				bfr.close();
+				return "SUCCESS|" + fullSubmission + "|" + submissionName;
 			}
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null,
-					"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		}
-
 	}
 
 
