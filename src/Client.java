@@ -443,7 +443,15 @@ public class Client implements ActionListener {
                         pw.flush();
 
                         quizList = parseMessage(bfr.readLine());
-
+                        String status = quizList.get(quizList.size() - 1);
+                        quizList.remove(quizList.size() - 1);
+                        if (status.equals("true")) {
+                        	JOptionPane.showMessageDialog(null,
+            						choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                        	JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
+                					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
+                        }
                         bfr.close();
                         pw.close();
                         socket.close();
