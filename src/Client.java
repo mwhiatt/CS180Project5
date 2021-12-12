@@ -755,16 +755,16 @@ public class Client implements ActionListener {
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
                     if (courseNameRequested == null) {
-                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
                     while (courseNameRequested.isEmpty() || courseNameRequested.isBlank()) {
                         courseNameRequested = JOptionPane.showInputDialog(null,
                                 "Enter something. Please enter the course name.");
                         if (courseNameRequested == null) {
-                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                             return;
                         }
                     }
@@ -779,8 +779,8 @@ public class Client implements ActionListener {
                     String courseNameRequested = JOptionPane.showInputDialog(null,
                             "Please enter the course name.");
                     if (courseNameRequested == null) {
-                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                        JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                                "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                         teacherMainMenu.setVisible(true);
                         return;
                     }
@@ -788,8 +788,8 @@ public class Client implements ActionListener {
                         courseNameRequested = JOptionPane.showInputDialog(null,
                                 "Enter something. Please enter the course name.");
                         if (courseNameRequested == null) {
-                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                            JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                                    "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                             teacherMainMenu.setVisible(true);
                             return;
                         }
@@ -873,8 +873,8 @@ public class Client implements ActionListener {
                 String quizNameToDelete = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
                 if (quizNameToDelete == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 teacherViewCourseMenu.setVisible(false);
@@ -920,8 +920,8 @@ public class Client implements ActionListener {
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
                 if (quizNameToEdit == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 try {
@@ -947,15 +947,15 @@ public class Client implements ActionListener {
                 String quizNameToEdit = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
                 if (quizNameToEdit == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 String submissionToView = JOptionPane.showInputDialog(null,
                         "Please enter name of submission.");
                 if (submissionToView == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 try {
@@ -973,14 +973,6 @@ public class Client implements ActionListener {
                 teacherViewCourseMenu.setVisible(true);
             }
         });
-        //Potential work around to display all courses and quizzes and submissions without it being directly in code.
-//        printCourse = new JButton("Print All Available Courses");
-//        printCourse.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Teacher.printCourses();
-//            }
-//        });
         printQuizzes = new JButton("Print All Quizzes For " + courseName);
         printQuizzes.addActionListener(new ActionListener() {
             @Override
@@ -1009,15 +1001,15 @@ public class Client implements ActionListener {
                 String quizNameToView = JOptionPane.showInputDialog(null,
                         "Please enter the quiz name.");
                 if (quizNameToView == null) {
-                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
+//                            "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-                    pw.write("PRINTSUBMISSIONS|" + courseName + "|" + quizNameToView + "\n");
+                    pw.write("PRINTSUBMISSIONS2|" + courseName + "|" + quizNameToView + "\n");
                     pw.flush();
 
                     socket.close();

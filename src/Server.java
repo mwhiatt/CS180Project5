@@ -79,7 +79,7 @@ public class Server implements Runnable {
 					pw.write(ret + "\n");
 					pw.flush();
 				} else if (method.equals("CHECKSUBMISSION")) {
-					
+
 				} else if (method.equals("CHECKQUIZ")) {
 					if (Teacher.checkQuizExistence(arguments.get(1), arguments.get(2))) {
 						pw.write("true" + "\n");
@@ -118,7 +118,7 @@ public class Server implements Runnable {
 							parseList(arguments.get(4)), parseList(arguments.get(5)));
 				} else if (method.equals("ANSWERIMPORTFILE")) {
 					
-				} else if (method.equals("PRINTSUBMISSIONS")) {
+				} else if (method.equals("PRINTSUBMISSIONS2")) {
 					Teacher.printSubmissions(arguments.get(1), arguments.get(2));
 				} else if (method.equals("VIEWSUBMISSIONS")) {
 					String submission = Student.viewSubmissions(arguments.get(1));
