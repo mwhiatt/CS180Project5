@@ -582,7 +582,7 @@ public class Teacher {
 		return choices2;
 	}
 
-	public static void printSubmissions(String courseName, String quizName) {
+	public static String printSubmissions(String courseName, String quizName) {
 		ArrayList<String> listSubmissions = new ArrayList<>();
 		try {
 			synchronized (submissionListKeeper) {
@@ -606,12 +606,10 @@ public class Teacher {
 					}
 				}
 				bfr.close();
-				JOptionPane.showMessageDialog(null,
-						listSubmissions, "All Submissions", JOptionPane.INFORMATION_MESSAGE);
+				return "success|" + listSubmissions;
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Displaying Submission.", "File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		}
 	}
 
