@@ -32,13 +32,12 @@ Class Descriptions:
 -Client: The Client class handles all the GUI's and contains methods to handle our programs UI. 
    
 -Student: The Student class contains methods that are called in Client to implement the Student functionality. The methods are as follows: readQuiz, writeFile,
-answerImportFile, printSubmission, viewSubmissions and grading. Read Quiz is used to read the quiz file that the student has chosen to take and inserts the content of the quiz into an array which can be displayed in the Client class for the student. It returns an arraylist of the students answers to be formed into
-the submission file by writeFile. The writeFile method creates and timestamps the submission for each time the student takes a quiz. It also adds the submission name to the master submission file for the quiz. The answerImportFile  
- method takes in the name a user enters to submit as an answer for a question and reads it in, it then returns that value to be  
- treated as a terminal answer would be by the answer method. The viewSubmissions method takes in a course and quiz name and then  
- searches through the submissions master list for any submission containing the username of the current user. It allows them to pick  
- one of these submissions to view. Test cases were written to test each intended path in the Student menu system and ensure that all  
- outputs from methods in driver matched our expected outputs.  
+answerImportFile, printSubmission, viewSubmissions and grading. Read Quiz is used to read the quiz file that the student has chosen to take and inserts the content
+of the quiz into an array which can be displayed in the Client class for the student. It returns an arraylist of the students answers to be formed into
+the submission file by writeFile. The writeFile method creates and timestamps the submission for each time the student takes a quiz. It also adds the submission
+name to the master submission file for the quiz. The answerImportFile enables the student to answer the quiz by importing file. The grading method is used to grade
+the submission of a student and returns an array with points earned for each question. The print submissions method is used to print the submissions of the student
+for a quiz they have taken and displays all of their attempts. Last is the viewSubmissions method which prints out the submission that they have chosen to view.
    
 -Teacher: The Teacher class contains the methods responsible for the teacher functionality as well as some quality of life methods  
  that are used in driver to reduce code recycling. The createCourse method creates the quiz title master file for the course as well  
