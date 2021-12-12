@@ -48,8 +48,7 @@ public class Teacher {
 		}
 	}
 
-	public static void deleteCourse(String courseName) {
-
+	public static String deleteCourse(String courseName) {
 		try {
 			synchronized (courseListKeeper) {
 				BufferedReader bfr = new BufferedReader(new FileReader("CourseNames.txt")); // calling courseNames file
@@ -73,7 +72,7 @@ public class Teacher {
 //					JOptionPane.showMessageDialog(null, "No need to delete, " +
 //									"that course doesn't exist", "File Status", JOptionPane.ERROR_MESSAGE);
 					bfr.close();
-					return;
+					return "DNE";
 				}
 				PrintWriter myWriter = new PrintWriter(new FileOutputStream("CourseNames.txt"));
 				for (int j = 0; j < allCourses.size(); j++) {
@@ -84,13 +83,14 @@ public class Teacher {
 			}
 			// FINISHED REWRITING FILES AFTER DELETING NAME
 		} catch (FileNotFoundException e) {
-
 			JOptionPane.showMessageDialog(null, "Error writing to file." ,
 					"File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		} catch (Exception e) {
 
 			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
 					"File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		}
 		// SEARCHING FOR ALL QUIZZES INSIDE courseName + Quizzes, then calling
 		// deleteQuiz
@@ -113,17 +113,19 @@ public class Teacher {
 				bfrQuizzes.close();
 			}
 		} catch (FileNotFoundException e) {
-
 			JOptionPane.showMessageDialog(null, "File Not Found." ,
 					"File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		} catch (IOException e) {
 
 			JOptionPane.showMessageDialog(null, "Error reading/writing to file." ,
 					"File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 		} catch (Exception e) {
 
 			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
 					"File Status", JOptionPane.ERROR_MESSAGE);
+			return "fail";
 
 		}
 		// Deleting entire file with all Quiz names. Finished using the file to find all
@@ -133,9 +135,11 @@ public class Teacher {
 			if (deletedFile.delete()) {
 //				JOptionPane.showMessageDialog(null, "Successfully deleted the file " + courseName + "Quizzes.txt" ,
 //						"File Status", JOptionPane.INFORMATION_MESSAGE);
+				return "success";
 			} else {
 				JOptionPane.showMessageDialog(null, "Error deleting file." ,
 						"File Status", JOptionPane.ERROR_MESSAGE);
+				return "fail";
 			}
 		}
 
