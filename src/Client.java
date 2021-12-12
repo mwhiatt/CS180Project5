@@ -350,7 +350,6 @@ public class Client implements ActionListener {
     //allows students to take a quiz
     public void takeQuiz() {
         takeQuizFrame = new JFrame("Available Quizzes");
-        takeQuizFrame.setVisible(true);
         takeQuizFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         takeQuizFrame.setSize(500, 140);
         takeQuizFrame.setLocation(430, 100);
@@ -368,6 +367,8 @@ public class Client implements ActionListener {
             pw.flush();
 
             courseList = parseMessage(bfr.readLine());
+
+            takeQuizFrame.setVisible(true);
 
             bfr.close();
             pw.close();

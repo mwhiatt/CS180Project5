@@ -160,10 +160,7 @@ public class Student {
             }
             return returnString;
         }
-//            System.out.println("Would you like to view more submissions? [Y/N]"); // checks if user wants to
-//            // view more submissions
-//            prompt = input.nextLine();
-//        } while (prompt.equalsIgnoreCase("Y")); // continues while the user says yes
+
     }
 
     //calculates the points obtained by a student
@@ -180,4 +177,5 @@ public class Student {
         }
         return points;
     }
+
 }

@@ -229,35 +229,3 @@ public class Server implements Runnable {
 }
 
 
-/*
- * first try, saving in case better way is too hard
-public class Server {
-
-	public static void main(String[] args) {
-		ServerSocket serverSocket = null;
-		try {
-			serverSocket = new ServerSocket(4242);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		while (true) {
-			Socket socket = null;
-			try {
-				String message = "";
-				socket = serverSocket.accept();
-				BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				PrintWriter pw = new PrintWriter(socket.getOutputStream());
-				String line = bfr.readLine();
-				while (line != null) {
-					message += line;
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-}
- */
