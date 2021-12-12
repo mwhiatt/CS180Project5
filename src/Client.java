@@ -4,7 +4,14 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.net.*;
-
+/**
+ * Project 5 - Learning Management Quiz Tool - Client
+ * Client side operations for user interactions, sends information to the server to be saved. 
+ * <p>
+ *
+ * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
+ * @version 12/12/2021
+ */
 public class Client implements ActionListener {
 
     public static ArrayList<String> parseMessage(String message) {
@@ -774,7 +781,23 @@ public class Client implements ActionListener {
                             return;
                         }
                     }
-                    Teacher.createCourse(courseNameRequested);
+                    try {
+                        Socket socket = new Socket(SERVERADDRESS, 4343);
+                        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                        BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        pw.write("CREATECOURSE|" + courseNameRequested + "\n");
+                        pw.flush();
+                        String response = bfr.readLine();
+                        if (response.equals("success")) {
+                        	JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
+            						JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        bfr.close();
+                        socket.close();
+                        pw.close();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
                 }
             });
             viewCourse = new JButton("View Specific Course");
