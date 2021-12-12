@@ -59,7 +59,12 @@ public class Server implements Runnable {
 					for (int i = 0; i < quizzes.length; i++) {
 						quizStr += quizzes[i] + "|";
 					}
-					String ret = quizStr.substring(0, quizStr.length() - 1);
+					String ret;
+					if (quizStr.length() != 0) {
+						ret = quizStr.substring(0, quizStr.length() - 1);
+					} else {
+						ret = " ";
+					}
 					pw.write(ret + "\n");
 					pw.flush();
 				} else if (method.equals("PRINTQUIZZES2")) {
