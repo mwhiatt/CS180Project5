@@ -29,9 +29,9 @@ Class Descriptions:
  functionality and all inputs that could be received as parameters from Client are handled. 
  
 - Server: The server class receives written information from the client class. It handles the inputs and makes the appropriate method calls. Method calls and handling
- are only done in Server so that all data is available to all our users and not stuck on a local machine. 
+ are only done in Server so that all data is available to all our users and not stuck on a local machine. The server classes receives strings written through PrintWriters from the client class. The Server class then breaks them up according to special characters and passses them to their proper methods as arguments. The first segment of all passed strings is a designator for the method to be called so that the server can utilize simple if else logic to determine what method to call.
 
-- Client: The Client class handles all the GUI's and contains methods to handle our programs UI. 
+- Client: The Client class handles all the GUI's and contains methods to handle our programs UI. The complex GUI consists of many frames and buttons that provide for a smooth user experience. The client packages data from the user into a format that can be broken down by the server according to special characters so that the method calls that interact with files can be deployed on the server machine. The client also in some instances takes information back from the server to be used in GUI elements or as necessary part of functionality.  
    
 - Student: The Student class contains methods that are called in Client to implement the Student functionality. The methods are as follows: readQuiz, writeFile,
 answerImportFile, printSubmission, viewSubmissions and grading. Read Quiz is used to read the quiz file that the student has chosen to take and inserts the content
