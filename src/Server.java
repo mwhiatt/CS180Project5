@@ -115,16 +115,30 @@ public class Server implements Runnable {
 					pw.flush();
 				} else if (method.equals("READQUIZ")) {
 					ArrayList<String> quizAndAnswers = Student.readQuiz(arguments.get(1), arguments.get(2));
-					String quizAndAnswersStr = "";
-					for (int i = 0; i < quizAndAnswers.size(); i++) {
-						quizAndAnswersStr += quizAndAnswers.get(i) + "|";
+					if (quizAndAnswers == null) {
+						pw.write("fail" + "\n");
+					} else {
+						String quizAndAnswersStr = "";
+						for (int i = 0; i < quizAndAnswers.size(); i++) {
+							quizAndAnswersStr += quizAndAnswers.get(i) + "|";
+						}
+						String ret = quizAndAnswersStr.substring(0, quizAndAnswersStr.length() - 1);
+						pw.write(ret + "\n");
+						pw.flush();
 					}
-					String ret = quizAndAnswersStr.substring(0, quizAndAnswersStr.length() - 1);
-					pw.write(ret + "\n");
-					pw.flush();
 				} else if (method.equals("WRITEFILE")) {
-					Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
+					String status = Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
 							parseList(arguments.get(4)), parseList(arguments.get(5)));
+					if (status == null) {
+						pw.write("fail");
+						pw.flush();
+					} else if (status.equals("success")) {
+						pw.write("success");
+						pw.flush();
+					} else {
+						pw.write("fail");
+						pw.flush();
+					}
 				} else if (method.equals("PRINTSUBMISSIONS2")) {
 					String status = Teacher.printSubmissions(arguments.get(1), arguments.get(2));
 					pw.write(status + "\n");
