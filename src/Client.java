@@ -233,15 +233,32 @@ public class Client implements ActionListener {
 
                 points = parseMessage(bfr.readLine());
                 setCurrentPoints(points);
-                pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
-                        + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
-                pw.flush();
                 bfr.close();
                 pw.close();
                 socket.close();
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
+            try {
+            	Socket socket = new Socket(SERVERADDRESS, 4343);
+                BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+            
+                pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername()
+                        + "|" + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
+                pw.flush();
+                
+                String status = bfr.readLine();
+                if (status.equals("fail")) {
+                	JOptionPane.showMessageDialog(null, "Error", "Write Submissions error", JOptionPane.ERROR_MESSAGE);
+                }
+                bfr.close();
+                pw.close();
+                socket.close();
+            } catch (IOException exception) {
+            	exception.printStackTrace();
+            }
+            
             JOptionPane.showMessageDialog(null,"You are done with this quiz!");
             setCurrentAnswerList(new ArrayList<String>());
             setCurrentCount(0);
@@ -479,6 +496,7 @@ public class Client implements ActionListener {
                     ok4.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+                        	String response = "";
                             try {
                                 Socket socket = new Socket(SERVERADDRESS, 4343);
                                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -486,22 +504,42 @@ public class Client implements ActionListener {
 
                                 pw.write("CHECKQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
                                 pw.flush();
-                                String response = bfr.readLine();
-                                if (response.equals("true")) {
-                                    takeQuizFrame.setVisible(false);
-                                    pw.write("READQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
-                                    pw.flush();
-                                    ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
-                                    setCurrentQuizAndAnswers(quizAndAnswers);
-                                    answerQuiz(quizAndAnswers);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Quiz doesn't exist", "Check Quiz error", JOptionPane.ERROR_MESSAGE);                                    //GUI implementation saying quiz doesn't exist
-                                }
+                                response = bfr.readLine();
+                                
                                 pw.close();
                                 bfr.close();
                                 socket.close();
+                                
+                                
                             } catch (IOException exception) {
                                 exception.printStackTrace();
+                            }
+                            try {
+                            	Socket socket = new Socket(SERVERADDRESS, 4343);
+                                BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+	                            if (response.equals("true")) {
+	                                takeQuizFrame.setVisible(false);
+	                                pw.write("READQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
+	                                pw.flush();
+	                                
+	                                String status = bfr.readLine();
+	                                if (status.equals("fail")) {
+	                                	JOptionPane.showMessageDialog(null, "Error", "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+	                                } else {
+		                                ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
+		                                setCurrentQuizAndAnswers(quizAndAnswers);
+		                                answerQuiz(quizAndAnswers);
+	                                }
+	                            } else {
+	                                JOptionPane.showMessageDialog(null, "Quiz doesn't exist", "Check Quiz error", JOptionPane.ERROR_MESSAGE);                                    //GUI implementation saying quiz doesn't exist
+	                            }
+	                            
+	                            pw.close();
+	                            bfr.close();
+	                            socket.close();
+                            } catch (IOException ex) {
+                            	ex.printStackTrace();
                             }
                         }
                     });
