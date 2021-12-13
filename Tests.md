@@ -2,7 +2,7 @@
 
 ## *FRIENDLY REMINDER: ALL PATHWAYS MUST BE TESTED IN SUCESSION* ##
 
-##Test 1: Create Account (Teacher)##
+## Test 1: Create Account (Teacher) ##
 1. Click [Create]
 2. Select option [Teacher] form drop down list
 3. Write "TestTeacher" in the [Username] text field
