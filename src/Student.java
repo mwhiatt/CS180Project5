@@ -45,16 +45,16 @@ public class Student {
 	               }
 	           } while (s != null);
 	       } catch (FileNotFoundException e) {
-	           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+	    	   return null;
 	       } catch (IOException e) {
-	           JOptionPane.showMessageDialog(null, e.getMessage(), "Read Quiz error", JOptionPane.ERROR_MESSAGE);
+	    	   return null;
 	       }
        }
        list.remove(list.size() - 1);
        return list;
     }
     //writes the submission file for a student
-    public static void writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> answerList) {
+    public static String writeFile(String course, String quiz, String user, ArrayList<String> points, ArrayList<String> answerList) {
         String totalString;
         int total = 0;
         for (int y = 0; y < points.size(); y++) {
@@ -85,44 +85,20 @@ public class Student {
 	            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 	            pw.println("Timestamp: " + timeStamp);
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Write Submissions error", JOptionPane.ERROR_MESSAGE);
+	        	return "fail";
+                
 	        }
         }
         synchronized (Teacher.submissionListKeeper) {
 	        String masterFileName = course + quiz + "Submissions.txt";
 	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
 	            pw.println(fileName);
+	            return "true";
 	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Write Submissions error", JOptionPane.ERROR_MESSAGE);
+	        	return "fail";
 	        }
         }
     }
-
-    //allows the student to answer through file imports
-    //MOVING INTO CLIENT, DOESN'T DEAL WITH FILE CREATION SO IS SAFE IN CLIENT
-    /*
-    public static String answerImportFile(File fileName) {
-    	synchronized (Teacher.submissionKeeper) {
-	        File f = null;
-	        FileReader fileReader = null;
-	        BufferedReader bufferedReader = null;
-	        String ans = "";
-	        try {
-	            f = fileName;
-	            fileReader = new FileReader(f);
-	            bufferedReader = new BufferedReader(fileReader);
-	            ans = bufferedReader.readLine();
-	
-	            bufferedReader.close();
-	        } catch (FileNotFoundException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Import Answers error", JOptionPane.ERROR_MESSAGE);
-	        } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Import Answers error", JOptionPane.ERROR_MESSAGE);
-	        }
-	        return ans;
-    	}
-    }
-    */
 
     // Displays student the submission they have chosen to view
     public static ArrayList<String> printSubmissions(String course, String quiz, String user) throws IOException {
@@ -160,7 +136,6 @@ public class Student {
             }
             return returnString;
         }
-
     }
 
     //calculates the points obtained by a student
