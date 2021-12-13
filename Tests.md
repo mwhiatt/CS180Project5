@@ -52,13 +52,18 @@ password
 3. Write 'password' in the [Password] password field
 4. Click [View Specific Course] and write "CS180"
 5. Click [Create Quiz]
-----TODO----
-(FYI:
-COURSE: CS180
-QUIZ: Quiz1
-No of Questions: 1
-Correct Answer: A
-)
+6. Type "no" and click [OK] in the import menu
+7. Type the name, "Quiz1" into the quiz name field press [OK]
+8. Type the question into the question field and press [OK]
+9. Write the answer choice in the field and press [OK] (4 times)
+10. Type "no" in the point value field and press [OK]
+11. Type "no" in the field that asks if you'd like to enter another question and click [OK]
+12. click [OK] on the success message popup
+
+## Expected Output: ##
+1. User is returned to Course menu
+2. File titled "CS180Quiz1.txt" has been created and contains quiz contents
+3. File titled "CS180Quiz1Submissions.txt" has been created and is empty
 
 ## Test 5: Take Quiz (Answering through GUI) (Student) ##
 1. Click [login]
@@ -116,3 +121,18 @@ Correct Answer: A
 
 ## Expected Output: ##
 1. You can view your submission in a GUI with its points and timestamp.
+
+## Test 8: View Submissions (Teacher) ##
+1. Click [login]
+2. Write "TestTeacher" in the [Username] text field
+3. Write 'password' in the [Password] password field
+4. Click [View Specific Course] and write "CS180"
+5. Click [Print Submission Names for Specified Quiz in CS180] to find submission title
+6. Enter "Quiz1" and press [OK]
+7. View Submissions and press [OK]
+8. Click [View Submission] and enter "Quiz1"
+9. Enter submission name "TestStudent" and view submission
+10. Click [OK]
+
+## Expected Output: ##
+1. You can view the student's submission in a GUI component with its points and timestamp.
