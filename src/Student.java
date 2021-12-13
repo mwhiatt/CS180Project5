@@ -55,7 +55,7 @@ public class Student {
 
 	// writes the submission file for a student
 	public static String writeFile(String course, String quiz, String user, ArrayList<String> points,
-			ArrayList<String> answerList) {
+			  ArrayList<String> answerList) {
 		String totalString;
 		int total = 0;
 		for (int y = 0; y < points.size(); y++) {
