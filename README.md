@@ -9,14 +9,14 @@ To run the project, ensure the following files are included in your directory:
 -Student.java
 -Teacher.java
 1. Run Server.java
-2. Run Client.java (Set SERVERADDRESS (Line 37) to desired server address)
+2. Run Client.java (Set SERVERADDRESS (Line 37) to desired server address, address is localhost by default)
 3. Follow directions on the User Interface
 Pointers: No login has been created so please create a login before proceeding
 
 Parts submitted by:
--Vocareum: 
--Report on Brightspace: 
--Video Presentation: 
+-Vocareum: Matt Hiatt
+-Report on Brightspace: Matt Hiatt
+-Video Presentation: Aryan Mathur
 Class Descriptions:
 
 
