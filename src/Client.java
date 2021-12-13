@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -136,9 +135,9 @@ public class Client implements ActionListener {
 			pw.write("PRINTSUBMISSIONS|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername() + "\n");
 			pw.flush();
 			response = bfr.readLine();
-			if (response == " ") {
+			if (response.equals(" ")) {
 				JOptionPane.showMessageDialog(null, "Unfortunately, this quiz has no submissions yet",
-						"View Submissions Error", JOptionPane.ERROR_MESSAGE);
+						  "View Submissions Error", JOptionPane.ERROR_MESSAGE);
 				viewSubmissionsFrame.setVisible(false);
 				viewingSubmissionsFrame.setVisible(false);
 				takeQuizFrame.setVisible(true);
@@ -151,7 +150,7 @@ public class Client implements ActionListener {
 			viewSubmissionsFrame.setVisible(true);
 		} catch (IOException exception) {
 			JOptionPane.showMessageDialog(null, exception.getMessage(), "View Submissions Error",
-					JOptionPane.ERROR_MESSAGE);
+					  JOptionPane.ERROR_MESSAGE);
 		}
 
 		ArrayList<String> userSubmissions = parseMessage(response);
@@ -274,7 +273,7 @@ public class Client implements ActionListener {
 				PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
 				pw.write("WRITEFILE|" + getCurrentCourse() + "|" + getCurrentQuiz() + "|" + getUsername() + "|"
-						+ packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
+						  + packageList(getCurrentPoints()) + "|" + packageList(getCurrentAnswerList()) + "\n");
 				pw.flush();
 
 				String status = bfr.readLine();
@@ -349,10 +348,10 @@ public class Client implements ActionListener {
 								bfr.close();
 							} catch (FileNotFoundException except) {
 								JOptionPane.showMessageDialog(null, except.getMessage(), "Import Answers error",
-										JOptionPane.ERROR_MESSAGE);
+										  JOptionPane.ERROR_MESSAGE);
 							} catch (IOException except) {
 								JOptionPane.showMessageDialog(null, except.getMessage(), "Import Answers error",
-										JOptionPane.ERROR_MESSAGE);
+										  JOptionPane.ERROR_MESSAGE);
 							}
 							currentAnswerList.add(ans);
 							setCurrentAnswerList(currentAnswerList);
@@ -490,10 +489,10 @@ public class Client implements ActionListener {
 						quizList.remove(quizList.size() - 1);
 						if (status.equals("fail") || status.equals(" ")) {
 							JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
-									JOptionPane.ERROR_MESSAGE);// change in Teacher error message
+									  JOptionPane.ERROR_MESSAGE); // change in Teacher error message
 						} else {
 							JOptionPane.showMessageDialog(null, quizList, "All Quizzes",
-									JOptionPane.INFORMATION_MESSAGE);
+									  JOptionPane.INFORMATION_MESSAGE);
 						}
 						bfr.close();
 						pw.close();
@@ -552,7 +551,7 @@ public class Client implements ActionListener {
 									String status = bfr.readLine();
 									if (status.equals("fail")) {
 										JOptionPane.showMessageDialog(null, "Error", "Read Quiz error",
-												JOptionPane.ERROR_MESSAGE);
+												  JOptionPane.ERROR_MESSAGE);
 									} else {
 										System.out.println("ANSWERQUIZCALLED");
 										ArrayList<String> quizAndAnswers = parseMessage(status);
@@ -561,7 +560,7 @@ public class Client implements ActionListener {
 									}
 								} else {
 									JOptionPane.showMessageDialog(null, "Quiz doesn't exist", "Check Quiz error",
-											JOptionPane.ERROR_MESSAGE); // GUI implementation saying quiz doesn't exist
+											  JOptionPane.ERROR_MESSAGE); 
 								}
 
 								pw.close();
@@ -615,9 +614,9 @@ public class Client implements ActionListener {
 		createAccountFrame.add(panel, BorderLayout.NORTH);
 
 		JLabel lbl2 = new JLabel("Username");
-		JTextField username = new JTextField(8);
+		JTextField user = new JTextField(8);
 		panel2.add(lbl2, BorderLayout.EAST);
-		panel2.add(username, BorderLayout.AFTER_LINE_ENDS);
+		panel2.add(user, BorderLayout.AFTER_LINE_ENDS);
 		createAccountFrame.add(panel2, BorderLayout.CENTER);
 
 		JLabel lbl3 = new JLabel("Password");
@@ -633,7 +632,7 @@ public class Client implements ActionListener {
 					String classification = (String) cb.getSelectedItem();
 					if (password.getText().isBlank()) {
 						JOptionPane.showMessageDialog(null, "Password cannot be blank!", "Password Error",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 						prompt = false;
 					}
 					String dupResponse = "";
@@ -642,7 +641,7 @@ public class Client implements ActionListener {
 						BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 						PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-						pw.write("ISDUPLICATE|" + username.getText() + "\n");
+						pw.write("ISDUPLICATE|" + user.getText() + "\n");
 						pw.flush();
 						dupResponse = bfr.readLine();
 
@@ -654,12 +653,12 @@ public class Client implements ActionListener {
 					}
 					if (dupResponse.equals("true")) {
 						JOptionPane.showMessageDialog(null, "Sorry that username is taken, please try a new one.",
-								"Username Error", JOptionPane.ERROR_MESSAGE);
+								  "Username Error", JOptionPane.ERROR_MESSAGE);
 						prompt = false;
 					}
-					if (username.getText().isBlank()) {
+					if (user.getText().isBlank()) {
 						JOptionPane.showMessageDialog(null, "Username cannot be blank!", "Username Error",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 						prompt = false;
 					}
 					if (prompt) {
@@ -667,8 +666,8 @@ public class Client implements ActionListener {
 							Socket socket = new Socket(SERVERADDRESS, 4343);
 							PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-							pw.write("WRITENEWUSER|" + classification + "|" + username.getText() + "|"
-									+ password.getText() + "\n");
+							pw.write("WRITENEWUSER|" + classification + "|" + user.getText() + "|"
+									  + password.getText() + "\n");
 							pw.flush();
 
 							socket.close();
@@ -676,8 +675,8 @@ public class Client implements ActionListener {
 						} catch (IOException exception) {
 							exception.printStackTrace();
 						}
-						setUsername(username.getText());
-						StudentMenu(username.getText());
+						setUsername(user.getText());
+						studentMenu(user.getText());
 						createAccountFrame.setVisible(false);
 					}
 				}
@@ -694,7 +693,6 @@ public class Client implements ActionListener {
 			}
 		});
 		createAccountFrame.add(panel3, BorderLayout.SOUTH);
-//        createAccountFrame.setVisible(true);
 	}
 
 	// allows users to login
@@ -706,9 +704,9 @@ public class Client implements ActionListener {
 		loginFrame.setSize(500, 120);
 		loginFrame.setLocation(430, 100);
 		JLabel lbl2 = new JLabel("Username");
-		JTextField username = new JTextField(8);
+		JTextField user = new JTextField(8);
 		panel.add(lbl2, BorderLayout.EAST);
-		panel.add(username, BorderLayout.AFTER_LINE_ENDS);
+		panel.add(user, BorderLayout.AFTER_LINE_ENDS);
 		loginFrame.add(panel, BorderLayout.NORTH);
 		JLabel lbl3 = new JLabel("Password");
 		JPasswordField password = new JPasswordField(8);
@@ -726,7 +724,7 @@ public class Client implements ActionListener {
 					BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-					pw.write("ISDUPLICATE|" + username.getText() + "\n");
+					pw.write("ISDUPLICATE|" + user.getText() + "\n");
 					pw.flush();
 					dupResponse = bfr.readLine();
 
@@ -738,7 +736,7 @@ public class Client implements ActionListener {
 				}
 				if (!dupResponse.equals("true")) {
 					JOptionPane.showMessageDialog(null, "Username not found, please try again.", "Username Error",
-							JOptionPane.ERROR_MESSAGE);
+							  JOptionPane.ERROR_MESSAGE);
 					prompt2 = false;
 				}
 				String loginResponse = "";
@@ -747,7 +745,7 @@ public class Client implements ActionListener {
 					BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					PrintWriter pw = new PrintWriter(socket.getOutputStream());
 
-					pw.write("LOGIN|" + username.getText() + "|" + password.getText() + "\n");
+					pw.write("LOGIN|" + user.getText() + "|" + password.getText() + "\n");
 					pw.flush();
 					loginResponse = bfr.readLine();
 
@@ -759,12 +757,12 @@ public class Client implements ActionListener {
 				}
 				if (!loginResponse.equals("true")) {
 					JOptionPane.showMessageDialog(null, "Incorrect password, please try again.", "Username Error",
-							JOptionPane.ERROR_MESSAGE);
+							  JOptionPane.ERROR_MESSAGE);
 					prompt2 = false;
 				}
 				if (prompt2) {
-					setUsername(username.getText());
-					StudentMenu(username.getText());
+					setUsername(user.getText());
+					studentMenu(user.getText());
 					loginFrame.setVisible(false);
 				}
 			}
@@ -787,24 +785,24 @@ public class Client implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		Client Client = new Client();
+		Client client = new Client();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Client.createGUI();
+				client.createGUI();
 			}
 		});
 	}
 
 	// menu shown for Teacher/Student
-	public void StudentMenu(String username) {
+	public void studentMenu(String user) {
 		String type = "";
 		try {
 			System.out.println("Stuedent Menu get classification hit");
 			Socket socket = new Socket(SERVERADDRESS, 4343);
 			BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
-			System.out.println("Connection for get established, user: " + username);
-			pw.write("GETCLASSIFICATION|" + username + "\n");
+			System.out.println("Connection for get established, user: " + user);
+			pw.write("GETCLASSIFICATION|" + user + "\n");
 			pw.flush();
 			type = bfr.readLine();
 			System.out.println("Classification Received: " + type);
@@ -815,7 +813,7 @@ public class Client implements ActionListener {
 			exception.printStackTrace();
 		}
 		if (type.equals("Student")) {
-			studentMenuFrame = new JFrame("Welcome Student " + username);
+			studentMenuFrame = new JFrame("Welcome Student " + user);
 			studentMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			studentMenuFrame.setSize(500, 100);
 			studentMenuFrame.setLocation(430, 100);
@@ -839,7 +837,7 @@ public class Client implements ActionListener {
 			studentMenuFrame.setVisible(true);
 		} else if (type.equals("Teacher")) {
 			// created december 5
-			teacherMainMenu = new JFrame("Welcome Teacher " + username);
+			teacherMainMenu = new JFrame("Welcome Teacher " + user);
 			teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			teacherMainMenu.setSize(650, 140);
 			teacherMainMenu.setLocation(430, 100);
@@ -870,13 +868,13 @@ public class Client implements ActionListener {
 						String response = bfr.readLine();
 						if (response.equals("fail")) {
 							JOptionPane.showMessageDialog(null, "Error. Try again.", "File Status",
-									JOptionPane.ERROR_MESSAGE);
+									  JOptionPane.ERROR_MESSAGE);
 						} else if (response.equals("success")) {
 							JOptionPane.showMessageDialog(null, "New Course Created!", "Course Status",
-									JOptionPane.INFORMATION_MESSAGE);
+									  JOptionPane.INFORMATION_MESSAGE);
 						} else if (response.equals("exists")) {
 							JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
-									JOptionPane.ERROR_MESSAGE);
+									  JOptionPane.ERROR_MESSAGE);
 						}
 						bfr.close();
 						socket.close();
@@ -968,13 +966,13 @@ public class Client implements ActionListener {
 					String result = bfr.readLine();
 					if (result == null || result.equals("fail")) {
 						JOptionPane.showMessageDialog(null, "Error deleting course.", "File Status",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 					} else if (result.equals("DNE")) {
 						JOptionPane.showMessageDialog(null, "No need to delete, " + "that course doesn't exist",
-								"File Status", JOptionPane.ERROR_MESSAGE);
+								  "File Status", JOptionPane.ERROR_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "Successfully deleted.", "File Status",
-								JOptionPane.INFORMATION_MESSAGE);
+								  JOptionPane.INFORMATION_MESSAGE);
 					}
 					bfr.close();
 					pw.close();
@@ -1006,10 +1004,10 @@ public class Client implements ActionListener {
 
 					if (result.equals("fail")) {
 						JOptionPane.showMessageDialog(null, "Failed Deletion. Please try again!", "File Status",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 					} else if (result.equals("success")) {
 						JOptionPane.showMessageDialog(null, "Successful Deletion", "File Status",
-								JOptionPane.INFORMATION_MESSAGE);
+								  JOptionPane.INFORMATION_MESSAGE);
 					}
 					bfr.close();
 					pw.close();
@@ -1223,7 +1221,7 @@ public class Client implements ActionListener {
 						JOptionPane.showMessageDialog(null, show, "Submission", JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "Error Writing/Reading to File.", "File Status",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 					}
 					bfr.close();
 					pw.close();
@@ -1255,7 +1253,7 @@ public class Client implements ActionListener {
 					quizList.remove(quizList.size() - 1);
 					if (status.equals("fail") || status.equals(" ")) {
 						JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
-								JOptionPane.ERROR_MESSAGE);// change in Teacher error message
+								  JOptionPane.ERROR_MESSAGE); // change in Teacher error message
 					} else {
 						JOptionPane.showMessageDialog(null, quizList, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -1291,10 +1289,10 @@ public class Client implements ActionListener {
 					String listSubmissions = returned.substring(returned.indexOf('|'));
 					if (status.equals("success")) {
 						JOptionPane.showMessageDialog(null, listSubmissions, "All Submissions",
-								JOptionPane.INFORMATION_MESSAGE);
+								  JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "Error Displaying Submission.", "File Status",
-								JOptionPane.ERROR_MESSAGE);
+								  JOptionPane.ERROR_MESSAGE);
 					}
 
 					bfr.close();
