@@ -14,9 +14,9 @@ To run the project, ensure the following files are included in your directory:
 Pointers: No login has been created so please create a login before proceeding
 
 Parts submitted by:
- -Vocareum: Matt Hiatt
- -Report on Brightspace: Matt Hiatt
- -Video Presentation: Aryan Mathur
+ - Vocareum: Matt Hiatt
+ - Report on Brightspace: Matt Hiatt
+ - Video Presentation: Aryan Mathur
 Class Descriptions:
 
 
