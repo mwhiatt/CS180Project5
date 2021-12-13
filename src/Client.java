@@ -103,8 +103,12 @@ public class Client implements ActionListener {
         if (e.getSource() == exit) {
             this.exit();
             createGUIFrame.setVisible(false);
-            studentMenuFrame.setVisible(false);
-            teacherViewCourseMenu.setVisible(false);
+            if (studentMenuFrame != null) {
+                studentMenuFrame.setVisible(false);
+            }
+            if (teacherViewCourseMenu != null) {
+                teacherViewCourseMenu.setVisible(false);
+            }
         }
         if (e.getSource() == takeQuiz) {
             this.takeQuiz();
