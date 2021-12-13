@@ -73,7 +73,7 @@ public class Server implements Runnable {
 					if (quizStr.length() != 0) {
 						ret = quizStr.substring(0, quizStr.length() - 1);
 					} else {
-						ret = " ";
+						ret = " " + "\n";
 					}
 					pw.write(ret + "\n");
 					pw.flush();
@@ -117,6 +117,7 @@ public class Server implements Runnable {
 					ArrayList<String> quizAndAnswers = Student.readQuiz(arguments.get(1), arguments.get(2));
 					if (quizAndAnswers == null) {
 						pw.write("fail" + "\n");
+						pw.flush();
 					} else {
 						String quizAndAnswersStr = "";
 						for (int i = 0; i < quizAndAnswers.size(); i++) {
