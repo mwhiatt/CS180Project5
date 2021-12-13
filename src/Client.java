@@ -467,7 +467,7 @@ public class Client implements ActionListener {
                 					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
                         } else {
                         	JOptionPane.showMessageDialog(null,
-            						choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
+            						quizList, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
                         }
                         bfr.close();
                         pw.close();
@@ -518,6 +518,7 @@ public class Client implements ActionListener {
                             	Socket socket = new Socket(SERVERADDRESS, 4343);
                                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                                System.out.println("RESPONSE IS: " + response);
 	                            if (response.equals("true")) {
 	                                takeQuizFrame.setVisible(false);
 	                                pw.write("READQUIZ|" + getCurrentCourse() + "|" + getCurrentQuiz() + "\n");
