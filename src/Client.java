@@ -104,6 +104,7 @@ public class Client implements ActionListener {
             this.exit();
             createGUIFrame.setVisible(false);
             studentMenuFrame.setVisible(false);
+            teacherViewCourseMenu.setVisible(false);
         }
         if (e.getSource() == takeQuiz) {
             this.takeQuiz();
@@ -845,7 +846,7 @@ public class Client implements ActionListener {
             // created december 5
             teacherMainMenu = new JFrame("Welcome Teacher " + username);
             teacherMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            teacherMainMenu.setSize(500, 140);
+            teacherMainMenu.setSize(650, 140);
             teacherMainMenu.setLocation(430, 100);
             //general shape of frame created
             JPanel teacherFirstMenu = new JPanel();
@@ -940,7 +941,7 @@ public class Client implements ActionListener {
             teacherFirstMenu.add(createCourse);
             teacherFirstMenu.add(viewCourse);
             teacherFirstMenu.add(viewAllCourses);
-            teacherFirstMenu.add(exit);
+            teacherFirstMenu.add(exit, BorderLayout.AFTER_LINE_ENDS);
             JPanel bottomLayer = new JPanel();
             firstMenuBack = new JButton("Back");
             firstMenuBack.addActionListener(new ActionListener() {
