@@ -8,7 +8,7 @@ import java.io.*;
  * <p>
  *
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
- * @version 11/15/2021
+ * @version 12/13/2021
  */
 
 public class Teacher {
@@ -17,7 +17,7 @@ public class Teacher {
 	public static Object submissionListKeeper = new Object();
 	public static Object quizKeeper = new Object();
 	public static Object submissionKeeper = new Object();
-	
+
 	public static String createCourse(String courseName) {
 		try {
 			String nameAndQuiz = courseName + "Quizzes.txt";
@@ -92,7 +92,6 @@ public class Teacher {
 					quizNames = bfrQuizzes.readLine();
 				}
 				// preparing to delete all the quizzes
-
 				// preparing to delete all the quiz submissions and quiz itself after
 				for (int k = 0; k < allQuizzes.size(); k++) {
 					deleteQuiz(courseName, allQuizzes.get(k)); // calling deleteQuiz for each one
@@ -196,22 +195,21 @@ public class Teacher {
 	}
 
 	public static void createQuiz(String courseName) {
-
 		try {
 			boolean contWriting = false; // variable for knowing if they want to keep writing quizzes (do while loop)
 			String fileName = "";
 			PrintWriter myWriter;
 			String importOrCreate = JOptionPane.showInputDialog(null,
-							"Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
-									+ "file inside the program immediately)");
+					"Would you like to import a quiz? Yes or No (If no, you will be directed to create a "
+							+ "file inside the program immediately)");
 
 			// ^^checks if importing or creating
 			// checks for valid input
 			if (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
 				while (!(importOrCreate.equalsIgnoreCase("no") || importOrCreate.equalsIgnoreCase("yes"))) {
 					importOrCreate = JOptionPane.showInputDialog(null,
-							"Please input a valid answer, Yes or No.\n" + "Would you like to import a quiz? " +
-									"Yes or No (If no, you will be directed to "
+							"Please input a valid answer, Yes or No.\n" + "Would you like to import a quiz? "
+									+ "Yes or No (If no, you will be directed to "
 									+ "create a file inside program immediately");
 					if (importOrCreate == null) {
 						return;
@@ -219,9 +217,9 @@ public class Teacher {
 				}
 			}
 			if (importOrCreate.equalsIgnoreCase("yes")) { // if importing, do this
-				String premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
-						"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
-						+ "Choice C\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
+				String premadeFile = JOptionPane.showInputDialog(null,
+						"\nRemember File must be in " + "the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+								+ "Choice C\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 				if (premadeFile == null) {
 					return;
 				}
@@ -231,20 +229,20 @@ public class Teacher {
 						quizImport(premadeFile, courseName);
 					} catch (FileNotFoundException e) {
 						check = true;
-						JOptionPane.showMessageDialog(null, "File not found! Please try again",
-								"File Status", JOptionPane.ERROR_MESSAGE);
-						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
-								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+						JOptionPane.showMessageDialog(null, "File not found! Please try again", "File Status",
+								JOptionPane.ERROR_MESSAGE);
+						premadeFile = JOptionPane.showInputDialog(null, "\nRemember File must be in "
+								+ "the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 						if (premadeFile == null) {
 							return;
 						}
 					} catch (IOException e) {
 						check = true;
-						JOptionPane.showMessageDialog(null, "Error, please try again.",
-								"File Status", JOptionPane.ERROR_MESSAGE);
-						premadeFile = JOptionPane.showInputDialog(null,"\nRemember File must be in " +
-								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
+						JOptionPane.showMessageDialog(null, "Error, please try again.", "File Status",
+								JOptionPane.ERROR_MESSAGE);
+						premadeFile = JOptionPane.showInputDialog(null, "\nRemember File must be in "
+								+ "the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 						if (premadeFile == null) {
 							return;
@@ -258,19 +256,19 @@ public class Teacher {
 						return;
 					}
 					if (fileName.isBlank()) {
-						JOptionPane.showMessageDialog(null, "Quiz title cannot be blank.",
-								"File Status", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Quiz title cannot be blank.", "File Status",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				} while (fileName.isBlank());
 				synchronized (quizKeeper) {
 					File newQuiz = new File(courseName + fileName + ".txt");
 
 					if (newQuiz.createNewFile()) {
-						JOptionPane.showMessageDialog(null, "Creating a new file!",
-								"File Status", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Creating a new file!", "File Status",
+								JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(null, "Overwriting the file, it already exists!",
-								"File Status", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Overwriting the file, it already exists!", "File Status",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 				synchronized (submissionListKeeper) {
@@ -303,21 +301,21 @@ public class Teacher {
 							myWriter.close();
 							return;
 						} else {
-							myWriter.write("B." +  upcomingAnswersValid + "\n");
+							myWriter.write("B." + upcomingAnswersValid + "\n");
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer C):");
 						if (upcomingAnswersValid == null) {
 							myWriter.close();
 							return;
 						} else {
-							myWriter.write("C." +  upcomingAnswersValid + "\n");
+							myWriter.write("C." + upcomingAnswersValid + "\n");
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer D):");
 						if (upcomingAnswersValid == null) {
 							myWriter.close();
 							return;
 						} else {
-							myWriter.write("D." +  upcomingAnswersValid + "\n");
+							myWriter.write("D." + upcomingAnswersValid + "\n");
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null,
 								"Please write which letter is the answer");
@@ -325,7 +323,7 @@ public class Teacher {
 							myWriter.close();
 							return;
 						} else {
-							myWriter.write( upcomingAnswersValid + "\n");
+							myWriter.write(upcomingAnswersValid + "\n");
 						}
 						pointsAdded = JOptionPane.showInputDialog(null,
 								"What you like to put a point value in? Yes or No");
@@ -333,8 +331,7 @@ public class Teacher {
 							myWriter.close();
 							return;
 						} else if (pointsAdded.equalsIgnoreCase("yes")) {
-							pointsGiven = JOptionPane.showInputDialog(null,
-									"Please input a value (digit): ");
+							pointsGiven = JOptionPane.showInputDialog(null, "Please input a value (digit): ");
 							if (pointsGiven == null) {
 								myWriter.close();
 								return;
@@ -351,8 +348,8 @@ public class Teacher {
 							return;
 						}
 						while (!(another.equalsIgnoreCase("yes") || another.equalsIgnoreCase("no"))) {
-							another = JOptionPane.showInputDialog(null, "Please input a valid answer, " +
-									"Yes or No." + "Would you like to write another question? Yes or No");
+							another = JOptionPane.showInputDialog(null, "Please input a valid answer, " + "Yes or No."
+									+ "Would you like to write another question? Yes or No");
 							if (another == null) {
 								myWriter.close();
 								return;
@@ -370,29 +367,27 @@ public class Teacher {
 				synchronized (quizListKeeper) {
 					File allQuizzes = new File(courseName + "Quizzes.txt");
 					if (allQuizzes.exists()) {
-						JOptionPane.showMessageDialog(null,
-								"Creating a New File.", "File Status", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Creating a New File.", "File Status",
+								JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(null,
-								"Appending the file, it already exists!", "File Status", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Appending the file, it already exists!", "File Status",
+								JOptionPane.ERROR_MESSAGE);
 					}
 					PrintWriter writeToList = new PrintWriter(new FileOutputStream(allQuizzes, true));
 					writeToList.write(fileName + "\n");
 					writeToList.close();
 				}
 			}
-			JOptionPane.showMessageDialog(null,
-					"DONE!", "File Status", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "DONE!", "File Status", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error Writing/Reading to File.", "File Status",
+					JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(null,
-					"Undocumented Error.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Undocumented Error.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	public static ArrayList<String> getQuiz(String quizName, String courseName) {
 		try {
 			ArrayList<String> courseQuizQuestions = new ArrayList<String>();
@@ -404,10 +399,10 @@ public class Teacher {
 					quizContents = bfrForEditing.readLine();
 				}
 				bfrForEditing.close();
-			} 
+			}
 			return courseQuizQuestions;
 		} catch (IOException e) {
-				return null;
+			return null;
 		}
 	}
 
@@ -421,7 +416,7 @@ public class Teacher {
 				myWriterToQuiz.close();
 			}
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -429,7 +424,8 @@ public class Teacher {
 		String fullSubmission = "";
 		try {
 			synchronized (submissionKeeper) {
-				BufferedReader bfr = new BufferedReader(new FileReader(courseName + quizName + submissionName + ".txt"));
+				BufferedReader bfr = new BufferedReader(
+						new FileReader(courseName + quizName + submissionName + ".txt"));
 				String details = bfr.readLine();
 				while (details != null) {
 					fullSubmission += details + "\n";
@@ -444,7 +440,6 @@ public class Teacher {
 			return "fail";
 		}
 	}
-
 
 	public static String[] printCourses() {
 		ArrayList<String> choices = new ArrayList<>();
@@ -469,11 +464,13 @@ public class Teacher {
 					}
 				}
 			}
-			JOptionPane.showMessageDialog(null,
-					choices, "All Courses", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, choices, "All Courses", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Courses",
-					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
+			JOptionPane.showMessageDialog(null, "Error Displaying Courses.", "Courses", JOptionPane.ERROR_MESSAGE);// change
+																													// in
+																													// Teacher
+																													// error
+																													// message
 		}
 		String[] choices2 = new String[choices.size()];
 		for (int c = 0; c < choices.size(); c++) {
@@ -496,7 +493,7 @@ public class Teacher {
 					choices.add(line);
 				}
 				status = "success";
-				bfr.close();	
+				bfr.close();
 			}
 		} catch (IOException e) {
 			status = "fail";
@@ -522,15 +519,10 @@ public class Teacher {
 					line = line.replace(courseName, "");
 					line = line.replace(quizName, "");
 					line = line.replace(".txt", "");
-					if (listSubmissions.size() == 0) {
-						listSubmissions.add("No submissions currently.");
-					} else {
-						for (int x = 0; x < listSubmissions.size(); x++) {
-							if (listSubmissions.get(x).equals("No courses currently.")) {
-								listSubmissions.remove(x);
-							}
-						}
-					}
+					listSubmissions.add(line);
+				}
+				if (listSubmissions.size() == 0) {
+					listSubmissions.add("No Submissions Currently");
 				}
 				bfr.close();
 				return "success|" + listSubmissions;
@@ -556,12 +548,11 @@ public class Teacher {
 				}
 				bfr.close();
 			}
-			JOptionPane.showMessageDialog(null,
-					"Submission Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Submission Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Validating Submission.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error Validating Submission.", "File Status",
+					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -582,12 +573,10 @@ public class Teacher {
 				}
 				bfr.close();
 			}
-			JOptionPane.showMessageDialog(null,
-					"Quiz Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Quiz Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Validating Quiz.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error Validating Quiz.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -604,8 +593,7 @@ public class Teacher {
 					if (line.equals(courseName)) {
 						bfr.close();
 						if (creating) {
-							JOptionPane.showMessageDialog(null,
-									"Course already created. You can't make another!",
+							JOptionPane.showMessageDialog(null, "Course already created. You can't make another!",
 									"File Status", JOptionPane.ERROR_MESSAGE);
 						}
 						return true;
@@ -614,13 +602,11 @@ public class Teacher {
 				bfr.close();
 			}
 			if (!creating) {
-				JOptionPane.showMessageDialog(null,
-						"Course Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Course Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 			}
 			return false;
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Error Validating Course.", "File Status", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error Validating Course.", "File Status", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
