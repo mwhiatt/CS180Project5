@@ -106,8 +106,8 @@ public class Client implements ActionListener {
             if (studentMenuFrame != null) {
                 studentMenuFrame.setVisible(false);
             }
-            if (teacherViewCourseMenu != null) {
-                teacherViewCourseMenu.setVisible(false);
+            if (teacherMainMenu != null) {
+                teacherMainMenu.setVisible(false);
             }
         }
         if (e.getSource() == takeQuiz) {
