@@ -1,3 +1,5 @@
+
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,7 +11,7 @@ import java.util.*;
  * <p>
  * 
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
- * @version 12/13/2021
+ * @version 12/12/2021
  */
 public class Server implements Runnable {
 	Socket socket;
@@ -81,8 +83,8 @@ public class Server implements Runnable {
 					pw.flush();
 				} else if (method.equals("PRINTSUBMISSIONS")) {
 					try {
-						ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2),
-								arguments.get(3));
+						ArrayList<String> submissions = Student.printSubmissions(
+                            arguments.get(1), arguments.get(2), arguments.get(3));
 						String submissionsStr = "";
 						for (int i = 0; i < submissions.size(); i++) {
 							submissionsStr += submissions.get(i) + "|";
@@ -130,7 +132,7 @@ public class Server implements Runnable {
 					}
 				} else if (method.equals("WRITEFILE")) {
 					String status = Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
-							parseList(arguments.get(4)), parseList(arguments.get(5)));
+							  parseList(arguments.get(4)), parseList(arguments.get(5)));
 					if (status == null) {
 						pw.write("fail + \n");
 						pw.flush();
