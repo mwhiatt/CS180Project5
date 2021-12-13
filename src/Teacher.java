@@ -198,6 +198,7 @@ public class Teacher {
 	public static void createQuiz(String courseName) {
 		try {
 			boolean contWriting = false; // variable for knowing if they want to keep writing quizzes (do while loop)
+			boolean previouslyCreated = false;
 			String fileName = "";
 			PrintWriter myWriter;
 			String importOrCreate = JOptionPane.showInputDialog(null,
@@ -270,6 +271,7 @@ public class Teacher {
 					} else {
 						JOptionPane.showMessageDialog(null, "Overwriting the file, it already exists!", "File Status",
 								  JOptionPane.INFORMATION_MESSAGE);
+						previouslyCreated = true;
 					}
 				}
 				synchronized (submissionListKeeper) {
@@ -277,7 +279,11 @@ public class Teacher {
 					newQuizSubmissions.createNewFile();
 				}
 				synchronized (quizKeeper) {
-					myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt", true));
+					if (previouslyCreated) {
+						myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt"));
+					} else {
+						myWriter = new PrintWriter(new FileOutputStream(courseName + fileName + ".txt", true));
+					}
 					myWriter.write(fileName + "\n");
 					String upcomingAnswersValid = "";
 					String pointsAdded = "";
