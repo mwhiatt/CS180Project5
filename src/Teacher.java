@@ -33,17 +33,11 @@ public class Teacher {
 				}
 				return "success";
 			} else {
-				//JOptionPane.showMessageDialog(null, "This File Exists Already!", "File Status",
-				//		JOptionPane.ERROR_MESSAGE);
 				return "fail";
 			}
 		} catch (IOException e) {
-			//JOptionPane.showMessageDialog(null, "Error writing to file. Try again.", "File Status",
-			//		JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		} catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, "Undocumented Error. Try again.", "File Status",
-			//		JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		}
 	}
@@ -69,8 +63,6 @@ public class Teacher {
 				}
 				// Ends method if course doesn't already exist
 				if (!courseExists) {
-//					JOptionPane.showMessageDialog(null, "No need to delete, " +
-//									"that course doesn't exist", "File Status", JOptionPane.ERROR_MESSAGE);
 					bfr.close();
 					return "DNE";
 				}
@@ -83,13 +75,8 @@ public class Teacher {
 			}
 			// FINISHED REWRITING FILES AFTER DELETING NAME
 		} catch (FileNotFoundException e) {
-			//JOptionPane.showMessageDialog(null, "Error writing to file." ,
-			//		"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		} catch (Exception e) {
-
-			//JOptionPane.showMessageDialog(null, "Undocumented Error." ,
-			//		"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		}
 		// SEARCHING FOR ALL QUIZZES INSIDE courseName + Quizzes, then calling
@@ -113,36 +100,22 @@ public class Teacher {
 				bfrQuizzes.close();
 			}
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "File Not Found." ,
-					"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		} catch (IOException e) {
-
-			JOptionPane.showMessageDialog(null, "Error reading/writing to file." ,
-					"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
 		} catch (Exception e) {
-
-			JOptionPane.showMessageDialog(null, "Undocumented Error." ,
-					"File Status", JOptionPane.ERROR_MESSAGE);
 			return "fail";
-
 		}
 		// Deleting entire file with all Quiz names. Finished using the file to find all
 		// quizzes, so can delete now.
 		synchronized (quizListKeeper) {
 			File deletedFile = new File(courseName + "Quizzes.txt");
 			if (deletedFile.delete()) {
-//				JOptionPane.showMessageDialog(null, "Successfully deleted the file " + courseName + "Quizzes.txt" ,
-//						"File Status", JOptionPane.INFORMATION_MESSAGE);
 				return "success";
 			} else {
-				JOptionPane.showMessageDialog(null, "Error deleting file." ,
-						"File Status", JOptionPane.ERROR_MESSAGE);
 				return "fail";
 			}
 		}
-
 	}
 
 	// DELETES QUIZ AND QUIZ SUBMISSIONS
@@ -165,12 +138,8 @@ public class Teacher {
 					for (int a = 0; a < allSubmissions.size(); a++) {
 						deletedSubmissions = new File(allSubmissions.get(a));
 						if (deletedSubmissions.delete()) {
-//							JOptionPane.showMessageDialog(null, "Successfully deleted the file " + allSubmissions.get(a) ,
-//									"File Status", JOptionPane.INFORMATION_MESSAGE);
 						} else {
 							return "fail";
-							//JOptionPane.showMessageDialog(null, "Failed to delete file.",
-							//		"File Status", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -207,37 +176,22 @@ public class Teacher {
 			synchronized (quizKeeper) {
 				deletedQuiz = new File(courseName + quizName + ".txt");
 				if (deletedQuiz.delete()) {
-//					JOptionPane.showMessageDialog(null,
-//							"Successfully deleted the file " + courseName + quizName + ".txt",
-//							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					return "fail";
-					//JOptionPane.showMessageDialog(null,
-					//		"Failed to delete file." + courseName + quizName + ".txt",
-					//		"File Status", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			synchronized (submissionListKeeper) {
 				File deletedSubmissionFile = new File(courseName + quizName + "Submissions.txt");
 				if (deletedSubmissionFile.delete()) {
 					return "success";
-//					JOptionPane.showMessageDialog(null,
-//							"Successfully deleted the file " + courseName + quizName + "Submissions.txt",
-//							"File Status", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					return "fail";
-					//JOptionPane.showMessageDialog(null,
-					//		"Failed to delete file.", "File Status", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		} catch (FileNotFoundException e) {
 			return "fail";
-			//JOptionPane.showMessageDialog(null,
-			//		"File Not Found.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
 			return "fail";
-			//JOptionPane.showMessageDialog(null,
-			//		"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -260,8 +214,6 @@ public class Teacher {
 									"Yes or No (If no, you will be directed to "
 									+ "create a file inside program immediately");
 					if (importOrCreate == null) {
-//						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
@@ -271,8 +223,6 @@ public class Teacher {
 						"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 						+ "Choice C\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 				if (premadeFile == null) {
-//					JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//							"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				boolean check = false;
@@ -287,8 +237,6 @@ public class Teacher {
 								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 						if (premadeFile == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 							return;
 						}
 					} catch (IOException e) {
@@ -299,8 +247,6 @@ public class Teacher {
 								"the format:\nName of Quiz\nQuestion\nChoice A\nChoice B\n"
 								+ "Choice C\\nChoice D\nCorrect Choice\nPoints\n" + "What is the name of the file?");
 						if (premadeFile == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 							return;
 						}
 					}
@@ -309,8 +255,6 @@ public class Teacher {
 				do {
 					fileName = JOptionPane.showInputDialog(null, "What would you like to name the quiz?");
 					if (fileName == null) {
-//						JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//								"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 					if (fileName.isBlank()) {
@@ -342,8 +286,6 @@ public class Teacher {
 					do { // looping for each question
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write the question");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 							myWriter.close();
 							return;
 						} else {
@@ -351,8 +293,6 @@ public class Teacher {
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer A):");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 							myWriter.close();
 							return;
 						} else {
@@ -360,24 +300,21 @@ public class Teacher {
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer B):");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						} else {
 							myWriter.write("B." +  upcomingAnswersValid + "\n");
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer C):");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						} else {
 							myWriter.write("C." +  upcomingAnswersValid + "\n");
 						}
 						upcomingAnswersValid = JOptionPane.showInputDialog(null, "Please write answer D):");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						} else {
 							myWriter.write("D." +  upcomingAnswersValid + "\n");
@@ -385,8 +322,7 @@ public class Teacher {
 						upcomingAnswersValid = JOptionPane.showInputDialog(null,
 								"Please write which letter is the answer");
 						if (upcomingAnswersValid == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						} else {
 							myWriter.write( upcomingAnswersValid + "\n");
@@ -394,15 +330,13 @@ public class Teacher {
 						pointsAdded = JOptionPane.showInputDialog(null,
 								"What you like to put a point value in? Yes or No");
 						if (pointsAdded == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						} else if (pointsAdded.equalsIgnoreCase("yes")) {
 							pointsGiven = JOptionPane.showInputDialog(null,
 									"Please input a value (digit): ");
 							if (pointsGiven == null) {
-//								JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//										"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+								myWriter.close();
 								return;
 							} else {
 								myWriter.write(pointsGiven + "\n");
@@ -413,16 +347,13 @@ public class Teacher {
 						String another = JOptionPane.showInputDialog(null,
 								"Would you like to write another question? Yes or No");
 						if (another == null) {
-//							JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//									"Cancelled", JOptionPane.INFORMATION_MESSAGE);
+							myWriter.close();
 							return;
 						}
 						while (!(another.equalsIgnoreCase("yes") || another.equalsIgnoreCase("no"))) {
 							another = JOptionPane.showInputDialog(null, "Please input a valid answer, " +
 									"Yes or No." + "Would you like to write another question? Yes or No");
 							if (another == null) {
-//								JOptionPane.showMessageDialog(null, "Operation cancelled. Going back.",
-//										"Cancelled", JOptionPane.INFORMATION_MESSAGE);
 								myWriter.close();
 								return;
 							}
@@ -452,9 +383,7 @@ public class Teacher {
 			}
 			JOptionPane.showMessageDialog(null,
 					"DONE!", "File Status", JOptionPane.INFORMATION_MESSAGE);
-
 		} catch (IOException e) {
-
 			JOptionPane.showMessageDialog(null,
 					"Error Writing/Reading to File.", "File Status", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
@@ -462,7 +391,6 @@ public class Teacher {
 			JOptionPane.showMessageDialog(null,
 					"Undocumented Error.", "File Status", JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 	
 	public static ArrayList<String> getQuiz(String quizName, String courseName) {
@@ -528,7 +456,6 @@ public class Teacher {
 					if (line == null) {
 						break;
 					}
-					//System.out.println(line);
 					choices.add(line);
 				}
 				bfr.close();
