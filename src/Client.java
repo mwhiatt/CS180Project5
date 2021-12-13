@@ -529,7 +529,7 @@ public class Client implements ActionListener {
 	                                	JOptionPane.showMessageDialog(null, "Error", "Read Quiz error", JOptionPane.ERROR_MESSAGE);
 	                                } else {
 	                                	System.out.println("ANSWERQUIZCALLED");
-		                                ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
+		                                ArrayList<String> quizAndAnswers = parseMessage(status);
 		                                setCurrentQuizAndAnswers(quizAndAnswers);
 		                                answerQuiz(quizAndAnswers);
 	                                }
