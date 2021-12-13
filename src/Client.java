@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -114,7 +115,7 @@ public class Client implements ActionListener {
         viewSubmissionsFrame = new JFrame("View Submissions");
         viewSubmissionsFrame.setVisible(true);
         viewSubmissionsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        viewSubmissionsFrame.setSize(500, 250);
+        viewSubmissionsFrame.setSize(650, 250);
         viewSubmissionsFrame.setLocation(430, 100);
         JPanel panel = new JPanel();
         String response = "";
@@ -156,6 +157,15 @@ public class Client implements ActionListener {
         panel.add(cb, BorderLayout.AFTER_LINE_ENDS);
         JButton ok = new JButton("OK");
         panel.add(ok, BorderLayout.AFTER_LINE_ENDS);
+        JButton backViewSubmissions = new JButton("Back");
+        panel.add(backViewSubmissions, BorderLayout.AFTER_LINE_ENDS);
+        backViewSubmissions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewSubmissionsFrame.setVisible(false);
+                takeQuizFrame.setVisible(true);
+            }
+        });
         viewSubmissionsFrame.add(panel, BorderLayout.NORTH);
         ok.addActionListener(new ActionListener() {
             @Override
@@ -164,7 +174,7 @@ public class Client implements ActionListener {
                 viewingSubmissionsFrame = new JFrame("View Submissions");
                 viewingSubmissionsFrame.setVisible(true);
                 viewingSubmissionsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                viewingSubmissionsFrame.setSize(500, 250);
+                viewingSubmissionsFrame.setSize(650, 250);
                 viewingSubmissionsFrame.setLocation(430, 100);
                 JPanel panel = new JPanel();
                 String submission = "";
@@ -186,10 +196,19 @@ public class Client implements ActionListener {
                 }
                 JTextArea selectedSubmission = new JTextArea(submission);
                 JButton ok2 = new JButton("Continue viewing other submissions?");
+                JButton backViewingSubmissions = new JButton("Back");
                 panel.add(selectedSubmission, BorderLayout.NORTH);
                 panel.add(ok2, BorderLayout.AFTER_LINE_ENDS);
+                panel.add(backViewingSubmissions, BorderLayout.AFTER_LINE_ENDS);
                 viewingSubmissionsFrame.add(panel, BorderLayout.NORTH);
                 ok2.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        viewingSubmissionsFrame.setVisible(false);
+                        viewSubmissionsFrame.setVisible(true);
+                    }
+                });
+                backViewingSubmissions.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         viewingSubmissionsFrame.setVisible(false);
@@ -403,7 +422,7 @@ public class Client implements ActionListener {
     public void takeQuiz() {
         takeQuizFrame = new JFrame("Available Quizzes");
         takeQuizFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        takeQuizFrame.setSize(500, 140);
+        takeQuizFrame.setSize(650, 140);
         takeQuizFrame.setLocation(430, 100);
         JPanel panel = new JPanel();
         JLabel lbl = new JLabel("Select an option click OK");
