@@ -462,12 +462,12 @@ public class Client implements ActionListener {
                         quizList = parseMessage(bfr.readLine());
                         String status = quizList.get(quizList.size() - 1);
                         quizList.remove(quizList.size() - 1);
-                        if (status.equals("true")) {
-                        	JOptionPane.showMessageDialog(null,
-            						choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
+                        if (status.equals("fail")) {
                         	JOptionPane.showMessageDialog(null, "Error Displaying Quizzes.", "Quizzes",
                 					JOptionPane.ERROR_MESSAGE);//change in Teacher error message
+                        } else {
+                        	JOptionPane.showMessageDialog(null,
+            						choices, "All Quizzes", JOptionPane.INFORMATION_MESSAGE);
                         }
                         bfr.close();
                         pw.close();
@@ -527,6 +527,7 @@ public class Client implements ActionListener {
 	                                if (status.equals("fail")) {
 	                                	JOptionPane.showMessageDialog(null, "Error", "Read Quiz error", JOptionPane.ERROR_MESSAGE);
 	                                } else {
+	                                	System.out.println("ANSWERQUIZCALLED");
 		                                ArrayList<String> quizAndAnswers = parseMessage(bfr.readLine());
 		                                setCurrentQuizAndAnswers(quizAndAnswers);
 		                                answerQuiz(quizAndAnswers);
@@ -1264,7 +1265,7 @@ public class Client implements ActionListener {
                 try {
                     Socket socket = new Socket(SERVERADDRESS, 4343);
                     PrintWriter pw = new PrintWriter(socket.getOutputStream());
-
+                    
                     pw.write("PRINTQUIZZES2|" + courseName + "\n");
                     pw.flush();
 
