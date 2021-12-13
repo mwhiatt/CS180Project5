@@ -93,7 +93,7 @@ public class Student {
 	        String masterFileName = course + quiz + "Submissions.txt";
 	        try (PrintWriter pw = new PrintWriter(new FileOutputStream(masterFileName, true))) {
 	            pw.println(fileName);
-	            return "true";
+	            return "success";
 	        } catch (FileNotFoundException e) {
 	        	return "fail";
 	        }

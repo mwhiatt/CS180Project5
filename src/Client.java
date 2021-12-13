@@ -207,7 +207,7 @@ public class Client implements ActionListener {
     public void answerQuiz(ArrayList<String> quizAndAnswers) {
         if (quizAndAnswers.size() <= getCurrentCount()) {
             answerQuizFrame.setVisible(false);
-            ArrayList<String> points = Student.grading(getCurrentAnswerList(), quizAndAnswers);
+            ArrayList<String> points;
             try {
                 Socket socket = new Socket(SERVERADDRESS, 4343);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -252,6 +252,7 @@ public class Client implements ActionListener {
                 if (status.equals("fail")) {
                 	JOptionPane.showMessageDialog(null, "Error", "Write Submissions error", JOptionPane.ERROR_MESSAGE);
                 }
+
                 bfr.close();
                 pw.close();
                 socket.close();

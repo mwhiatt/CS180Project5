@@ -131,13 +131,13 @@ public class Server implements Runnable {
 					String status = Student.writeFile(arguments.get(1), arguments.get(2), arguments.get(3),
 							parseList(arguments.get(4)), parseList(arguments.get(5)));
 					if (status == null) {
-						pw.write("fail");
+						pw.write("fail + \n");
 						pw.flush();
 					} else if (status.equals("success")) {
-						pw.write("success");
+						pw.write("success + \n");
 						pw.flush();
 					} else {
-						pw.write("fail");
+						pw.write("fail + \n");
 						pw.flush();
 					}
 				} else if (method.equals("PRINTSUBMISSIONS2")) {
