@@ -2,9 +2,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+
 /**
- * Project 5 - Learning Management Quiz Tool - Server
- * Server class to receive connections from multiple users and store information. 
+ * Project 5 - Learning Management Quiz Tool - Server Server class to receive
+ * connections from multiple users and store information.
  * <p>
  * 
  * @author Matt Hiatt, Aryan Mathur, Aniket Mohanty, and Nathan Lo
@@ -12,18 +13,19 @@ import java.util.*;
  */
 public class Server implements Runnable {
 	Socket socket;
+
 	public Server(Socket socket) {
 		this.socket = socket;
 	}
-	
+
 	public void run() {
 		try {
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			//handling
+			// handling
 			String message = bfr.readLine();
 			while (message != null) {
-				System.out.println("Entered Method handling");				
+				System.out.println("Entered Method handling");
 				System.out.println("Message received from client: " + message);
 				ArrayList<String> arguments = parseMessage(message);
 				String method = arguments.get(0);
@@ -47,11 +49,11 @@ public class Server implements Runnable {
 					pw.write(packaged + "\n");
 					pw.flush();
 				} else if (method.equals("UPDATEQUIZ")) {
-					//Teacher.editQuiz(arguments.get(1), arguments.get(2));
 					ArrayList<String> questions = parseList(arguments.get(3));
 					Teacher.updateQuiz(arguments.get(1), arguments.get(2), questions);
 				} else if (method.equals("VIEWSUBMISSION")) {
 					String result = Teacher.viewSubmission(arguments.get(1), arguments.get(2), arguments.get(3));
+					System.out.println("VIEWSUBMISSION RESULT: " + result);
 					pw.write(result + "\n");
 					pw.flush();
 				} else if (method.equals("PRINTCOURSES")) {
@@ -77,11 +79,10 @@ public class Server implements Runnable {
 					}
 					pw.write(ret + "\n");
 					pw.flush();
-				} else if (method.equals("PRINTQUIZZES2")) {
-					Teacher.printQuizzes(arguments.get(1));
 				} else if (method.equals("PRINTSUBMISSIONS")) {
 					try {
-						ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2), arguments.get(3));
+						ArrayList<String> submissions = Student.printSubmissions(arguments.get(1), arguments.get(2),
+								arguments.get(3));
 						String submissionsStr = "";
 						for (int i = 0; i < submissions.size(); i++) {
 							submissionsStr += submissions.get(i) + "|";
@@ -90,7 +91,7 @@ public class Server implements Runnable {
 						pw.write(ret + "\n");
 						pw.flush();
 					} catch (IOException e) {
-						pw.write("" + "\n");
+						pw.write(" " + "\n");
 						pw.flush();
 					}
 				} else if (method.equals("CHECKQUIZ")) {
@@ -142,6 +143,7 @@ public class Server implements Runnable {
 					}
 				} else if (method.equals("PRINTSUBMISSIONS2")) {
 					String status = Teacher.printSubmissions(arguments.get(1), arguments.get(2));
+					System.out.println("STATUS FOR PRINT2: " + status);
 					pw.write(status + "\n");
 					pw.flush();
 				} else if (method.equals("VIEWSUBMISSIONS")) {
@@ -188,7 +190,6 @@ public class Server implements Runnable {
 				} else
 					System.out.println("Message is null");
 			}
-			
 			pw.close();
 			bfr.close();
 			socket.close();
@@ -197,9 +198,9 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
 	public static void main(String[] args) {
-		//Creates Login File 
-		//Creates Login File 
+		// Creates Login File
 		File logins = new File("login.txt");
 		if (!logins.exists()) {
 			try {
@@ -208,8 +209,7 @@ public class Server implements Runnable {
 				e.printStackTrace();
 			}
 		}
-				
-		//Creates coursenames file
+		// Creates coursenames file
 		File courseNames = new File("CourseNames.txt");
 		if (!courseNames.exists()) {
 			try {
@@ -220,7 +220,7 @@ public class Server implements Runnable {
 		}
 		try {
 			ServerSocket serverSocket = new ServerSocket(4343);
-			
+
 			while (true) {
 				Socket socket = serverSocket.accept();
 				System.out.println("Accepted");
@@ -230,39 +230,36 @@ public class Server implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Socket exception");
 		}
-		
 	}
-	
+
 	public static ArrayList<String> parseMessage(String message) {
 		ArrayList<String> arguments = new ArrayList<String>();
 		while (message.indexOf('|') != -1) {
 			arguments.add(message.substring(0, message.indexOf('|')));
 			message = message.substring(message.indexOf('|') + 1);
-	    }
+		}
 		arguments.add(message);
 		return arguments;
 	}
-	
+
 	public static ArrayList<String> parseList(String message) {
-		message = message.replace("~","\n");
+		message = message.replace("~", "\n");
 		ArrayList<String> parsedList = new ArrayList<String>();
 		while (message.indexOf('`') != -1) {
 			parsedList.add(message.substring(0, message.indexOf('`')));
 			message = message.substring(message.indexOf('`') + 1);
-	    }
+		}
 		parsedList.add(message);
 		return parsedList;
 	}
-	
+
 	public static String packageList(ArrayList<String> list) {
-        String packedList = "";
-        //packaging currentAnswers list to a string to be sent to server
-        for (int i = 0; i < list.size(); i++) {
-            packedList += list.get(i) + "`";
-        }
-        packedList = packedList.substring(0, packedList.length() - 1);
-        return packedList;
-    }
-
+		String packedList = "";
+		// packaging currentAnswers list to a string to be sent to server
+		for (int i = 0; i < list.size(); i++) {
+			packedList += list.get(i) + "`";
+		}
+		packedList = packedList.substring(0, packedList.length() - 1);
+		return packedList;
+	}
 }
-
